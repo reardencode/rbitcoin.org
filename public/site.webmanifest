@@ -4,8 +4,8 @@
   "description": "Bitcoin full node in Rust for server-side operators",
   "start_url": "/",
   "display": "browser",
-  "background_color": "#0c0e10",
-  "theme_color": "#0c0e10",
+  "background_color": "#0b0c0e",
+  "theme_color": "#0b0c0e",
   "icons": [
     {
       "src": "/assets/img/favicon.svg",

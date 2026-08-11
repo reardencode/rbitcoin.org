@@ -249,10 +249,7 @@ button:focus-visible,
   color: var(--text);
 }
 
-.brand img,
-.brand-mark {
-  width: 2rem;
-  height: 2rem;
+.brand img {
   flex-shrink: 0;
 }
 
@@ -433,72 +430,88 @@ main {
   overflow: hidden;
 }
 
-/* Survey grid + rust stains */
+/* Survey grid + grit (same world as OG art) */
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(122, 52, 40, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(122, 52, 40, 0.07) 1px, transparent 1px),
-    linear-gradient(rgba(110, 118, 128, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(110, 118, 128, 0.1) 1px, transparent 1px);
+    linear-gradient(rgba(122, 52, 40, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(122, 52, 40, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(110, 118, 128, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(110, 118, 128, 0.08) 1px, transparent 1px);
   background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
-  mask-image: radial-gradient(ellipse 85% 80% at 45% 40%, black 10%, transparent 75%);
+  mask-image: radial-gradient(ellipse 90% 85% at 40% 40%, black 15%, transparent 78%);
   opacity: 0.9;
   pointer-events: none;
 }
 
-/*
- * Abandoned right-of-way — heavy T-rail SVG (not flat toy stripes).
- * Fishplates, spikes, irregular ties, ballast grit, oxide streaks.
- */
-.hero-tracks {
-  position: absolute;
-  z-index: 0;
-  top: -20%;
-  right: max(-5rem, calc(46% - 28rem));
-  width: min(15rem, 34vw);
-  height: 150%;
-  pointer-events: none;
-  transform: rotate(-26deg) skewY(1.5deg);
-  transform-origin: center center;
-  opacity: 0.92;
-  filter:
-    drop-shadow(4px 10px 14px rgba(0, 0, 0, 0.65))
-    drop-shadow(-1px 0 0 rgba(90, 40, 28, 0.25));
+/* Home hero: copy + full OG art (plate + rails) */
+.hero-split .container {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 2rem 2.5rem;
+  align-items: center;
 }
 
-.hero-tracks img,
-.hero-tracks svg {
+.hero-copy {
+  min-width: 0;
+}
+
+.hero-visual {
+  position: relative;
+  min-width: 0;
+  border: 1px solid var(--rail);
+  border-top: 2px solid rgba(160, 74, 56, 0.55);
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.4);
+  background: #0a0c0e;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+}
+
+.hero-visual img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: fill;
+  object-fit: cover;
+  object-position: center;
 }
 
-/* Soft vignette so tracks sink into the page (less “sticker”) */
-.hero-tracks::after {
+.hero-visual::after {
   content: "";
   position: absolute;
-  inset: -2%;
-  background:
-    linear-gradient(
-      180deg,
-      var(--bg) 0%,
-      transparent 12%,
-      transparent 88%,
-      var(--bg) 100%
-    ),
-    linear-gradient(
-      90deg,
-      rgba(11, 12, 14, 0.55) 0%,
-      transparent 18%,
-      transparent 82%,
-      rgba(11, 12, 14, 0.55) 100%
-    );
+  inset: 0;
   pointer-events: none;
-  mix-blend-mode: multiply;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(138, 146, 156, 0.12);
+}
+
+/* Subpages: photoreal track strip (same asset family as OG) */
+.hero-tracks {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(42%, 28rem);
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.88;
+  mask-image: linear-gradient(90deg, transparent 0%, black 22%, black 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 22%, black 100%);
+}
+
+.hero-tracks img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 30% center;
+  filter: saturate(0.92) contrast(1.05);
 }
 
 .hero .container {
@@ -506,13 +519,38 @@ main {
   z-index: 1;
 }
 
-@media (max-width: 720px) {
-  .hero-tracks {
-    right: -3rem;
-    width: 9rem;
-    opacity: 0.7;
-    filter: drop-shadow(3px 8px 10px rgba(0, 0, 0, 0.6));
+@media (max-width: 900px) {
+  .hero-split .container {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
   }
+
+  .hero-visual {
+    max-width: 36rem;
+    aspect-ratio: 16 / 9;
+  }
+
+  .hero-tracks {
+    width: min(55%, 18rem);
+    opacity: 0.55;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-tracks {
+    display: none;
+  }
+}
+
+/* Brand mark — photoreal plate (matches OG) */
+.brand-mark {
+  width: 2.15rem;
+  height: 2.15rem;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 2px;
+  border: 1px solid rgba(138, 146, 156, 0.35);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
 }
 
 .status-chip {
@@ -546,17 +584,25 @@ main {
 .hero h1 {
   margin: 0 0 1rem;
   max-width: 18ch;
-  font-size: clamp(2.15rem, 5.5vw, 3.35rem);
+  font-size: clamp(2.15rem, 5.5vw, 3.15rem);
   line-height: 1.12;
   letter-spacing: -0.035em;
   font-weight: 700;
 }
 
+.hero-split h1 {
+  max-width: 14ch;
+}
+
 .hero-lead {
   margin: 0 0 1.75rem;
-  max-width: 38rem;
+  max-width: 36rem;
   font-size: 1.125rem;
   color: var(--text-muted);
+}
+
+.hero-split .hero-lead {
+  max-width: none;
 }
 
 .hero-actions {
@@ -950,11 +996,8 @@ pre code {
 }
 
 .page-hero .hero-tracks {
-  top: -40%;
-  right: max(-4rem, calc(50% - 32rem));
-  width: min(10rem, 24vw);
-  height: 180%;
-  opacity: 0.4;
+  opacity: 0.55;
+  width: min(38%, 22rem);
 }
 
 .page-hero .container {

@@ -24,7 +24,7 @@
       content="Server-side Bitcoin full node: map-free archive, pure-Rust scripts, Electrum in-process."
     />
     <meta name="twitter:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
-    <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/assets/img/logo.jpg" type="image/jpeg" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="stylesheet" href="/assets/css/main.css" />
   </head>
@@ -33,7 +33,7 @@
     <header class="site-header">
       <div class="header-inner">
         <a class="brand" href="/">
-          <img class="brand-mark" src="/assets/img/logo.svg" width="32" height="32" alt="" />
+          <img class="brand-mark" src="/assets/img/logo.jpg" width="32" height="32" alt="" />
           <span class="brand-name">rbitcoin</span>
         </a>
         <button
@@ -89,31 +89,42 @@
     </header>
 
     <main id="main">
-      <section class="hero">
-        <div class="hero-tracks" aria-hidden="true"><img src="/assets/img/tracks.svg" alt="" width="160" height="1000" decoding="async" /></div>
+      <section class="hero hero-split">
         <div class="container">
-          <div class="status-chip">Experimental 0.x · not prime time yet</div>
-          <h1>Bitcoin full node in Rust for server-side operators</h1>
-          <p class="hero-lead">
-            Validating peer, compact relational archive, and in-process Electrum (plus optional
-            Esplora REST) in one Linux-first binary—built for wallet backends and infrastructure,
-            not a desktop GUI.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="/get-started/">Get started</a>
-            <a
-              class="btn btn-secondary"
-              href="https://github.com/reardencode/rbitcoin"
-              rel="noopener noreferrer"
-              target="_blank"
-              >View on GitHub</a
-            >
-            <a class="btn btn-ghost" href="/architecture/">Why it’s different</a>
+          <div class="hero-copy">
+            <div class="status-chip">Experimental 0.x · not prime time yet</div>
+            <h1>Bitcoin full node in Rust for server-side operators</h1>
+            <p class="hero-lead">
+              Validating peer, compact relational archive, and in-process Electrum (plus optional
+              Esplora REST) in one Linux-first binary—built for wallet backends and infrastructure,
+              not a desktop GUI.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="/get-started/">Get started</a>
+              <a
+                class="btn btn-secondary"
+                href="https://github.com/reardencode/rbitcoin"
+                rel="noopener noreferrer"
+                target="_blank"
+                >View on GitHub</a
+              >
+              <a class="btn btn-ghost" href="/architecture/">Why it’s different</a>
+            </div>
+            <div class="meta-row">
+              <span>MIT OR Apache-2.0</span>
+              <span>Linux first</span>
+              <span>Full archival · no UTXO db</span>
+            </div>
           </div>
-          <div class="meta-row">
-            <span>MIT OR Apache-2.0</span>
-            <span>Linux first</span>
-            <span>Full archival · no UTXO db</span>
+          <div class="hero-visual">
+            <img
+              src="/assets/img/og-image.jpg"
+              width="1200"
+              height="675"
+              alt="rbitcoin steel monogram plate beside weathered rails"
+              decoding="async"
+              fetchpriority="high"
+            />
           </div>
         </div>
       </section>
@@ -263,7 +274,7 @@
         <div class="footer-grid">
           <div class="footer-brand">
             <a class="brand" href="/">
-              <img class="brand-mark" src="/assets/img/logo.svg" width="32" height="32" alt="" />
+              <img class="brand-mark" src="/assets/img/logo.jpg" width="32" height="32" alt="" />
               <span class="brand-name">rbitcoin</span>
             </a>
             <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>

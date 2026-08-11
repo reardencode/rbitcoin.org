@@ -61,11 +61,15 @@ jobs:
             public/about/index.html \
             public/assets/css/main.css \
             public/assets/js/main.js \
-            public/assets/img/logo.svg \
+            public/assets/img/logo.jpg \
             public/assets/img/favicon.svg \
+            public/assets/img/icon-192.jpg \
+            public/assets/img/apple-touch-icon.jpg \
             public/assets/img/og-image.jpg \
+            public/assets/img/tracks.jpg \
             public/robots.txt \
             public/sitemap.xml \
+            public/site.webmanifest \
             README.md \
             SECURITY.md \
             LICENSE-MIT \

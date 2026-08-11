@@ -1003,23 +1003,32 @@ pre code {
 }
 
 /* ——— Prose pages ——— */
+/* Match content column — not full-bleed browser width */
 .page-hero {
   position: relative;
-  padding: 3rem 0 1.5rem;
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 3rem 1.25rem 1.5rem;
   border-bottom: 1px solid var(--border);
-  margin-bottom: 0;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .page-hero .hero-tracks {
-  /* keep the narrow strip; sit behind page title only */
   opacity: 0.65;
   width: min(8.5rem, 14vw);
+  right: 0.5rem;
+  top: -10%;
+  bottom: -10%;
 }
 
 .page-hero .container {
   position: relative;
   z-index: 1;
+  max-width: none;
+  margin: 0;
+  padding: 0;
 }
 
 .page-hero h1 {

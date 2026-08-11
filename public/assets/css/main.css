@@ -411,7 +411,7 @@ main {
 
 .section-head {
   margin-bottom: 2rem;
-  max-width: 40rem;
+  max-width: none; /* match full content width (cards/metrics below) */
 }
 
 .section-head h2 {

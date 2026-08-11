@@ -1,49 +1,57 @@
 # Auto-deploy from GitHub (NixOS)
 
-On push to `master`, GitHub hits a local webhook; the host `git pull`s. Static files only — no build, no nginx reload.
+On push to `master`, GitHub POSTs to this host; a loopback webhook verifies the request and runs `git pull`. Static site — no build, no nginx reload.
+
+The repo is **public**, so git uses plain HTTPS (no deploy key). The webhook endpoint is still locked down so only real GitHub deliveries run the update.
+
+## Security model
+
+| Layer | What it does |
+|-------|----------------|
+| **HMAC secret** | GitHub signs the body with a shared secret (`X-Hub-Signature-256`). The hook rejects anything that fails verification. |
+| **Loopback only** | `webhook` binds `127.0.0.1`; the public path is TLS nginx → proxy. |
+| **Branch filter** | Only `refs/heads/master` runs the update. |
+| **Secret not in store** | Secret lives in `/etc/rbitcoin-org/webhook.env` (`EnvironmentFile` + `getenv`), not in Nix. |
+
+That HMAC is what “only real GitHub” means in practice: an attacker needs the secret to forge a valid signature. Keep the secret long and private; rotate it in GitHub + the env file if it leaks.
 
 ## One-time setup
 
-1. **Deploy key** (read-only) on the host, added to the GitHub repo:
+1. **Clone** (after the user exists from the module, or create user first):
 
    ```bash
-   sudo -u rbitcoin-site ssh-keygen -t ed25519 -N '' \
-     -f /var/lib/rbitcoin-site/deploy_key -C rbitcoin.org-deploy
-   # paste .pub into GitHub → Settings → Deploy keys (write access off)
+   sudo -u rbitcoin-site git clone --depth 1 \
+     https://github.com/reardencode/rbitcoin.org.git /var/www/rbitcoin.org
    ```
 
-2. **Clone** once:
-
-   ```bash
-   sudo -u rbitcoin-site env \
-     GIT_SSH_COMMAND='ssh -i /var/lib/rbitcoin-site/deploy_key -o IdentitiesOnly=yes' \
-     git clone --depth 1 git@github.com:reardencode/rbitcoin.org.git /var/www/rbitcoin.org
-   ```
-
-3. **Webhook secret** (not in the Nix store):
+2. **Webhook secret** (not in the Nix store):
 
    ```bash
    sudo install -d -m 0750 /etc/rbitcoin-org
    echo "RBITCOIN_WEBHOOK_SECRET=$(openssl rand -hex 32)" | sudo tee /etc/rbitcoin-org/webhook.env
    sudo chmod 640 /etc/rbitcoin-org/webhook.env
    sudo chown root:rbitcoin-site /etc/rbitcoin-org/webhook.env
-   # save the secret value for GitHub in the next step
+   # keep a copy of the secret for the GitHub UI
    ```
 
-4. **GitHub webhook**: Settings → Webhooks → Add  
-   - URL: `https://rbitcoin.org/hooks/rbitcoin-org`  
-   - Content type: `application/json`  
-   - Secret: same as `RBITCOIN_WEBHOOK_SECRET`  
-   - Events: **Just the push event**
+3. **GitHub** → repo **Settings → Webhooks → Add webhook**
 
-5. Point nginx `root` at `/var/www/rbitcoin.org/public` (already). Apply the module below, then:
+   | Field | Value |
+   |-------|--------|
+   | Payload URL | `https://rbitcoin.org/hooks/rbitcoin-org` |
+   | Content type | `application/json` |
+   | Secret | same as `RBITCOIN_WEBHOOK_SECRET` |
+   | Events | **Just the push event** |
+   | Active | on |
+
+4. Apply the module (`nixos-rebuild switch`). Nginx `root` = `/var/www/rbitcoin.org/public`.
+
+5. Smoke test:
 
    ```bash
-   sudo nixos-rebuild switch
-   # smoke: push a commit, or:
-   sudo -u rbitcoin-site /run/current-system/sw/bin/true  # ensure user exists
    sudo systemctl start rbitcoin-org-update.service
    journalctl -u webhook -u rbitcoin-org-update -n 40
+   # then push a commit; Recent Deliveries on GitHub should be green
    ```
 
 ## NixOS module
@@ -53,14 +61,15 @@ On push to `master`, GitHub hits a local webhook; the host `git pull`s. Static f
 
 let
   siteRoot = "/var/www/rbitcoin.org";
-  key = "/var/lib/rbitcoin-site/deploy_key";
-  repo = "git@github.com:reardencode/rbitcoin.org.git";
+  repo = "https://github.com/reardencode/rbitcoin.org.git";
 
   update = pkgs.writeShellScript "rbitcoin-org-update" ''
     set -euo pipefail
-    export PATH=${lib.makeBinPath [ pkgs.git pkgs.openssh pkgs.coreutils ]}
-    export GIT_SSH_COMMAND="ssh -i ${key} -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
+    export PATH=${lib.makeBinPath [ pkgs.git pkgs.coreutils ]}
     cd ${siteRoot}
+    if [ ! -d .git ]; then
+      git clone --depth 1 ${lib.escapeShellArg repo} .
+    fi
     git fetch --depth 1 origin master
     git merge --ff-only FETCH_HEAD
   '';
@@ -68,18 +77,20 @@ in
 {
   users.users.rbitcoin-site = {
     isSystemUser = true;
+    uid = 1002;
     group = "rbitcoin-site";
-    home = "/var/lib/rbitcoin-site";
+    home = "/home/rbitcoin-site";
     createHome = true;
   };
-  users.groups.rbitcoin-site = {};
+  users.groups.rbitcoin-site = {
+    gid = 1002;
+  };
 
   systemd.tmpfiles.rules = [
     "d ${siteRoot} 0755 rbitcoin-site rbitcoin-site -"
-    "d /var/lib/rbitcoin-site 0750 rbitcoin-site rbitcoin-site -"
+    "d /home/rbitcoin-site 0750 rbitcoin-site rbitcoin-site -"
   ];
 
-  # Pull (webhook + backup timer both start this)
   systemd.services.rbitcoin-org-update = {
     description = "Pull rbitcoin.org (ff-only)";
     after = [ "network-online.target" ];
@@ -92,7 +103,6 @@ in
     };
   };
 
-  # Webhook listens on loopback; nginx proxies HTTPS
   services.webhook = {
     enable = true;
     ip = "127.0.0.1";
@@ -111,14 +121,20 @@ in
               "match": {
                 "type": "payload-hmac-sha256",
                 "secret": "{{ getenv "RBITCOIN_WEBHOOK_SECRET" }}",
-                "parameter": { "source": "header", "name": "X-Hub-Signature-256" }
+                "parameter": {
+                  "source": "header",
+                  "name": "X-Hub-Signature-256"
+                }
               }
             },
             {
               "match": {
                 "type": "value",
                 "value": "refs/heads/master",
-                "parameter": { "source": "payload", "name": "ref" }
+                "parameter": {
+                  "source": "payload",
+                  "name": "ref"
+                }
               }
             }
           ]
@@ -132,7 +148,7 @@ in
   ];
 
   services.nginx.virtualHosts."rbitcoin.org" = {
-    # forceSSL / enableACME / root = "${siteRoot}/public" as you already have
+    # merge with existing: forceSSL, enableACME, root = "${siteRoot}/public"
     locations."/hooks/" = {
       proxyPass = "http://127.0.0.1:9000/hooks/";
       recommendedProxySettings = true;
@@ -151,11 +167,9 @@ in
 }
 ```
 
-Merge the `virtualHosts."rbitcoin.org"` block with your existing vhost (same `root`, TLS, etc.).
-
 ## Notes
 
-- Secret stays in `/etc/rbitcoin-org/webhook.env` only (`hooksTemplated` + `getenv`).
-- Webhook runs as `rbitcoin-site` and executes the same script as the timer — no polkit.
+- Public HTTPS clone/fetch — no SSH keys or tokens for git.
+- Unsigned or wrong-secret POSTs to `/hooks/rbitcoin-org` do not run the update.
 - `merge --ff-only` refuses non-fast-forward history.
-- No build step; nginx keeps serving `public/`.
+- Webhook and timer both run the same script as `rbitcoin-site` (uid/gid **1002**, home **`/home/rbitcoin-site`**).

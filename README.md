@@ -24,6 +24,7 @@ python3 -m http.server 8080 --directory public
 | Path | Role |
 |------|------|
 | `public/` | Document root (HTML, CSS, JS, assets) |
+| `docs/deploy-webhook.md` | NixOS auto-deploy via GitHub webhook |
 | `AGENTS.md` | Notes for agents and contributors editing the site |
 | `SECURITY.md` | Vulnerability reporting |
 | `CONTRIBUTING.md` | How to change the site |

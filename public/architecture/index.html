@@ -103,23 +103,78 @@
               and thin indexes for wallet queries.
             </p>
           </div>
-          <div class="pipeline" role="img" aria-label="rbitcoin store and lookup diagram">
-  Class A archive (map-free fd tables)
-    header.body/head     packed txs: tx.body + tx.idx + txid.body
-    tx.head.*            segmented keyless heads (+ fuse8 on seal)
-         │
-         │  create_fk is the dense identity
-         ▼
-  Class C tip commit
-    confirmed[]  strong_tx  tx_height  header_txs_*
-         │
-         ├─► reconstruct historical wire from packed txs
-         │   (tip soft zone: wire ring)
-         │
-  Class B forever-open indexes
-    scripthash.*  ── thin create_tx_fk only ──► join A + C at query
-         │
-         └─► Electrum / Esplora (+ mempool for unconfirmed)
+          <div class="store-diagram" role="img" aria-label="rbitcoin store and lookup diagram">
+            <div class="store-layer store-layer-a">
+              <div class="store-layer-label">Class A · archive</div>
+              <p class="store-layer-tag">map-free fd tables · create_fk is dense identity</p>
+              <div class="store-cells">
+                <div class="store-cell">
+                  <strong>headers</strong>
+                  <span>header.body / header.head</span>
+                </div>
+                <div class="store-cell">
+                  <strong>packed txs</strong>
+                  <span>tx.body · tx.idx · txid.body</span>
+                </div>
+                <div class="store-cell">
+                  <strong>txid heads</strong>
+                  <span>tx.head.* · fuse8 on seal</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="store-flow" aria-hidden="true">
+              <span class="store-flow-line"></span>
+              <span class="store-flow-caption">create_fk · packed bodies</span>
+              <span class="store-flow-line"></span>
+            </div>
+
+            <div class="store-layer store-layer-c">
+              <div class="store-layer-label">Class C · tip commit</div>
+              <p class="store-layer-tag">best-chain visibility · tip advance is the commit</p>
+              <div class="store-cells store-cells-4">
+                <div class="store-cell"><strong>confirmed[]</strong><span>height → header_fk</span></div>
+                <div class="store-cell"><strong>strong_tx</strong><span>strong bitset</span></div>
+                <div class="store-cell"><strong>tx_height</strong><span>create height</span></div>
+                <div class="store-cell"><strong>header_txs_*</strong><span>per-block ranges</span></div>
+              </div>
+            </div>
+
+            <div class="store-flow" aria-hidden="true">
+              <span class="store-flow-line"></span>
+              <span class="store-flow-caption">joins at query</span>
+              <span class="store-flow-line"></span>
+            </div>
+
+            <div class="store-split">
+              <div class="store-layer store-layer-out">
+                <div class="store-layer-label">Serve / reconstruct</div>
+                <div class="store-cells store-cells-stack">
+                  <div class="store-cell">
+                    <strong>historical wire</strong>
+                    <span>rebuild from packed Class A txs</span>
+                  </div>
+                  <div class="store-cell">
+                    <strong>tip wire ring</strong>
+                    <span>soft zone for recent tip</span>
+                  </div>
+                </div>
+              </div>
+              <div class="store-layer store-layer-b">
+                <div class="store-layer-label">Class B · indexes</div>
+                <p class="store-layer-tag">forever-open · thin create_tx_fk only</p>
+                <div class="store-cells store-cells-stack">
+                  <div class="store-cell">
+                    <strong>scripthash.*</strong>
+                    <span>head + page chains · join A + C</span>
+                  </div>
+                  <div class="store-cell">
+                    <strong>Electrum / Esplora</strong>
+                    <span>wallet clients · + mempool unconfirmed</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <p class="footnote">
             Tables are pread/pwrite + fallocate grow (kernel page cache as L0)—not process

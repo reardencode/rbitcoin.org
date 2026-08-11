@@ -88,10 +88,11 @@
       <div class="page-hero">
         <div class="hero-tracks" aria-hidden="true"><img src="/assets/img/tracks.jpg" alt="" width="720" height="1280" decoding="async" /></div>
         <div class="container">
+          <div class="status-chip">Experimental 0.x · report privately</div>
           <h1>Security</h1>
           <p>
-            Full-node software for production server-side use. Until 1.0, treat mainnet as early
-            production / high-scrutiny.
+            Full-node software intended for server-side use. Until 1.0, treat mainnet as early
+            production and keep scrutiny high.
           </p>
         </div>
       </div>
@@ -111,27 +112,38 @@
 
           <h2>0.x expectations</h2>
           <ul>
-            <li>On-disk format and APIs are <strong>unstable until 1.0</strong>.</li>
-            <li>Prefer a <strong>signet soak</strong> before first mainnet cutover.</li>
-            <li>There is no multi-year LTS branch yet; security-relevant fixes are prioritized on 0.x.</li>
-            <li>The software is <strong>not prime time yet</strong>—rapid progress, high scrutiny.</li>
+            <li>On-disk format and public APIs are <strong>unstable until 1.0</strong>.</li>
+            <li>Prefer a <strong>signet soak</strong> before the first mainnet cutover.</li>
+            <li>
+              There is no multi-year LTS branch yet; security-relevant fixes are prioritized on the
+              active 0.x line.
+            </li>
+            <li>
+              The software is early: progress is rapid, and operators should assume high scrutiny
+              rather than turnkey production readiness.
+            </li>
           </ul>
 
-          <h2>Milestone / script checks</h2>
+          <h2>Milestone and script checks</h2>
           <p>
-            Default mainnet <code>--milestone</code> skips <strong>script/sig</strong> checks at or
-            below the configured height (assumevalid-style speed tradeoff). Prevouts, double-spend,
-            maturity, and fees still run. Use <code>--milestone 0</code> for full historical scripts.
-            This is an honest tradeoff—not a claim that all historical scripts were checked under
-            the default flag.
+            Default mainnet <code>--milestone</code> skips <strong>script and signature</strong>
+            checks at or below the configured height (an assumevalid-style speed tradeoff). Prevouts,
+            double-spend checks, maturity, and fees still run. Use <code>--milestone 0</code> for full
+            historical script validation. That is an explicit tradeoff—not a claim that every
+            historical script was checked under the default flag.
           </p>
 
           <h2>In scope (node)</h2>
           <ul>
             <li>Consensus and script: accepting invalid chain data or rejecting valid data</li>
-            <li>P2P (BIP324 v2 only): DoS and misbehavior handling</li>
-            <li>Electrum and Esplora wallet-client backends: integrity and application DoS limits</li>
-            <li>Store / archive: corruption or incorrect spend/scripthash results that mislead a wallet backend</li>
+            <li>P2P (BIP324 v2 only): denial-of-service and misbehavior handling</li>
+            <li>
+              Electrum and Esplora wallet-client backends: integrity and application-level DoS limits
+            </li>
+            <li>
+              Store and archive: corruption or incorrect spend or scripthash results that could
+              mislead a wallet backend
+            </li>
           </ul>
           <p>
             Full policy:
@@ -140,21 +152,29 @@
               rel="noopener noreferrer"
               target="_blank"
               >node SECURITY.md</a
-            >. Report against a git commit (and binary digest if you built musl static).
+            >.
+            Report against a git commit (and the binary digest if you built the musl static release).
           </p>
 
           <h2>Out of scope (for security@)</h2>
           <ul>
-            <li>Feature requests, IBD performance, non-sensitive crashes → ordinary issues / CONTRIBUTING</li>
-            <li>Compromised operator hosts, reverse-proxy misconfiguration, third-party wallets outside the tree</li>
+            <li>
+              Feature requests, IBD performance tuning, and non-sensitive crashes—use ordinary issues
+              or CONTRIBUTING
+            </li>
+            <li>
+              Compromised operator hosts, reverse-proxy misconfiguration, or third-party wallets
+              outside this tree
+            </li>
             <li>Do not send seed phrases or private keys</li>
           </ul>
 
           <h2>This website</h2>
           <p>
-            rbitcoin.org is static HTML/CSS/JS with no backend. Serious site issues (e.g. XSS in
-            checked-in scripts) → <a href="mailto:security@reardencode.com">security@reardencode.com</a>.
-            Typos and broken links can be ordinary issues or PRs on the site repository.
+            rbitcoin.org is static HTML, CSS, and JavaScript with no backend. Report serious site
+            issues (for example XSS in checked-in scripts) to
+            <a href="mailto:security@reardencode.com">security@reardencode.com</a>.
+            Typos and broken links can be ordinary issues or pull requests on the site repository.
           </p>
 
           <h2>Contact</h2>
@@ -179,8 +199,8 @@
             </li>
           </ul>
           <p class="mt-2">
-            Use security@ for vulnerability reports. General questions: freedom@ or X—not for unfixed
-            0-day consensus bugs.
+            Use security@ for vulnerability reports. General questions go to freedom@ or X—not for
+            unfixed consensus or remote-attack bugs.
           </p>
         </div>
       </section>
@@ -231,6 +251,7 @@
             <ul>
               <li><a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a></li>
               <li><a href="mailto:security@reardencode.com">security@reardencode.com</a></li>
+              <li><a href="/about/#donate">Donate (silent payment)</a></li>
             </ul>
           </div>
         </div>

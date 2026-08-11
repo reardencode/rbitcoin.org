@@ -88,10 +88,11 @@
       <div class="page-hero">
         <div class="hero-tracks" aria-hidden="true"><img src="/assets/img/tracks.jpg" alt="" width="720" height="1280" decoding="async" /></div>
         <div class="container">
+          <div class="status-chip">Experimental 0.x · open source</div>
           <h1>About</h1>
           <p>
-            rbitcoin is a Bitcoin full node in Rust aimed at production server-side use: multi-peer
-            IBD, tip follow, relay, and in-process Electrum / optional Esplora for wallet clients.
+            rbitcoin is a Bitcoin full node in Rust for server-side operators: multi-peer IBD, tip
+            follow, relay, and in-process Electrum with optional Esplora for wallet clients.
           </p>
         </div>
       </div>
@@ -100,20 +101,24 @@
         <div class="container prose">
           <h2 class="mt-0">Purpose</h2>
           <p>
-            The design centers a libbitcoin-class relational archive (no UTXO set), pure-Rust
-            consensus on rust-bitcoin, and a single binary for Electrum self-hosting on Linux.
-            Smaller full archive than a Core + separate indexer stack—still full archival, not a
-            pruned lite node.
+            The design centers a libbitcoin-class relational archive (no UTXO database), pure-Rust
+            consensus on rust-bitcoin, and a single Linux binary for Electrum self-hosting. The full
+            archive is smaller than a typical Core-plus-external-indexer stack, while remaining full
+            archival—not a pruned lite node.
+          </p>
+          <p>
+            Product focus is infrastructure and wallet backends. The node is not a desktop wallet,
+            miner, or graphical explorer.
           </p>
 
           <h2>Origin</h2>
           <p>
-            The architecture had been gestating for years. The first-party implementation was written
-            with AI assistance (Grok / xAI) under the direction and prompting of
+            The architecture had been under consideration for years. First-party implementation was
+            written with AI assistance (Grok / xAI) under the direction and prompting of
             <strong>Brandon Black</strong>
             (<a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">@reardencode</a>).
-            That does not change how seriously consensus, P2P, and Electrum integrity are taken—or how
-            to report bugs. See the node
+            That does not reduce the seriousness of consensus, P2P, or Electrum integrity, or how
+            bugs should be reported. See the node
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/SECURITY.md"
               rel="noopener noreferrer"
@@ -146,39 +151,57 @@
             </li>
           </ul>
 
+          <h2 id="donate">Donate</h2>
+          <div class="donate-block">
+            <p>
+              Optional support for ongoing development via a Bitcoin silent payment address (BIP352):
+            </p>
+            <code class="sp-address" id="sp-donate"
+              >sp1qqwkt0aetchmm5gzucxych7l7kxaevetpx7npe54e236zqv73jevr5qucy5pgnut9fm7syjmlqv9ykm3qzzpfc0v3j737plzvvuy8k08a4scn62wl</code
+            >
+            <p class="footnote">
+              Use a wallet that supports silent payments. Do not send funds related to vulnerability
+              reports; use the security contact instead.
+            </p>
+            <div class="hero-actions mt-2">
+              <button type="button" class="btn btn-secondary copy-btn" data-copy="sp-donate">
+                Copy address
+              </button>
+            </div>
+          </div>
+
           <h2>This site</h2>
           <p>
-            rbitcoin.org is a static marketing site (no backend). Clone the site repository, point a
-            web server document root at <code>public/</code>, and serve—no build step. Product
-            documentation and operator runbooks stay in the node repository.
+            rbitcoin.org is a static marketing site with no backend. Clone the site repository, point
+            the web server document root at <code>public/</code>, and serve—no build step. Operator
+            documentation and the full architecture write-up remain in the node repository.
           </p>
 
           <h2>License</h2>
           <p>
-            rbitcoin (node and this site) are dual-licensed under the
+            The node and this site are dual-licensed under the
             <a href="https://github.com/reardencode/rbitcoin/blob/master/LICENSE-MIT" rel="noopener noreferrer" target="_blank"
               >MIT License</a
             >
-            or
+            or the
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/LICENSE-APACHE"
               rel="noopener noreferrer"
               target="_blank"
               >Apache License 2.0</a
-            >
-            at your option.
+            >, at your option.
           </p>
 
           <h2>Contributing</h2>
           <p>
-            Node development:
+            Node development follows
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/CONTRIBUTING.md"
               rel="noopener noreferrer"
               target="_blank"
               >CONTRIBUTING.md</a
             >
-            in the node repo (coverage gates, TDD culture, public commit hygiene). Site copy and
+            in the node repository (coverage gates, tests, and public commit hygiene). Site copy and
             design changes belong in the rbitcoin.org repository.
           </p>
 
@@ -248,6 +271,7 @@
             <ul>
               <li><a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a></li>
               <li><a href="mailto:security@reardencode.com">security@reardencode.com</a></li>
+              <li><a href="/about/#donate">Donate (silent payment)</a></li>
             </ul>
           </div>
         </div>

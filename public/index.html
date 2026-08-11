@@ -6,7 +6,7 @@
     <title>rbitcoin — Bitcoin full node in Rust</title>
     <meta
       name="description"
-      content="rbitcoin is a Bitcoin full node in Rust for server-side operators: relational archive (no UTXO set), pure-Rust consensus, in-process Electrum and optional Esplora for wallet clients."
+      content="rbitcoin is a Bitcoin full node in Rust for server-side operators: full archival store without a UTXO database, pure-Rust consensus, and in-process Electrum or Esplora for wallet clients."
     />
     <link rel="canonical" href="https://rbitcoin.org/" />
     <meta property="og:type" content="website" />
@@ -94,12 +94,12 @@
       <section class="hero hero-split">
         <div class="container">
           <div class="hero-copy">
-            <div class="status-chip">Experimental 0.x · not prime time yet</div>
+            <div class="status-chip">Experimental 0.x · early production</div>
             <h1>Bitcoin full node in Rust for server-side operators</h1>
             <p class="hero-lead">
-              Validating peer, compact relational archive, and in-process Electrum (plus optional
-              Esplora REST) in one Linux-first binary—built for wallet backends and infrastructure,
-              not a desktop GUI.
+              A validating peer with a compact relational archive and in-process Electrum (optional
+              Esplora REST) in one Linux-first binary. Built for wallet backends and infrastructure—not
+              a desktop GUI or pruned lite node.
             </p>
             <div class="hero-actions">
               <a class="btn btn-primary" href="/get-started/">Get started</a>
@@ -110,12 +110,12 @@
                 target="_blank"
                 >View on GitHub</a
               >
-              <a class="btn btn-ghost" href="/architecture/">Why it’s different</a>
+              <a class="btn btn-ghost" href="/architecture/">Architecture</a>
             </div>
             <div class="meta-row">
               <span>MIT OR Apache-2.0</span>
               <span>Linux first</span>
-              <span>Full archival · no UTXO db</span>
+              <span>Full archival · no UTXO database</span>
             </div>
           </div>
           <div class="hero-visual">
@@ -138,8 +138,9 @@
           <div class="section-head">
             <h2>Why this node is different</h2>
             <p>
-              Most full nodes center a UTXO set and block files. Most Electrum backends are external
-              indexers of another node. rbitcoin does neither.
+              Most full nodes organize around a UTXO set and block files. Most Electrum backends are
+              external indexers attached to another node. rbitcoin takes a different path: one process,
+              one archive, wallet indexes included.
             </p>
           </div>
           <div class="grid-3">
@@ -148,10 +149,11 @@
                 <rect x="4" y="6" width="28" height="24" rx="3" stroke="currentColor" stroke-width="1.5" />
                 <path d="M10 14h16M10 18h12M10 22h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
               </svg>
-              <h3>Relational archive, no UTXO set</h3>
+              <h3>Relational archive, no UTXO database</h3>
               <p>
-                Map-free Class A/B/C tables (libbitcoin-class design): packed txs, spend annotations,
-                native scripthash—txindex and Electrum index included in the archive footprint.
+                Map-free Class A/B/C tables in the libbitcoin-class tradition: packed transactions,
+                spend annotations, and native scripthash. Transaction index and Electrum index share
+                the same archive footprint—no separate multi‑GiB UTXO chainstate.
               </p>
             </article>
             <article class="card">
@@ -161,8 +163,9 @@
               </svg>
               <h3>Electrum in-process</h3>
               <p>
-                Self-contained single binary for Electrum self-hosting—and optional Esplora REST—without
-                a second process re-indexing blk files. Wallet clients, not a graphical explorer.
+                A single binary for Electrum self-hosting, with optional Esplora REST. There is no
+                second process re-indexing block files. The surface is aimed at wallet clients, not
+                a graphical block explorer.
               </p>
             </article>
             <article class="card">
@@ -177,8 +180,9 @@
               </svg>
               <h3>Pure-Rust scripts · modest RAM</h3>
               <p>
-                Consensus and script verification in Rust on rust-bitcoin (secp256k1 only as crypto
-                primitive). No multi‑GiB dbcache flush pauses on the confirm path.
+                Consensus and script verification run in Rust on rust-bitcoin, with secp256k1 as the
+                only cryptographic primitive. Confirm work stays lookup → load → scripts → write—no
+                multi‑GiB dbcache flushes on the hot path.
               </p>
             </article>
           </div>
@@ -189,30 +193,33 @@
         <div class="container">
           <div class="section-head">
             <h2>Operator-order facts</h2>
-            <p>Ballpark figures from a real mainnet archive; tip moves—treat as order of magnitude, not a warranty.</p>
+            <p>
+              Approximate figures from a real mainnet archive. The tip moves; treat these as order of
+              magnitude, not a warranty or SLA.
+            </p>
           </div>
           <div class="metrics">
             <div class="metric">
               <span class="metric-value">~886 GiB</span>
-              <span class="metric-label">Full archive with txindex + Electrum scripthash</span>
+              <span class="metric-label">Full archive with txindex and Electrum scripthash</span>
               <span class="metric-note">Fits ~1 TB-class disks</span>
             </div>
             <div class="metric">
               <span class="metric-value">&lt; ~30 h</span>
-              <span class="metric-label">IBD on a laptop-class host</span>
-              <span class="metric-note">With --milestone 0 (full scripts)</span>
+              <span class="metric-label">Initial block download on a laptop-class host</span>
+              <span class="metric-note">With --milestone 0 (full script checks)</span>
             </div>
             <div class="metric">
               <span class="metric-value">Modest RAM</span>
               <span class="metric-label">During sync—no multi‑GiB dbcache</span>
-              <span class="metric-note">Confirm is lookup → load → scripts → write</span>
+              <span class="metric-note">Confirm: lookup → load → scripts → write</span>
             </div>
           </div>
           <p class="footnote">
-            Newer transactions resolve hottest in the segmented tx.index design. Reproducible static
-            musl builds target ordinary Linux hosts.
+            Segmented transaction heads keep newer txs hottest under tip traffic. Portable static musl
+            builds target ordinary Linux hosts without a matching glibc.
             <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
-              >Full details on GitHub</a
+              >Details on GitHub</a
             >.
           </p>
         </div>
@@ -221,25 +228,28 @@
       <section class="section">
         <div class="container">
           <div class="section-head">
-            <h2>Who it’s for</h2>
-            <p>Different goals than Bitcoin Core: smaller full archive, single-binary Electrum self-host—not every Core surface.</p>
+            <h2>Who it is for</h2>
+            <p>
+              Goals differ from Bitcoin Core: a smaller full archive and a single binary for Electrum
+              self-hosting—not every Core product surface.
+            </p>
           </div>
           <div class="audience">
             <div class="card list-card for">
               <h3>Built for</h3>
               <ul>
-                <li>Wallet-backend operators (Electrum / Esplora clients)</li>
-                <li>Infrastructure that wants a validating node + index in one process</li>
-                <li>Linux servers with ~1 TB-class disk for a full archive</li>
-                <li>Engineers who prefer pure-Rust consensus transparency</li>
+                <li>Operators running Electrum or Esplora wallet backends</li>
+                <li>Infrastructure that wants validation and indexing in one process</li>
+                <li>Linux servers with roughly terabyte-class disk for a full archive</li>
+                <li>Engineers who want a transparent pure-Rust consensus path</li>
               </ul>
             </div>
             <div class="card list-card not">
-              <h3>Not a fit</h3>
+              <h3>Not a fit today</h3>
               <ul>
-                <li>Desktop wallets, mining, or GUI</li>
-                <li>Pruned / low-disk “lite” nodes</li>
-                <li>Graphical block explorers and catalogue search</li>
+                <li>Desktop wallets, mining, or a graphical UI</li>
+                <li>Pruned or low-disk “lite” deployments</li>
+                <li>Graphical block explorers and catalogue-style search</li>
               </ul>
             </div>
           </div>
@@ -252,8 +262,8 @@
             <div>
               <h2>Start on signet</h2>
               <p>
-                Prefer a signet soak before mainnet. On-disk format and APIs are unstable until 1.0.
-                Source and musl builds live on GitHub.
+                Soak on signet before any mainnet cutover. On-disk format and APIs remain unstable
+                until 1.0. Source and portable musl builds are on GitHub.
               </p>
             </div>
             <div class="hero-actions">
@@ -316,6 +326,7 @@
             <ul>
               <li><a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a></li>
               <li><a href="mailto:security@reardencode.com">security@reardencode.com</a></li>
+              <li><a href="/about/#donate">Donate (silent payment)</a></li>
             </ul>
           </div>
         </div>

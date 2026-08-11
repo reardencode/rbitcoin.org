@@ -88,10 +88,11 @@
       <div class="page-hero">
         <div class="hero-tracks" aria-hidden="true"><img src="/assets/img/tracks.jpg" alt="" width="720" height="1280" decoding="async" /></div>
         <div class="container">
+          <div class="status-chip">Experimental 0.x · store model</div>
           <h1>Architecture</h1>
           <p>
-            How data sits on disk and how lookups hit it. Normative layouts live in the node repo;
-            this page is the newcomer map.
+            How data sits on disk and how common lookups resolve. Normative layouts live in the node
+            repository; this page is the newcomer map.
           </p>
         </div>
       </div>
@@ -101,8 +102,8 @@
           <div class="section-head">
             <h2>One-screen picture</h2>
             <p>
-              No UTXO database. A relational archive of packed transactions, tip truth in Class C,
-              and thin indexes for wallet queries.
+              There is no UTXO database. History lives in a relational archive of packed
+              transactions, tip truth in Class C, and thin indexes for wallet queries.
             </p>
           </div>
           <div class="store-diagram" role="img" aria-label="rbitcoin store and lookup diagram">
@@ -179,8 +180,9 @@
             </div>
           </div>
           <p class="footnote">
-            Tables are pread/pwrite + fallocate grow (kernel page cache as L0)—not process
-            <code>mmap</code> of Class A/B/C, and not a LevelDB UTXO chainstate.
+            Tables grow with <code>pread</code>/<code>pwrite</code> and fallocate; the kernel page
+            cache is L0. Class A/B/C are not process-<code>mmap</code>’d, and there is no LevelDB UTXO
+            chainstate.
           </p>
         </div>
       </section>
@@ -189,32 +191,34 @@
         <div class="container">
           <div class="section-head">
             <h2>Class A / B / C</h2>
-            <p>Three roles, one store. Mutation style matches the job.</p>
+            <p>Three roles in one store. How each class mutates matches its job.</p>
           </div>
           <div class="grid-3">
             <article class="card">
               <h3>Class A — archive</h3>
               <p>
-                Canonical history: headers and <strong>packed full txs</strong> (body + dense idx).
-                Append bodies; publish via high-water marks and heads
-                (<strong>allocate-then-publish</strong>). Identity is dense
-                <code>create_fk</code>, with txids in a sidefile—not a fat key on every row.
+                Canonical history: headers and <strong>packed full transactions</strong> (body plus
+                dense index). Bodies append; visibility is published through high-water marks and
+                heads (<strong>allocate-then-publish</strong>). Identity is a dense
+                <code>create_fk</code>, with txids in a side file—not a fat key on every row.
               </p>
             </article>
             <article class="card">
               <h3>Class B — indexes</h3>
               <p>
                 Forever-open structures such as Electrum <strong>scripthash</strong>: thin
-                <code>create_tx_fk</code> lists (inline or 4 KiB page chains). Expand vouts, value,
-                and height at query time by joining Class A + C—not a second copy of the chain.
+                <code>create_tx_fk</code> lists (inline or 4 KiB page chains). Values, vouts, and
+                height expand at query time by joining Class A and Class C—not a second copy of the
+                chain.
               </p>
             </article>
             <article class="card">
               <h3>Class C — tip</h3>
               <p>
-                Best-chain visibility: <code>confirmed[]</code>, strong flags, tx heights, per-header
-                tx ranges. <strong>Tip advance is the commit</strong>. Spentness is annotations on
-                create outputs (plus rare multi-spender lists)—not deleting coins from a UTXO bag.
+                Best-chain visibility: <code>confirmed[]</code>, strong flags, transaction heights,
+                and per-header ranges. <strong>Tip advance is the commit.</strong> Spentness is
+                recorded as annotations on create outputs (with rare multi-spender lists)—not by
+                deleting coins from a UTXO bag.
               </p>
             </article>
           </div>
@@ -225,7 +229,7 @@
         <div class="container">
           <div class="section-head">
             <h2>How lookups work</h2>
-            <p>Common paths operators and wallet backends actually hit.</p>
+            <p>Paths operators and wallet backends hit most often.</p>
           </div>
           <div class="table-wrap">
             <table>
@@ -276,21 +280,22 @@
           </div>
           <div class="grid-2 mt-3">
             <article class="card">
-              <h3>Tip-hot txid heads</h3>
+              <h3>Tip-hot transaction heads</h3>
               <p>
-                <code>tx.head/</code> is a <strong>segmented keyless</strong> address table of dense
-                create foreign keys. Fixed 25-bit open segments with relative ids; roll at load /
-                soft span; <strong>binary fuse8</strong> only on seal. Open segments always probe;
-                sealed segments are fuse-gated. <strong>Newer transactions resolve hottest</strong>—
-                tip-local traffic wins without a multi‑GiB open hash of every point.
+                <code>tx.head/</code> is a <strong>segmented, keyless</strong> address table of dense
+                create foreign keys: fixed 25-bit open segments with relative ids, roll at load or
+                soft span, and <strong>binary fuse8</strong> only on seal. Open segments always probe;
+                sealed segments are fuse-gated. <strong>Newer transactions resolve hottest</strong>,
+                so tip-local traffic wins without a multi‑GiB open hash of every outpoint.
               </p>
             </article>
             <article class="card">
-              <h3>Map-free IO</h3>
+              <h3>Map-free I/O</h3>
               <p>
-                Class A/B/C are ordinary files: <strong>pread/pwrite</strong>, fallocate capacity
-                grow, page cache as L0. No process mmap of the archive tables. Optional bulk
-                io_uring for some denserel paths; table transport stays fd-based and page-coalesced.
+                Class A/B/C are ordinary files: <strong>pread</strong>/<strong>pwrite</strong>,
+                fallocate capacity growth, page cache as L0. The process does not
+                <code>mmap</code> the archive tables. Optional bulk io_uring covers some denserel
+                paths; table transport stays file-descriptor based and page-coalesced.
               </p>
             </article>
           </div>
@@ -300,8 +305,8 @@
       <section class="section section-tight">
         <div class="container">
           <div class="section-head">
-            <h2>vs Bitcoin Core (store)</h2>
-            <p>Different primary truth: archive + annotations, not UTXO chainstate.</p>
+            <h2>Compared with Bitcoin Core (store)</h2>
+            <p>Primary truth is the archive and annotations, not a UTXO chainstate.</p>
           </div>
           <div class="table-wrap">
             <table>
@@ -352,8 +357,8 @@
       <section class="section">
         <div class="container">
           <div class="section-head">
-            <h2>vs external Electrum indexers</h2>
-            <p>Same process as the validating node; Class A is authoritative.</p>
+            <h2>Compared with external Electrum indexers</h2>
+            <p>The validating node and the archive share one process; Class A is authoritative.</p>
           </div>
           <div class="table-wrap">
             <table>
@@ -391,9 +396,9 @@
           <div class="callout callout-info mt-3">
             <div>
               <p>
-                <strong>Full archival only.</strong> There is no pruning option—the store is built
-                around a complete transaction archive (with txindex and scripthash in the same
-                footprint class). Format is unstable until 1.0; see
+                <strong>Full archival only.</strong> There is no pruning option: the store assumes a
+                complete transaction archive, with transaction index and scripthash in the same
+                footprint class. The format is unstable until 1.0; see
                 <a
                   href="https://github.com/reardencode/rbitcoin/blob/master/SCHEMA.md"
                   rel="noopener noreferrer"
@@ -516,6 +521,7 @@
             <ul>
               <li><a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a></li>
               <li><a href="mailto:security@reardencode.com">security@reardencode.com</a></li>
+              <li><a href="/about/#donate">Donate (silent payment)</a></li>
             </ul>
           </div>
         </div>

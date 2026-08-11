@@ -6,7 +6,7 @@
     <title>Get started — rbitcoin</title>
     <meta
       name="description"
-      content="Build and run rbitcoin: portable musl static binary via Nix, signet first, milestone honesty for mainnet scripts."
+      content="Build and run rbitcoin: portable musl static binaries via Nix, signet first, and clear milestone behavior for mainnet scripts."
     />
     <link rel="canonical" href="https://rbitcoin.org/get-started/" />
     <meta property="og:type" content="website" />
@@ -88,11 +88,11 @@
       <div class="page-hero">
         <div class="hero-tracks" aria-hidden="true"><img src="/assets/img/tracks.jpg" alt="" width="720" height="1280" decoding="async" /></div>
         <div class="container">
-          <div class="status-chip">Signet first · experimental 0.x</div>
+          <div class="status-chip">Experimental 0.x · signet first</div>
           <h1>Get started</h1>
           <p>
-            Source and portable builds live on GitHub. Prefer a signet soak before any mainnet
-            cutover—format and APIs are unstable until 1.0.
+            Source and portable builds are on GitHub. Soak on signet before any mainnet cutover—the
+            on-disk format and public APIs remain unstable until 1.0.
           </p>
         </div>
       </div>
@@ -102,22 +102,22 @@
           <div class="callout callout-warn mb-2">
             <div>
               <p>
-                <strong>Not prime time yet.</strong> Core pipelines exist, but treat early mainnet as
-                high-scrutiny. Read
+                <strong>Early production.</strong> Core pipelines exist, but treat first mainnet use
+                as high-scrutiny work. Read the
                 <a
                   href="https://github.com/reardencode/rbitcoin/blob/master/docs/experimental-mainnet.md"
                   rel="noopener noreferrer"
                   target="_blank"
                   >experimental mainnet</a
                 >
-                and the
+                notes and the
                 <a
                   href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
                   rel="noopener noreferrer"
                   target="_blank"
                   >operator guide</a
                 >
-                before relying on this binary.
+                before depending on this binary for real funds or production wallets.
               </p>
             </div>
           </div>
@@ -127,9 +127,10 @@
             Clone
             <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
               >github.com/reardencode/rbitcoin</a
-            >. You need
+            >.
+            The recommended portable build uses
             <a href="https://nixos.org/download/" rel="noopener noreferrer" target="_blank">Nix</a>
-            with flakes for the recommended portable build.
+            with flakes enabled.
           </p>
           <div class="pre-wrap">
             <button type="button" class="copy-btn" data-copy="cmd-clone">Copy</button>
@@ -139,9 +140,9 @@ cd rbitcoin</code></pre>
 
           <h2>2. Portable static release (recommended)</h2>
           <p>
-            Pinned nixpkgs + Cargo.lock produce a fully static, portable <code>rbitcoin-node</code> /
-            <code>rbitcoin-cli</code> (musl) for ordinary Linux hosts—no matching glibc required on the
-            target.
+            Pinned nixpkgs and <code>Cargo.lock</code> produce fully static
+            <code>rbitcoin-node</code> and <code>rbitcoin-cli</code> binaries (musl) for ordinary
+            Linux hosts. No matching glibc is required on the target machine.
           </p>
           <div class="pre-wrap">
             <button type="button" class="copy-btn" data-copy="cmd-build">Copy</button>
@@ -149,9 +150,9 @@ cd rbitcoin</code></pre>
 install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/</code></pre>
           </div>
           <p>
-            Do <strong>not</strong> use <code>cargo build --release</code> inside <code>nix-shell</code>
-            as the operator binary—that links against the Nix store glibc and fails outside the store.
-            Details:
+            Do <strong>not</strong> ship <code>cargo build --release</code> from inside
+            <code>nix-shell</code> as the operator binary: that links against the Nix store glibc and
+            fails outside the store. See
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/docs/reproducible-builds.md"
               rel="noopener noreferrer"
@@ -161,6 +162,10 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
           </p>
 
           <h2>3. Signet lab (time-boxed)</h2>
+          <p>
+            A short signet run is a good first check that the binary starts, connects, and advances
+            tip under controlled conditions.
+          </p>
           <div class="pre-wrap">
             <button type="button" class="copy-btn" data-copy="cmd-signet">Copy</button>
             <pre><code id="cmd-signet">./target/release/rbitcoin-node --datadir ./datadir-signet --network signet \
@@ -168,7 +173,8 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
           </div>
           <p>
             Custom Signets are supported with <code>--signetchallenge</code> and
-            <code>--signetblocktime</code>. Electrum and Esplora listen flags are documented in
+            <code>--signetblocktime</code>. Electrum and Esplora listen addresses, logging, and
+            advanced knobs are documented in
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
               rel="noopener noreferrer"
@@ -181,28 +187,37 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
           <div class="callout callout-info">
             <div>
               <p>
-                Default mainnet <code>--milestone</code> (assumevalid-style) skips
-                <strong>script/sig</strong> checks at or below the configured height. Prevouts,
-                double-spend, maturity, and fees still run.
+                Default mainnet <code>--milestone</code> is assumevalid-style: it skips
+                <strong>script and signature</strong> checks at or below the configured height.
+                Prevouts, double-spend checks, maturity, and fees still run.
               </p>
               <p>
-                Use <code>--milestone 0</code> for full historical script validation. The author
-                prefers validating scripts; the compact storage architecture keeps scripts-on
-                competitive on laptop-class hosts. See the node README for the current default
-                height.
+                Use <code>--milestone 0</code> for full historical script validation. The compact
+                storage design keeps script-on sync competitive on laptop-class hosts. See the node
+                README for the current default height.
               </p>
             </div>
           </div>
 
           <h2>Requirements (order of magnitude)</h2>
           <ul>
-            <li><strong>Platform:</strong> Linux first (io_uring + map-free fd store; other OSes unproven)</li>
-            <li><strong>Disk:</strong> ~886 GiB full archive with txindex + scripthash (~1 TB-class)</li>
-            <li><strong>Mode:</strong> full archival only—no pruning option</li>
-            <li><strong>Build:</strong> Nix + flakes for musl static (preferred)</li>
+            <li>
+              <strong>Platform:</strong> Linux first (io_uring and map-free file descriptors). Other
+              operating systems are unproven.
+            </li>
+            <li>
+              <strong>Disk:</strong> roughly 886 GiB for a full archive with transaction index and
+              scripthash (terabyte-class media).
+            </li>
+            <li><strong>Mode:</strong> full archival only—there is no pruning option.</li>
+            <li><strong>Build:</strong> Nix with flakes for the musl static release (preferred).</li>
+            <li>
+              <strong>P2P:</strong> BIP324 version 2 only; plan reverse-proxy TLS for Electrum and
+              Esplora if you expose them beyond localhost.
+            </li>
           </ul>
 
-          <h2>Next reading</h2>
+          <h2>Further reading</h2>
           <ul>
             <li>
               <a
@@ -303,6 +318,7 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
             <ul>
               <li><a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a></li>
               <li><a href="mailto:security@reardencode.com">security@reardencode.com</a></li>
+              <li><a href="/about/#donate">Donate (silent payment)</a></li>
             </ul>
           </div>
         </div>

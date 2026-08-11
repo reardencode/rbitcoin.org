@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Get started — rbitcoin</title>
+    <meta
+      name="description"
+      content="Build and run rbitcoin: portable musl static binary via Nix, signet first, milestone honesty for mainnet scripts."
+    />
+    <link rel="canonical" href="https://rbitcoin.org/get-started/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rbitcoin.org/get-started/" />
+    <meta property="og:title" content="Get started — rbitcoin" />
+    <meta
+      property="og:description"
+      content="Build and run rbitcoin: portable musl static binary via Nix, signet first."
+    />
+    <meta property="og:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="stylesheet" href="/assets/css/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/">
+          <img class="brand-mark" src="/assets/img/logo.svg" width="32" height="32" alt="" />
+          <span class="brand-name">rbitcoin</span>
+        </a>
+        <button
+          class="nav-toggle"
+          type="button"
+          data-nav-toggle
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Open menu"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+          </svg>
+        </button>
+        <nav class="nav" id="site-nav" data-nav aria-label="Primary">
+          <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/get-started/" aria-current="page">Get started</a></li>
+            <li><a href="/architecture/">Architecture</a></li>
+            <li><a href="/security/">Security</a></li>
+            <li><a href="/about/">About</a></li>
+          </ul>
+          <div class="nav-social">
+            <a
+              class="icon-link"
+              href="https://github.com/reardencode/rbitcoin"
+              rel="noopener noreferrer"
+              target="_blank"
+              aria-label="GitHub"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"
+                />
+              </svg>
+            </a>
+            <a
+              class="icon-link"
+              href="https://x.com/reardencode"
+              rel="noopener noreferrer"
+              target="_blank"
+              aria-label="X (Twitter)"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"
+                />
+              </svg>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="page-hero">
+        <div class="container">
+          <div class="status-chip">Signet first · experimental 0.x</div>
+          <h1>Get started</h1>
+          <p>
+            Source and portable builds live on GitHub. Prefer a signet soak before any mainnet
+            cutover—format and APIs are unstable until 1.0.
+          </p>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="container prose">
+          <div class="callout callout-warn mb-2">
+            <div>
+              <p>
+                <strong>Not prime time yet.</strong> Core pipelines exist, but treat early mainnet as
+                high-scrutiny. Read
+                <a
+                  href="https://github.com/reardencode/rbitcoin/blob/master/docs/experimental-mainnet.md"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >experimental mainnet</a
+                >
+                and the
+                <a
+                  href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >operator guide</a
+                >
+                before relying on this binary.
+              </p>
+            </div>
+          </div>
+
+          <h2>1. Get the source</h2>
+          <p>
+            Clone
+            <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
+              >github.com/reardencode/rbitcoin</a
+            >. You need
+            <a href="https://nixos.org/download/" rel="noopener noreferrer" target="_blank">Nix</a>
+            with flakes for the recommended portable build.
+          </p>
+          <div class="pre-wrap">
+            <button type="button" class="copy-btn" data-copy="cmd-clone">Copy</button>
+            <pre><code id="cmd-clone">git clone https://github.com/reardencode/rbitcoin.git
+cd rbitcoin</code></pre>
+          </div>
+
+          <h2>2. Portable static release (recommended)</h2>
+          <p>
+            Pinned nixpkgs + Cargo.lock produce a fully static, portable <code>rbitcoin-node</code> /
+            <code>rbitcoin-cli</code> (musl) for ordinary Linux hosts—no matching glibc required on the
+            target.
+          </p>
+          <div class="pre-wrap">
+            <button type="button" class="copy-btn" data-copy="cmd-build">Copy</button>
+            <pre><code id="cmd-build">nix build .#rbitcoin-musl
+install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/</code></pre>
+          </div>
+          <p>
+            Do <strong>not</strong> use <code>cargo build --release</code> inside <code>nix-shell</code>
+            as the operator binary—that links against the Nix store glibc and fails outside the store.
+            Details:
+            <a
+              href="https://github.com/reardencode/rbitcoin/blob/master/docs/reproducible-builds.md"
+              rel="noopener noreferrer"
+              target="_blank"
+              >reproducible builds</a
+            >.
+          </p>
+
+          <h2>3. Signet lab (time-boxed)</h2>
+          <div class="pre-wrap">
+            <button type="button" class="copy-btn" data-copy="cmd-signet">Copy</button>
+            <pre><code id="cmd-signet">./target/release/rbitcoin-node --datadir ./datadir-signet --network signet \
+  --listen 127.0.0.1:38333 --milestone 200000 --max-run-secs 120</code></pre>
+          </div>
+          <p>
+            Custom Signets are supported with <code>--signetchallenge</code> and
+            <code>--signetblocktime</code>. Electrum and Esplora listen flags are documented in
+            <a
+              href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
+              rel="noopener noreferrer"
+              target="_blank"
+              >OPERATOR.md</a
+            >.
+          </p>
+
+          <h2>Milestone honesty</h2>
+          <div class="callout callout-info">
+            <div>
+              <p>
+                Default mainnet <code>--milestone</code> (assumevalid-style) skips
+                <strong>script/sig</strong> checks at or below the configured height. Prevouts,
+                double-spend, maturity, and fees still run.
+              </p>
+              <p>
+                Use <code>--milestone 0</code> for full historical script validation. The author
+                prefers validating scripts; the compact storage architecture keeps scripts-on
+                competitive on laptop-class hosts. See the node README for the current default
+                height.
+              </p>
+            </div>
+          </div>
+
+          <h2>Requirements (order of magnitude)</h2>
+          <ul>
+            <li><strong>Platform:</strong> Linux first (io_uring + map-free fd store; other OSes unproven)</li>
+            <li><strong>Disk:</strong> ~886 GiB full archive with txindex + scripthash (~1 TB-class)</li>
+            <li><strong>Mode:</strong> full archival only—no pruning option</li>
+            <li><strong>Build:</strong> Nix + flakes for musl static (preferred)</li>
+          </ul>
+
+          <h2>Next reading</h2>
+          <ul>
+            <li>
+              <a
+                href="https://github.com/reardencode/rbitcoin/blob/master/README.md"
+                rel="noopener noreferrer"
+                target="_blank"
+                >Node README</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
+                rel="noopener noreferrer"
+                target="_blank"
+                >OPERATOR.md</a
+              >
+              — CLI, logging, env knobs
+            </li>
+            <li>
+              <a
+                href="https://github.com/reardencode/rbitcoin/blob/master/docs/experimental-mainnet.md"
+                rel="noopener noreferrer"
+                target="_blank"
+                >Experimental mainnet</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://github.com/reardencode/rbitcoin/blob/master/SECURITY.md"
+                rel="noopener noreferrer"
+                target="_blank"
+                >SECURITY.md</a
+              >
+              · site
+              <a href="/security/">security page</a>
+            </li>
+            <li>
+              <a href="/architecture/">Architecture overview</a> on this site
+            </li>
+          </ul>
+
+          <div class="hero-actions mt-3">
+            <a
+              class="btn btn-primary"
+              href="https://github.com/reardencode/rbitcoin"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Open GitHub</a
+            >
+            <a class="btn btn-secondary" href="/architecture/">Architecture</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a class="brand" href="/">
+              <img class="brand-mark" src="/assets/img/logo.svg" width="32" height="32" alt="" />
+              <span class="brand-name">rbitcoin</span>
+            </a>
+            <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>
+          </div>
+          <div class="footer-col">
+            <h3>Site</h3>
+            <ul>
+              <li><a href="/get-started/">Get started</a></li>
+              <li><a href="/architecture/">Architecture</a></li>
+              <li><a href="/security/">Security</a></li>
+              <li><a href="/about/">About</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Project</h3>
+            <ul>
+              <li>
+                <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
+                  >GitHub</a
+                >
+              </li>
+              <li>
+                <a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">X @reardencode</a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >Operator guide</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Contact</h3>
+            <ul>
+              <li><a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a></li>
+              <li><a href="mailto:security@reardencode.com">security@reardencode.com</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© rbitcoin contributors · MIT OR Apache-2.0</span>
+          <span>Linux first · full archival</span>
+        </div>
+      </div>
+    </footer>
+    <script src="/assets/js/main.js" defer></script>
+  </body>
+</html>

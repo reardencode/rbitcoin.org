@@ -1,0 +1,17 @@
+{
+  "name": "rbitcoin",
+  "short_name": "rbitcoin",
+  "description": "Bitcoin full node in Rust for server-side operators",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#0c0e10",
+  "theme_color": "#0c0e10",
+  "icons": [
+    {
+      "src": "/assets/img/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

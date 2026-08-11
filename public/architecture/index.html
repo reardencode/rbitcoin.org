@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Architecture — rbitcoin</title>
+    <meta
+      name="description"
+      content="How rbitcoin differs: relational archive without a UTXO set, pure-Rust consensus, in-process Electrum, Linux map-free IO."
+    />
+    <link rel="canonical" href="https://rbitcoin.org/architecture/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rbitcoin.org/architecture/" />
+    <meta property="og:title" content="Architecture — rbitcoin" />
+    <meta
+      property="og:description"
+      content="Relational archive, pure-Rust scripts, Electrum in-process—how rbitcoin differs from Core and external indexers."
+    />
+    <meta property="og:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="stylesheet" href="/assets/css/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/">
+          <img class="brand-mark" src="/assets/img/logo.svg" width="32" height="32" alt="" />
+          <span class="brand-name">rbitcoin</span>
+        </a>
+        <button
+          class="nav-toggle"
+          type="button"
+          data-nav-toggle
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Open menu"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+          </svg>
+        </button>
+        <nav class="nav" id="site-nav" data-nav aria-label="Primary">
+          <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/get-started/">Get started</a></li>
+            <li><a href="/architecture/" aria-current="page">Architecture</a></li>
+            <li><a href="/security/">Security</a></li>
+            <li><a href="/about/">About</a></li>
+          </ul>
+          <div class="nav-social">
+            <a
+              class="icon-link"
+              href="https://github.com/reardencode/rbitcoin"
+              rel="noopener noreferrer"
+              target="_blank"
+              aria-label="GitHub"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"
+                />
+              </svg>
+            </a>
+            <a
+              class="icon-link"
+              href="https://x.com/reardencode"
+              rel="noopener noreferrer"
+              target="_blank"
+              aria-label="X (Twitter)"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"
+                />
+              </svg>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="page-hero">
+        <div class="container">
+          <h1>Architecture</h1>
+          <p>
+            Design uniqueness in plain language. Normative layouts live in the node repo; this page
+            is the newcomer map.
+          </p>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>One-screen picture</h2>
+            <p>Peers feed IBD densify; confirm is lookup → load → scripts → write with a sole Class A appender.</p>
+          </div>
+          <div class="pipeline" role="img" aria-label="rbitcoin pipeline diagram">
+  Peers (BIP324 v2)
+        │
+        ▼
+  IBD densify getdata ──► in-RAM body queue
+        │                              │
+        │                              ▼
+        │                    Confirm: lookup → load → scripts → write
+        │                    (sole Class A appender + Class C tip)
+        │                              │
+        └──── Mempool / tip follow ────┘
+                                       │
+                 Reconstruct wire ◄────┤
+                 Electrum joins   ◄────┘  Class A + SH + mempool
+          </div>
+          <p class="footnote">
+            Storage center is a transaction-relational archive on map-free tables (pread/pwrite +
+            fallocate; no process mmap of Class A/B/C)—not a UTXO set + LevelDB chainstate.
+          </p>
+        </div>
+      </section>
+
+      <section class="section section-tight">
+        <div class="container">
+          <div class="section-head">
+            <h2>vs Bitcoin Core</h2>
+            <p>Different goals: smaller full archive, Electrum in-process—not every Core product surface.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Concern</th>
+                  <th>rbitcoin</th>
+                  <th>Bitcoin Core (typical)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Primary store</td>
+                  <td>Map-free Class A/B/C tables; page cache as L0</td>
+                  <td>blocks/blk*.dat + undo + LevelDB chainstate (UTXO)</td>
+                </tr>
+                <tr>
+                  <td>Historical blocks</td>
+                  <td>Reconstruct from packed tx archive; tip wire ring</td>
+                  <td>Serve raw blk / undo</td>
+                </tr>
+                <tr>
+                  <td>Spentness</td>
+                  <td>Annotations on creates; no mutable UTXO set as truth</td>
+                  <td>Coins view / UTXO mutations</td>
+                </tr>
+                <tr>
+                  <td>Script verification</td>
+                  <td>Pure Rust in-tree (secp256k1 via rust-bitcoin)</td>
+                  <td>libbitcoinconsensus / C++ interpreter</td>
+                </tr>
+                <tr>
+                  <td>Electrum</td>
+                  <td>In-process index on confirm</td>
+                  <td>External (Fulcrum, ElectrumX, …)</td>
+                </tr>
+                <tr>
+                  <td>Transport</td>
+                  <td>BIP324 v2 only</td>
+                  <td>v1 + v2</td>
+                </tr>
+                <tr>
+                  <td>Scope</td>
+                  <td>Full node + Electrum backend; no wallet/mining/GUI/prune</td>
+                  <td>Full Core product surface</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>vs external Electrum indexers</h2>
+            <p>Same process as the validating node; Class A is authoritative.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Concern</th>
+                  <th>rbitcoin</th>
+                  <th>Typical external indexer</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Data source</td>
+                  <td>Validating node + archive in one process</td>
+                  <td>Reads Core RPC or blk files after the fact</td>
+                </tr>
+                <tr>
+                  <td>Scripthash index</td>
+                  <td>Written on confirm (bulk at tip)</td>
+                  <td>Separate DB built by scanning history</td>
+                </tr>
+                <tr>
+                  <td>Unconfirmed</td>
+                  <td>Mempool attached in-process</td>
+                  <td>Depends on Core mempool RPC</td>
+                </tr>
+                <tr>
+                  <td>Consensus</td>
+                  <td>This binary validates blocks/scripts</td>
+                  <td>Trusts the node it indexes</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-tight">
+        <div class="container">
+          <div class="grid-2">
+            <article class="card">
+              <h3>Class A / B / C (intuition)</h3>
+              <p>
+                <strong>A</strong> — canonical archive: headers, packed txs (append + HWM publish).
+                <strong>B</strong> — forever-open indexes (e.g. Electrum scripthash).
+                <strong>C</strong> — tip / confirmation; tip advance is the commit.
+              </p>
+              <p class="mt-2 mb-0">
+                Spents are annotations—not rewriting old outputs as a UTXO bag. Segmented
+                <code>tx.head</code> makes newer txs resolve hottest.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Concurrent IBD / IO</h3>
+              <p>
+                Fixed writer roles (one Class A appender), allocate-then-publish HWMs, confirm split
+                so disk work, script verify, and publish can overlap. Bulk io_uring where available;
+                pread/pwrite fallback. Linux-shaped IO.
+              </p>
+              <p class="mt-2 mb-0">
+                No multi‑GiB dbcache flush pauses: confirm is lookup → load → scripts → write.
+              </p>
+            </article>
+          </div>
+          <div class="callout callout-info mt-3">
+            <div>
+              <p>
+                <strong>Full archival only.</strong> There is no pruning option. An aspirational
+                goal is ~1 day IBD on a modern laptop; that may require substantial RAM with this
+                architecture and is a goal, not a shipped SLA. Truly “low cost” full nodes still face
+                the random-access working set of possibly-spendable outputs—proof accumulators
+                (e.g. utreexo-class) are a different design path.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container prose">
+          <h2 class="mt-0">Deep docs (node repo)</h2>
+          <ul>
+            <li>
+              <a
+                href="https://github.com/reardencode/rbitcoin/blob/master/docs/architecture.md"
+                rel="noopener noreferrer"
+                target="_blank"
+                >docs/architecture.md</a
+              >
+              — full narrative
+            </li>
+            <li>
+              <a
+                href="https://github.com/reardencode/rbitcoin/blob/master/SCHEMA.md"
+                rel="noopener noreferrer"
+                target="_blank"
+                >SCHEMA.md</a
+              >
+              — on-disk tables
+            </li>
+            <li>
+              <a
+                href="https://github.com/reardencode/rbitcoin/blob/master/docs/concurrency.md"
+                rel="noopener noreferrer"
+                target="_blank"
+                >docs/concurrency.md</a
+              >
+              — writer roles / lock-free publish
+            </li>
+            <li>
+              <a
+                href="https://github.com/reardencode/rbitcoin/blob/master/docs/io-modality.md"
+                rel="noopener noreferrer"
+                target="_blank"
+                >docs/io-modality.md</a
+              >
+              — uring / pread
+            </li>
+            <li>
+              <a
+                href="https://github.com/reardencode/rbitcoin/blob/master/COMPAT.md"
+                rel="noopener noreferrer"
+                target="_blank"
+                >COMPAT.md</a
+              >
+              — intentional differences vs Core / Electrum
+            </li>
+          </ul>
+          <div class="hero-actions mt-3">
+            <a class="btn btn-primary" href="/get-started/">Get started</a>
+            <a
+              class="btn btn-secondary"
+              href="https://github.com/reardencode/rbitcoin"
+              rel="noopener noreferrer"
+              target="_blank"
+              >GitHub</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a class="brand" href="/">
+              <img class="brand-mark" src="/assets/img/logo.svg" width="32" height="32" alt="" />
+              <span class="brand-name">rbitcoin</span>
+            </a>
+            <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>
+          </div>
+          <div class="footer-col">
+            <h3>Site</h3>
+            <ul>
+              <li><a href="/get-started/">Get started</a></li>
+              <li><a href="/architecture/">Architecture</a></li>
+              <li><a href="/security/">Security</a></li>
+              <li><a href="/about/">About</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Project</h3>
+            <ul>
+              <li>
+                <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
+                  >GitHub</a
+                >
+              </li>
+              <li>
+                <a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">X @reardencode</a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >Operator guide</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Contact</h3>
+            <ul>
+              <li><a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a></li>
+              <li><a href="mailto:security@reardencode.com">security@reardencode.com</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© rbitcoin contributors · MIT OR Apache-2.0</span>
+          <span>Linux first · full archival</span>
+        </div>
+      </div>
+    </footer>
+    <script src="/assets/js/main.js" defer></script>
+  </body>
+</html>

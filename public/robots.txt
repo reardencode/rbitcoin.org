@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rbitcoin.org/sitemap.xml

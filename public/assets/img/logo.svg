@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none" role="img" aria-label="rbitcoin">
+  <defs>
+    <linearGradient id="steel" x1="4" y1="2" x2="36" y2="38" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d4d8de"/>
+      <stop offset="0.45" stop-color="#8b939e"/>
+      <stop offset="1" stop-color="#4a515c"/>
+    </linearGradient>
+    <linearGradient id="copper" x1="10" y1="28" x2="32" y2="10" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#e8a65a"/>
+      <stop offset="1" stop-color="#c4783a"/>
+    </linearGradient>
+  </defs>
+  <!-- outer plate -->
+  <rect x="2.5" y="2.5" width="35" height="35" rx="7" stroke="url(#steel)" stroke-width="1.5" fill="#12161c"/>
+  <!-- inner bevel -->
+  <rect x="6" y="6" width="28" height="28" rx="4.5" stroke="rgba(196,120,58,0.35)" stroke-width="1" fill="#0c0e10"/>
+  <!-- monogram: stylized r + bar -->
+  <path d="M13.2 28V12.2h7.1c3.55 0 5.85 1.85 5.85 4.7 0 2.15-1.15 3.65-3.05 4.3L27.2 28h-3.35l-3.85-6.35h-3.5V28H13.2Zm3.3-9.1h3.55c1.85 0 2.95-.95 2.95-2.35s-1.1-2.3-2.95-2.3H16.5v4.65Z" fill="url(#copper)"/>
+  <!-- archive lattice ticks -->
+  <path d="M29.5 12.5h2M29.5 15.5h2M29.5 18.5h2" stroke="#8b939e" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+</svg>

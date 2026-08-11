@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>rbitcoin — Bitcoin full node in Rust</title>
+    <meta
+      name="description"
+      content="rbitcoin is a Bitcoin full node in Rust for server-side operators: relational archive (no UTXO set), pure-Rust consensus, in-process Electrum and optional Esplora for wallet clients."
+    />
+    <link rel="canonical" href="https://rbitcoin.org/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rbitcoin.org/" />
+    <meta property="og:title" content="rbitcoin — Bitcoin full node in Rust" />
+    <meta
+      property="og:description"
+      content="Server-side Bitcoin full node: map-free archive, pure-Rust scripts, Electrum in-process. Experimental 0.x."
+    />
+    <meta property="og:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="rbitcoin — Bitcoin full node in Rust" />
+    <meta
+      name="twitter:description"
+      content="Server-side Bitcoin full node: map-free archive, pure-Rust scripts, Electrum in-process."
+    />
+    <meta name="twitter:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
+    <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="stylesheet" href="/assets/css/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/">
+          <img class="brand-mark" src="/assets/img/logo.svg" width="32" height="32" alt="" />
+          <span class="brand-name">rbitcoin</span>
+        </a>
+        <button
+          class="nav-toggle"
+          type="button"
+          data-nav-toggle
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Open menu"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+          </svg>
+        </button>
+        <nav class="nav" id="site-nav" data-nav aria-label="Primary">
+          <ul class="nav-links">
+            <li><a href="/" aria-current="page">Home</a></li>
+            <li><a href="/get-started/">Get started</a></li>
+            <li><a href="/architecture/">Architecture</a></li>
+            <li><a href="/security/">Security</a></li>
+            <li><a href="/about/">About</a></li>
+          </ul>
+          <div class="nav-social">
+            <a
+              class="icon-link"
+              href="https://github.com/reardencode/rbitcoin"
+              rel="noopener noreferrer"
+              target="_blank"
+              aria-label="GitHub"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"
+                />
+              </svg>
+            </a>
+            <a
+              class="icon-link"
+              href="https://x.com/reardencode"
+              rel="noopener noreferrer"
+              target="_blank"
+              aria-label="X (Twitter)"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"
+                />
+              </svg>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="container">
+          <div class="status-chip">Experimental 0.x · not prime time yet</div>
+          <h1>Bitcoin full node in Rust for server-side operators</h1>
+          <p class="hero-lead">
+            Validating peer, compact relational archive, and in-process Electrum (plus optional
+            Esplora REST) in one Linux-first binary—built for wallet backends and infrastructure,
+            not a desktop GUI.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="/get-started/">Get started</a>
+            <a
+              class="btn btn-secondary"
+              href="https://github.com/reardencode/rbitcoin"
+              rel="noopener noreferrer"
+              target="_blank"
+              >View on GitHub</a
+            >
+            <a class="btn btn-ghost" href="/architecture/">Why it’s different</a>
+          </div>
+          <div class="meta-row">
+            <span>MIT OR Apache-2.0</span>
+            <span>Linux first</span>
+            <span>Full archival · no prune</span>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider" />
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>Why this node is different</h2>
+            <p>
+              Most full nodes center a UTXO set and block files. Most Electrum backends are external
+              indexers of another node. rbitcoin does neither.
+            </p>
+          </div>
+          <div class="grid-3">
+            <article class="card">
+              <svg class="card-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <rect x="4" y="6" width="28" height="24" rx="3" stroke="currentColor" stroke-width="1.5" />
+                <path d="M10 14h16M10 18h12M10 22h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              <h3>Relational archive, no UTXO set</h3>
+              <p>
+                Map-free Class A/B/C tables (libbitcoin-class design): packed txs, spend annotations,
+                native scripthash—txindex and Electrum index included in the archive footprint.
+              </p>
+            </article>
+            <article class="card">
+              <svg class="card-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <circle cx="18" cy="18" r="12" stroke="currentColor" stroke-width="1.5" />
+                <path d="M12 18h12M18 12v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+              </svg>
+              <h3>Electrum in-process</h3>
+              <p>
+                Self-contained single binary for Electrum self-hosting—and optional Esplora REST—without
+                a second process re-indexing blk files. Wallet clients, not a graphical explorer.
+              </p>
+            </article>
+            <article class="card">
+              <svg class="card-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <path
+                  d="M8 24V12l10-6 10 6v12l-10 6-10-6z"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linejoin="round"
+                />
+                <path d="M18 18v12M8 12l10 6 10-6" stroke="currentColor" stroke-width="1.5" />
+              </svg>
+              <h3>Pure-Rust scripts · modest RAM</h3>
+              <p>
+                Consensus and script verification in Rust on rust-bitcoin (secp256k1 only as crypto
+                primitive). No multi‑GiB dbcache flush pauses on the confirm path.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-tight">
+        <div class="container">
+          <div class="section-head">
+            <h2>Operator-order facts</h2>
+            <p>Ballpark figures from a real mainnet archive; tip moves—treat as order of magnitude, not a warranty.</p>
+          </div>
+          <div class="metrics">
+            <div class="metric">
+              <span class="metric-value">~886 GiB</span>
+              <span class="metric-label">Full archive with txindex + Electrum scripthash</span>
+              <span class="metric-note">Fits ~1 TB-class disks</span>
+            </div>
+            <div class="metric">
+              <span class="metric-value">&lt; ~30 h</span>
+              <span class="metric-label">IBD on a laptop-class host</span>
+              <span class="metric-note">With --milestone 0 (full scripts)</span>
+            </div>
+            <div class="metric">
+              <span class="metric-value">Modest RAM</span>
+              <span class="metric-label">During sync—no multi‑GiB dbcache</span>
+              <span class="metric-note">Confirm is lookup → load → scripts → write</span>
+            </div>
+          </div>
+          <p class="footnote">
+            Newer transactions resolve hottest in the segmented tx.index design. Reproducible static
+            musl builds target ordinary Linux hosts.
+            <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
+              >Full details on GitHub</a
+            >.
+          </p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>Who it’s for</h2>
+            <p>Different goals than Bitcoin Core: smaller full archive, single-binary Electrum self-host—not every Core surface.</p>
+          </div>
+          <div class="audience">
+            <div class="card list-card for">
+              <h3>Built for</h3>
+              <ul>
+                <li>Wallet-backend operators (Electrum / Esplora clients)</li>
+                <li>Infrastructure that wants a validating node + index in one process</li>
+                <li>Linux servers with ~1 TB-class disk for a full archive</li>
+                <li>Engineers who prefer pure-Rust consensus transparency</li>
+              </ul>
+            </div>
+            <div class="card list-card not">
+              <h3>Not a fit</h3>
+              <ul>
+                <li>Desktop wallets, mining, or GUI</li>
+                <li>Pruned / low-disk “lite” nodes</li>
+                <li>Graphical block explorers and catalogue search</li>
+                <li>Drop-in full Core JSON-RPC replacement</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-tight">
+        <div class="container">
+          <div class="cta-band">
+            <div>
+              <h2>Start on signet</h2>
+              <p>
+                Prefer a signet soak before mainnet. On-disk format and APIs are unstable until 1.0.
+                Source and musl builds live on GitHub.
+              </p>
+            </div>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="/get-started/">Get started</a>
+              <a
+                class="btn btn-secondary"
+                href="https://x.com/reardencode"
+                rel="noopener noreferrer"
+                target="_blank"
+                >@reardencode on X</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a class="brand" href="/">
+              <img class="brand-mark" src="/assets/img/logo.svg" width="32" height="32" alt="" />
+              <span class="brand-name">rbitcoin</span>
+            </a>
+            <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>
+          </div>
+          <div class="footer-col">
+            <h3>Site</h3>
+            <ul>
+              <li><a href="/get-started/">Get started</a></li>
+              <li><a href="/architecture/">Architecture</a></li>
+              <li><a href="/security/">Security</a></li>
+              <li><a href="/about/">About</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Project</h3>
+            <ul>
+              <li>
+                <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
+                  >GitHub</a
+                >
+              </li>
+              <li>
+                <a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">X @reardencode</a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >Operator guide</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Contact</h3>
+            <ul>
+              <li><a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a></li>
+              <li><a href="mailto:security@reardencode.com">security@reardencode.com</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© rbitcoin contributors · MIT OR Apache-2.0</span>
+          <span>Linux first · full archival</span>
+        </div>
+      </div>
+    </footer>
+    <script src="/assets/js/main.js" defer></script>
+  </body>
+</html>

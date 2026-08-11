@@ -1,0 +1,76 @@
+name: ci
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  links:
+    name: internal-links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check internal hrefs under public/
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd public
+          fail=0
+          # Collect local paths from href="/..." and src="/..." (ignore mailto, http, #)
+          while IFS= read -r ref; do
+            path="${ref%%#*}"
+            path="${path%%\?*}"
+            [ -z "$path" ] && continue
+            case "$path" in
+              /*) ;;
+              *) continue ;;
+            esac
+            # directory URLs → index.html
+            if [ -d ".$path" ]; then
+              if [ -f ".$path/index.html" ] || [ -f ".$path" ]; then
+                continue
+              fi
+            fi
+            if [ -f ".$path" ]; then
+              continue
+            fi
+            # try as file without trailing slash
+            if [ "${path%/}" != "$path" ] && [ -f ".${path}index.html" ]; then
+              continue
+            fi
+            echo "Missing: $ref"
+            fail=1
+          done < <(grep -RhoE '(href|src)="(/[^"]*)"' . --include='*.html' | sed -E 's/^(href|src)="//;s/"$//' | sort -u)
+          exit "$fail"
+
+  structure:
+    name: structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Required pages and assets exist
+        run: |
+          set -euo pipefail
+          for f in \
+            public/index.html \
+            public/get-started/index.html \
+            public/architecture/index.html \
+            public/security/index.html \
+            public/about/index.html \
+            public/assets/css/main.css \
+            public/assets/js/main.js \
+            public/assets/img/logo.svg \
+            public/assets/img/favicon.svg \
+            public/assets/img/og-image.jpg \
+            public/robots.txt \
+            public/sitemap.xml \
+            README.md \
+            SECURITY.md \
+            LICENSE-MIT \
+            LICENSE-APACHE
+          do
+            test -f "$f" || { echo "missing $f"; exit 1; }
+          done
+          echo "structure ok"

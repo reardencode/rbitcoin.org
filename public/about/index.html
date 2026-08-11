@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>About — rbitcoin</title>
+    <meta
+      name="description"
+      content="About rbitcoin: Bitcoin full node in Rust by Brandon Black (@reardencode), AI-assisted implementation, MIT OR Apache-2.0."
+    />
+    <link rel="canonical" href="https://rbitcoin.org/about/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rbitcoin.org/about/" />
+    <meta property="og:title" content="About — rbitcoin" />
+    <meta
+      property="og:description"
+      content="Bitcoin full node in Rust under Brandon Black (@reardencode). Contact and license."
+    />
+    <meta property="og:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="stylesheet" href="/assets/css/main.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/">
+          <img class="brand-mark" src="/assets/img/logo.svg" width="32" height="32" alt="" />
+          <span class="brand-name">rbitcoin</span>
+        </a>
+        <button
+          class="nav-toggle"
+          type="button"
+          data-nav-toggle
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Open menu"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+          </svg>
+        </button>
+        <nav class="nav" id="site-nav" data-nav aria-label="Primary">
+          <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/get-started/">Get started</a></li>
+            <li><a href="/architecture/">Architecture</a></li>
+            <li><a href="/security/">Security</a></li>
+            <li><a href="/about/" aria-current="page">About</a></li>
+          </ul>
+          <div class="nav-social">
+            <a
+              class="icon-link"
+              href="https://github.com/reardencode/rbitcoin"
+              rel="noopener noreferrer"
+              target="_blank"
+              aria-label="GitHub"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"
+                />
+              </svg>
+            </a>
+            <a
+              class="icon-link"
+              href="https://x.com/reardencode"
+              rel="noopener noreferrer"
+              target="_blank"
+              aria-label="X (Twitter)"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"
+                />
+              </svg>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <div class="page-hero">
+        <div class="container">
+          <h1>About</h1>
+          <p>
+            rbitcoin is a Bitcoin full node in Rust aimed at production server-side use: multi-peer
+            IBD, tip follow, relay, and in-process Electrum / optional Esplora for wallet clients.
+          </p>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="container prose">
+          <h2 class="mt-0">Purpose</h2>
+          <p>
+            The design centers a libbitcoin-class relational archive (no UTXO set), pure-Rust
+            consensus on rust-bitcoin, and a single binary for Electrum self-hosting on Linux.
+            Smaller full archive than a Core + separate indexer stack—still full archival, not a
+            pruned lite node.
+          </p>
+
+          <h2>Origin</h2>
+          <p>
+            The architecture had been gestating for years. The first-party implementation was written
+            with AI assistance (Grok / xAI) under the direction and prompting of
+            <strong>Brandon Black</strong>
+            (<a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">@reardencode</a>).
+            That does not change how seriously consensus, P2P, and Electrum integrity are taken—or how
+            to report bugs. See the node
+            <a
+              href="https://github.com/reardencode/rbitcoin/blob/master/SECURITY.md"
+              rel="noopener noreferrer"
+              target="_blank"
+              >SECURITY.md</a
+            >
+            for authorship and review expectations.
+          </p>
+
+          <h2>Contact</h2>
+          <ul class="contact-list">
+            <li>
+              <span class="label">General</span>
+              <a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a>
+            </li>
+            <li>
+              <span class="label">X</span>
+              <a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">@reardencode</a>
+              — development updates
+            </li>
+            <li>
+              <span class="label">Security</span>
+              <a href="mailto:security@reardencode.com">security@reardencode.com</a>
+            </li>
+            <li>
+              <span class="label">Code</span>
+              <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
+                >github.com/reardencode/rbitcoin</a
+              >
+            </li>
+          </ul>
+
+          <h2>This site</h2>
+          <p>
+            rbitcoin.org is a static marketing site (no backend). Clone the site repository, point a
+            web server document root at <code>public/</code>, and serve—no build step. Product
+            documentation and operator runbooks stay in the node repository.
+          </p>
+
+          <h2>License</h2>
+          <p>
+            rbitcoin (node and this site) are dual-licensed under the
+            <a href="https://github.com/reardencode/rbitcoin/blob/master/LICENSE-MIT" rel="noopener noreferrer" target="_blank"
+              >MIT License</a
+            >
+            or
+            <a
+              href="https://github.com/reardencode/rbitcoin/blob/master/LICENSE-APACHE"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Apache License 2.0</a
+            >
+            at your option.
+          </p>
+
+          <h2>Contributing</h2>
+          <p>
+            Node development:
+            <a
+              href="https://github.com/reardencode/rbitcoin/blob/master/CONTRIBUTING.md"
+              rel="noopener noreferrer"
+              target="_blank"
+              >CONTRIBUTING.md</a
+            >
+            in the node repo (coverage gates, TDD culture, public commit hygiene). Site copy and
+            design changes belong in the rbitcoin.org repository.
+          </p>
+
+          <div class="hero-actions mt-3">
+            <a
+              class="btn btn-primary"
+              href="https://github.com/reardencode/rbitcoin"
+              rel="noopener noreferrer"
+              target="_blank"
+              >GitHub</a
+            >
+            <a
+              class="btn btn-secondary"
+              href="https://x.com/reardencode"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Follow @reardencode</a
+            >
+            <a class="btn btn-ghost" href="/get-started/">Get started</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a class="brand" href="/">
+              <img class="brand-mark" src="/assets/img/logo.svg" width="32" height="32" alt="" />
+              <span class="brand-name">rbitcoin</span>
+            </a>
+            <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>
+          </div>
+          <div class="footer-col">
+            <h3>Site</h3>
+            <ul>
+              <li><a href="/get-started/">Get started</a></li>
+              <li><a href="/architecture/">Architecture</a></li>
+              <li><a href="/security/">Security</a></li>
+              <li><a href="/about/">About</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Project</h3>
+            <ul>
+              <li>
+                <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
+                  >GitHub</a
+                >
+              </li>
+              <li>
+                <a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">X @reardencode</a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >Operator guide</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Contact</h3>
+            <ul>
+              <li><a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a></li>
+              <li><a href="mailto:security@reardencode.com">security@reardencode.com</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© rbitcoin contributors · MIT OR Apache-2.0</span>
+          <span>Linux first · full archival</span>
+        </div>
+      </div>
+    </footer>
+    <script src="/assets/js/main.js" defer></script>
+  </body>
+</html>

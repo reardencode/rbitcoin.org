@@ -1461,29 +1461,6 @@ pre code {
   font-size: 0.9rem;
 }
 
-/* Silent payment / long address */
-.sp-address {
-  display: block;
-  margin: 0.75rem 0 0;
-  padding: 0.85rem 1rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  line-height: 1.5;
-  word-break: break-all;
-  color: var(--steel-bright);
-  background: #0a0c0e;
-  border: 1px solid var(--rail);
-  border-left: 3px solid var(--copper);
-}
-
-.donate-block {
-  margin-top: 1rem;
-}
-
-.donate-block p {
-  margin: 0 0 0.5rem;
-}
-
 /* ——— Utility ——— */
 .sr-only {
   position: absolute;

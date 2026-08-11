@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 1000" fill="none" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="railL" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2a1814"/>
+      <stop offset="0.12" stop-color="#6a3428"/>
+      <stop offset="0.28" stop-color="#4a5058"/>
+      <stop offset="0.45" stop-color="#a8b0b8"/>
+      <stop offset="0.55" stop-color="#6a727c"/>
+      <stop offset="0.72" stop-color="#3a4048"/>
+      <stop offset="0.88" stop-color="#7a3a28"/>
+      <stop offset="1" stop-color="#1a1210"/>
+    </linearGradient>
+    <linearGradient id="railR" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1a1210"/>
+      <stop offset="0.15" stop-color="#8a4030"/>
+      <stop offset="0.3" stop-color="#3a424c"/>
+      <stop offset="0.48" stop-color="#9aa2aa"/>
+      <stop offset="0.58" stop-color="#5a626c"/>
+      <stop offset="0.75" stop-color="#3a3838"/>
+      <stop offset="0.9" stop-color="#5a2818"/>
+      <stop offset="1" stop-color="#120e0c"/>
+    </linearGradient>
+    <linearGradient id="tieWood" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a2e22"/>
+      <stop offset="0.35" stop-color="#4a3a28"/>
+      <stop offset="0.7" stop-color="#2a2018"/>
+      <stop offset="1" stop-color="#1a1410"/>
+    </linearGradient>
+    <filter id="grit" x="-5%" y="-2%" width="110%" height="104%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="n"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.15  0 0 0 0 0.1  0 0 0 0 0.08  0 0 0 0.35 0" in="n" result="c"/>
+      <feBlend in="SourceGraphic" in2="c" mode="multiply"/>
+    </filter>
+    <pattern id="ballast" width="12" height="12" patternUnits="userSpaceOnUse">
+      <rect width="12" height="12" fill="#1c1a18"/>
+      <circle cx="2" cy="3" r="1.2" fill="#3a342e"/>
+      <circle cx="7" cy="1" r="0.9" fill="#2a2622"/>
+      <circle cx="10" cy="6" r="1.4" fill="#4a4038"/>
+      <circle cx="4" cy="9" r="1.1" fill="#322c28"/>
+      <circle cx="9" cy="10" r="0.8" fill="#5a4838"/>
+      <circle cx="1" cy="7" r="0.7" fill="#2a2018"/>
+    </pattern>
+  </defs>
+
+  <!-- Ballast bed (wider than gauge) -->
+  <rect x="8" y="0" width="144" height="1000" fill="url(#ballast)" opacity="0.85"/>
+  <rect x="8" y="0" width="144" height="1000" fill="#1a1410" opacity="0.25"/>
+
+  <!-- Crossties — irregular spacing, length, rot -->
+  <g filter="url(#grit)">
+    <rect x="14" y="12" width="132" height="22" rx="1.5" fill="url(#tieWood)" transform="rotate(-0.4 80 23)"/>
+    <rect x="12" y="68" width="136" height="24" rx="1.5" fill="#3a2a1c" transform="rotate(0.6 80 80)"/>
+    <rect x="16" y="128" width="128" height="20" rx="1" fill="url(#tieWood)" transform="rotate(-0.8 80 138)"/>
+    <rect x="11" y="182" width="138" height="26" rx="2" fill="#2e2418"/>
+    <rect x="15" y="242" width="130" height="21" rx="1.5" fill="url(#tieWood)" transform="rotate(0.5 80 252)"/>
+    <rect x="13" y="298" width="134" height="25" rx="1.5" fill="#42301e" transform="rotate(-0.3 80 310)"/>
+    <rect x="17" y="358" width="126" height="19" rx="1" fill="url(#tieWood)"/>
+    <rect x="10" y="412" width="140" height="27" rx="2" fill="#2a2016" transform="rotate(0.7 80 425)"/>
+    <rect x="14" y="474" width="132" height="22" rx="1.5" fill="url(#tieWood)" transform="rotate(-0.5 80 485)"/>
+    <rect x="12" y="532" width="136" height="24" rx="1.5" fill="#3a2c1c"/>
+    <rect x="16" y="592" width="128" height="20" rx="1" fill="url(#tieWood)" transform="rotate(0.4 80 602)"/>
+    <rect x="11" y="646" width="138" height="26" rx="2" fill="#32261a" transform="rotate(-0.6 80 659)"/>
+    <rect x="15" y="708" width="130" height="21" rx="1.5" fill="url(#tieWood)"/>
+    <rect x="13" y="764" width="134" height="25" rx="1.5" fill="#2c2218" transform="rotate(0.3 80 776)"/>
+    <rect x="17" y="824" width="126" height="19" rx="1" fill="url(#tieWood)" transform="rotate(-0.4 80 833)"/>
+    <rect x="10" y="878" width="140" height="27" rx="2" fill="#3a2e20"/>
+    <rect x="14" y="940" width="132" height="22" rx="1.5" fill="url(#tieWood)" transform="rotate(0.5 80 951)"/>
+  </g>
+
+  <!-- Wood grain / cracks on a few ties -->
+  <g stroke="#1a1008" stroke-width="0.6" opacity="0.45">
+    <path d="M22 22h110M28 28h40"/>
+    <path d="M20 190h50M90 196h45"/>
+    <path d="M24 425h100"/>
+    <path d="M30 660h90M40 670h30"/>
+    <path d="M18 890h60"/>
+  </g>
+
+  <!-- Left rail: T-profile (foot, web, head) running full length -->
+  <g>
+    <!-- foot (base flange) -->
+    <rect x="36" y="0" width="18" height="1000" fill="#2a2420"/>
+    <rect x="36" y="0" width="18" height="1000" fill="url(#railL)" opacity="0.55"/>
+    <!-- web -->
+    <rect x="41.5" y="0" width="7" height="1000" fill="#4a5058"/>
+    <!-- head (running surface) — brighter, worn -->
+    <rect x="38.5" y="0" width="13" height="1000" fill="url(#railL)"/>
+    <rect x="40" y="0" width="5" height="1000" fill="#c8d0d8" opacity="0.35"/>
+    <!-- rust underside streak -->
+    <rect x="36" y="0" width="3" height="1000" fill="#6a3020" opacity="0.7"/>
+    <rect x="51" y="0" width="3" height="1000" fill="#5a2818" opacity="0.55"/>
+  </g>
+
+  <!-- Right rail -->
+  <g>
+    <rect x="106" y="0" width="18" height="1000" fill="#241e1c"/>
+    <rect x="106" y="0" width="18" height="1000" fill="url(#railR)" opacity="0.55"/>
+    <rect x="111.5" y="0" width="7" height="1000" fill="#454c54"/>
+    <rect x="108.5" y="0" width="13" height="1000" fill="url(#railR)"/>
+    <rect x="110" y="0" width="5" height="1000" fill="#b8c0c8" opacity="0.3"/>
+    <rect x="106" y="0" width="3" height="1000" fill="#7a3828" opacity="0.65"/>
+    <rect x="121" y="0" width="3" height="1000" fill="#4a2014" opacity="0.5"/>
+  </g>
+
+  <!-- Joint bars (fishplates) at intervals -->
+  <g fill="#2a2c30" stroke="#1a1a1c" stroke-width="0.5">
+    <rect x="34" y="200" width="22" height="28" rx="1"/>
+    <rect x="104" y="200" width="22" height="28" rx="1"/>
+    <rect x="34" y="560" width="22" height="30" rx="1"/>
+    <rect x="104" y="560" width="22" height="30" rx="1"/>
+    <rect x="34" y="850" width="22" height="26" rx="1"/>
+    <rect x="104" y="850" width="22" height="26" rx="1"/>
+  </g>
+  <!-- bolts on joint bars -->
+  <g fill="#5a5050">
+    <circle cx="40" cy="208" r="2"/><circle cx="50" cy="208" r="2"/>
+    <circle cx="40" cy="220" r="2"/><circle cx="50" cy="220" r="2"/>
+    <circle cx="110" cy="208" r="2"/><circle cx="120" cy="208" r="2"/>
+    <circle cx="110" cy="220" r="2"/><circle cx="120" cy="220" r="2"/>
+    <circle cx="40" cy="568" r="2"/><circle cx="50" cy="568" r="2"/>
+    <circle cx="40" cy="580" r="2"/><circle cx="50" cy="580" r="2"/>
+    <circle cx="110" cy="568" r="2"/><circle cx="120" cy="568" r="2"/>
+    <circle cx="110" cy="580" r="2"/><circle cx="120" cy="580" r="2"/>
+  </g>
+
+  <!-- Spikes / plates at ties -->
+  <g fill="#3a3030">
+    <rect x="34" y="18" width="6" height="8" rx="0.5"/><rect x="50" y="18" width="6" height="8" rx="0.5"/>
+    <rect x="104" y="18" width="6" height="8" rx="0.5"/><rect x="120" y="18" width="6" height="8" rx="0.5"/>
+    <rect x="34" y="74" width="6" height="8" rx="0.5"/><rect x="50" y="74" width="6" height="8" rx="0.5"/>
+    <rect x="104" y="74" width="6" height="8" rx="0.5"/><rect x="120" y="74" width="6" height="8" rx="0.5"/>
+    <rect x="34" y="188" width="6" height="8" rx="0.5"/><rect x="50" y="188" width="6" height="8" rx="0.5"/>
+    <rect x="104" y="188" width="6" height="8" rx="0.5"/><rect x="120" y="188" width="6" height="8" rx="0.5"/>
+    <rect x="34" y="304" width="6" height="8" rx="0.5"/><rect x="50" y="304" width="6" height="8" rx="0.5"/>
+    <rect x="104" y="304" width="6" height="8" rx="0.5"/><rect x="120" y="304" width="6" height="8" rx="0.5"/>
+    <rect x="34" y="420" width="6" height="8" rx="0.5"/><rect x="50" y="420" width="6" height="8" rx="0.5"/>
+    <rect x="104" y="420" width="6" height="8" rx="0.5"/><rect x="120" y="420" width="6" height="8" rx="0.5"/>
+    <rect x="34" y="538" width="6" height="8" rx="0.5"/><rect x="50" y="538" width="6" height="8" rx="0.5"/>
+    <rect x="104" y="538" width="6" height="8" rx="0.5"/><rect x="120" y="538" width="6" height="8" rx="0.5"/>
+    <rect x="34" y="652" width="6" height="8" rx="0.5"/><rect x="50" y="652" width="6" height="8" rx="0.5"/>
+    <rect x="104" y="652" width="6" height="8" rx="0.5"/><rect x="120" y="652" width="6" height="8" rx="0.5"/>
+    <rect x="34" y="770" width="6" height="8" rx="0.5"/><rect x="50" y="770" width="6" height="8" rx="0.5"/>
+    <rect x="104" y="770" width="6" height="8" rx="0.5"/><rect x="120" y="770" width="6" height="8" rx="0.5"/>
+    <rect x="34" y="884" width="6" height="8" rx="0.5"/><rect x="50" y="884" width="6" height="8" rx="0.5"/>
+    <rect x="104" y="884" width="6" height="8" rx="0.5"/><rect x="120" y="884" width="6" height="8" rx="0.5"/>
+  </g>
+  <!-- spike heads -->
+  <g fill="#6a5850">
+    <circle cx="37" cy="20" r="1.6"/><circle cx="53" cy="20" r="1.6"/>
+    <circle cx="107" cy="20" r="1.6"/><circle cx="123" cy="20" r="1.6"/>
+    <circle cx="37" cy="76" r="1.6"/><circle cx="53" cy="76" r="1.6"/>
+    <circle cx="107" cy="76" r="1.6"/><circle cx="123" cy="76" r="1.6"/>
+    <circle cx="37" cy="306" r="1.6"/><circle cx="53" cy="306" r="1.6"/>
+    <circle cx="107" cy="306" r="1.6"/><circle cx="123" cy="306" r="1.6"/>
+    <circle cx="37" cy="540" r="1.6"/><circle cx="53" cy="540" r="1.6"/>
+    <circle cx="107" cy="540" r="1.6"/><circle cx="123" cy="540" r="1.6"/>
+    <circle cx="37" cy="772" r="1.6"/><circle cx="53" cy="772" r="1.6"/>
+    <circle cx="107" cy="772" r="1.6"/><circle cx="123" cy="772" r="1.6"/>
+  </g>
+
+  <!-- Oxide streaks along rails -->
+  <g opacity="0.4">
+    <path d="M37 40 q4 80 2 160 t-1 200 t3 180 t-2 220" stroke="#8a4030" stroke-width="2.5" fill="none"/>
+    <path d="M50 100 q-3 100 0 200 t1 250 t-2 200" stroke="#5a2818" stroke-width="1.8" fill="none"/>
+    <path d="M108 60 q3 90 1 180 t2 220 t-1 240" stroke="#7a3828" stroke-width="2.2" fill="none"/>
+    <path d="M120 140 q-2 110 1 210 t-2 230" stroke="#4a2014" stroke-width="1.5" fill="none"/>
+  </g>
+
+  <!-- Missing / broken spike drama -->
+  <rect x="50" y="420" width="5" height="3" fill="#1a1010" opacity="0.8"/>
+  <!-- Scorch / oil stain on ballast -->
+  <ellipse cx="80" cy="480" rx="28" ry="40" fill="#0a0808" opacity="0.35"/>
+  <ellipse cx="70" cy="720" rx="20" ry="30" fill="#1a100c" opacity="0.3"/>
+</svg>

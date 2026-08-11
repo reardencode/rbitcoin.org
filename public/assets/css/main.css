@@ -450,89 +450,55 @@ main {
 }
 
 /*
- * Abandoned right-of-way: dual rails + crossties (Rearden steel, rusted).
- * Runs diagonally through the hero — Atlas / railroad energy, not a copper beam.
+ * Abandoned right-of-way — heavy T-rail SVG (not flat toy stripes).
+ * Fishplates, spikes, irregular ties, ballast grit, oxide streaks.
  */
 .hero-tracks {
   position: absolute;
   z-index: 0;
-  top: -18%;
-  right: max(-4rem, calc(48% - 26rem));
-  width: min(11rem, 26vw);
-  height: 145%;
+  top: -20%;
+  right: max(-5rem, calc(46% - 28rem));
+  width: min(15rem, 34vw);
+  height: 150%;
   pointer-events: none;
-  transform: rotate(-28deg);
+  transform: rotate(-26deg) skewY(1.5deg);
   transform-origin: center center;
-  filter: drop-shadow(2px 4px 8px rgba(0, 0, 0, 0.55));
+  opacity: 0.92;
+  filter:
+    drop-shadow(4px 10px 14px rgba(0, 0, 0, 0.65))
+    drop-shadow(-1px 0 0 rgba(90, 40, 28, 0.25));
 }
 
-/* Ballast + crossties */
-.hero-tracks::before {
-  content: "";
-  position: absolute;
-  inset: 0 8%;
-  background:
-    /* weathered ties */
-    repeating-linear-gradient(
-      180deg,
-      transparent 0,
-      transparent 18px,
-      var(--tie) 18px,
-      var(--tie-hi) 20px,
-      #1a1410 26px,
-      var(--tie) 32px,
-      transparent 32px,
-      transparent 48px
-    ),
-    /* gravel bed */
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(50, 44, 40, 0.35) 20%,
-      rgba(40, 36, 32, 0.5) 50%,
-      rgba(50, 44, 40, 0.35) 80%,
-      transparent 100%
-    );
-  opacity: 0.95;
+.hero-tracks img,
+.hero-tracks svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
 }
 
-/* Twin rails (steel + oxide edge) */
+/* Soft vignette so tracks sink into the page (less “sticker”) */
 .hero-tracks::after {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -2%;
   background:
-    /* left rail */
+    linear-gradient(
+      180deg,
+      var(--bg) 0%,
+      transparent 12%,
+      transparent 88%,
+      var(--bg) 100%
+    ),
     linear-gradient(
       90deg,
-      transparent 0,
-      transparent 14%,
-      #1a1210 14%,
-      var(--copper-deep) 15.5%,
-      var(--rail) 17%,
-      var(--rail-hi) 20%,
-      var(--rearden) 22%,
-      var(--rail-hi) 24%,
-      var(--rail) 27%,
-      var(--copper) 28.5%,
-      #1a1210 30%,
-      transparent 31%,
-      /* gap */
-      transparent 69%,
-      /* right rail */
-      #1a1210 69%,
-      var(--copper-deep) 70.5%,
-      var(--rail) 72%,
-      var(--rail-hi) 75%,
-      var(--rearden) 77%,
-      var(--rail-hi) 79%,
-      var(--rail) 82%,
-      var(--copper) 83.5%,
-      #1a1210 85%,
-      transparent 86%
+      rgba(11, 12, 14, 0.55) 0%,
+      transparent 18%,
+      transparent 82%,
+      rgba(11, 12, 14, 0.55) 100%
     );
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.25);
-  opacity: 0.98;
+  pointer-events: none;
+  mix-blend-mode: multiply;
 }
 
 .hero .container {
@@ -542,9 +508,10 @@ main {
 
 @media (max-width: 720px) {
   .hero-tracks {
-    right: -2.5rem;
-    width: 6.5rem;
-    opacity: 0.75;
+    right: -3rem;
+    width: 9rem;
+    opacity: 0.7;
+    filter: drop-shadow(3px 8px 10px rgba(0, 0, 0, 0.6));
   }
 }
 
@@ -984,10 +951,10 @@ pre code {
 
 .page-hero .hero-tracks {
   top: -40%;
-  right: max(-3rem, calc(50% - 32rem));
-  width: min(7rem, 18vw);
+  right: max(-4rem, calc(50% - 32rem));
+  width: min(10rem, 24vw);
   height: 180%;
-  opacity: 0.45;
+  opacity: 0.4;
 }
 
 .page-hero .container {

@@ -4,37 +4,53 @@ On push to `master`, GitHub POSTs to this host; a loopback webhook verifies the 
 
 The repo is **public**, so git uses plain HTTPS (no deploy key). The webhook endpoint is still locked down so only real GitHub deliveries run the update.
 
+**On-disk layout (only these trees):**
+
+| Path | Role |
+|------|------|
+| `/var/www/rbitcoin.org` | Git clone; nginx `root` → `…/public` |
+| `/home/rbitcoin-site` | User home (uid/gid **1002**), update script, webhook secret |
+
+No deploy files under `/etc` or elsewhere.
+
 ## Security model
 
 | Layer | What it does |
 |-------|----------------|
-| **HMAC secret** | GitHub signs the body with a shared secret (`X-Hub-Signature-256`). The hook rejects anything that fails verification. |
-| **Loopback only** | `webhook` binds `127.0.0.1`; the public path is TLS nginx → proxy. |
-| **Branch filter** | Only `refs/heads/master` runs the update. |
-| **Secret not in store** | Secret lives in `/etc/rbitcoin-org/webhook.env` (`EnvironmentFile` + `getenv`), not in Nix. |
+| **HMAC secret** | GitHub signs the body (`X-Hub-Signature-256`). Invalid signatures do not run the update. |
+| **Loopback only** | `webhook` binds `127.0.0.1`; public path is TLS nginx → proxy. |
+| **Branch filter** | Only `refs/heads/master` triggers the pull. |
+| **Secret not in Nix store** | Secret file under the home dir only. |
 
-That HMAC is what “only real GitHub” means in practice: an attacker needs the secret to forge a valid signature. Keep the secret long and private; rotate it in GitHub + the env file if it leaks.
+Keep the secret long; rotate it in GitHub and the env file if it leaks.
 
 ## One-time setup
 
-1. **Clone** (after the user exists from the module, or create user first):
+1. **User + dirs** (or let the module create the user, then):
+
+   ```bash
+   sudo install -d -m 0755 -o rbitcoin-site -g rbitcoin-site /var/www/rbitcoin.org
+   sudo install -d -m 0750 -o rbitcoin-site -g rbitcoin-site /home/rbitcoin-site
+   ```
+
+2. **Clone:**
 
    ```bash
    sudo -u rbitcoin-site git clone --depth 1 \
      https://github.com/reardencode/rbitcoin.org.git /var/www/rbitcoin.org
    ```
 
-2. **Webhook secret** (not in the Nix store):
+3. **Webhook secret** (under home only):
 
    ```bash
-   sudo install -d -m 0750 /etc/rbitcoin-org
-   echo "RBITCOIN_WEBHOOK_SECRET=$(openssl rand -hex 32)" | sudo tee /etc/rbitcoin-org/webhook.env
-   sudo chmod 640 /etc/rbitcoin-org/webhook.env
-   sudo chown root:rbitcoin-site /etc/rbitcoin-org/webhook.env
-   # keep a copy of the secret for the GitHub UI
+   secret=$(openssl rand -hex 32)
+   echo "RBITCOIN_WEBHOOK_SECRET=$secret" | sudo tee /home/rbitcoin-site/webhook.env
+   sudo chown rbitcoin-site:rbitcoin-site /home/rbitcoin-site/webhook.env
+   sudo chmod 600 /home/rbitcoin-site/webhook.env
+   # save $secret for the GitHub UI
    ```
 
-3. **GitHub** → repo **Settings → Webhooks → Add webhook**
+4. **GitHub** → **Settings → Webhooks → Add webhook**
 
    | Field | Value |
    |-------|--------|
@@ -44,14 +60,14 @@ That HMAC is what “only real GitHub” means in practice: an attacker needs th
    | Events | **Just the push event** |
    | Active | on |
 
-4. Apply the module (`nixos-rebuild switch`). Nginx `root` = `/var/www/rbitcoin.org/public`.
+5. Apply the module (`nixos-rebuild switch`). Nginx `root` = `/var/www/rbitcoin.org/public`.
 
-5. Smoke test:
+6. Smoke test:
 
    ```bash
    sudo systemctl start rbitcoin-org-update.service
    journalctl -u webhook -u rbitcoin-org-update -n 40
-   # then push a commit; Recent Deliveries on GitHub should be green
+   # push a commit; Recent Deliveries should be green
    ```
 
 ## NixOS module
@@ -61,7 +77,10 @@ That HMAC is what “only real GitHub” means in practice: an attacker needs th
 
 let
   siteRoot = "/var/www/rbitcoin.org";
+  home = "/home/rbitcoin-site";
   repo = "https://github.com/reardencode/rbitcoin.org.git";
+  updatePath = "${home}/update.sh";
+  secretPath = "${home}/webhook.env";
 
   update = pkgs.writeShellScript "rbitcoin-org-update" ''
     set -euo pipefail
@@ -79,17 +98,19 @@ in
     isSystemUser = true;
     uid = 1002;
     group = "rbitcoin-site";
-    home = "/home/rbitcoin-site";
+    home = home;
     createHome = true;
   };
   users.groups.rbitcoin-site = {
     gid = 1002;
   };
 
-  systemd.tmpfiles.rules = [
-    "d ${siteRoot} 0755 rbitcoin-site rbitcoin-site -"
-    "d /home/rbitcoin-site 0750 rbitcoin-site rbitcoin-site -"
-  ];
+  # Install update script into the home dir (not referenced from /etc)
+  system.activationScripts.rbitcoin-site = lib.stringAfter [ "users" ] ''
+    install -d -m 0755 -o rbitcoin-site -g rbitcoin-site ${siteRoot}
+    install -d -m 0750 -o rbitcoin-site -g rbitcoin-site ${home}
+    install -m 0755 -o rbitcoin-site -g rbitcoin-site ${update} ${updatePath}
+  '';
 
   systemd.services.rbitcoin-org-update = {
     description = "Pull rbitcoin.org (ff-only)";
@@ -99,7 +120,7 @@ in
       Type = "oneshot";
       User = "rbitcoin-site";
       Group = "rbitcoin-site";
-      ExecStart = "${update}";
+      ExecStart = updatePath;
     };
   };
 
@@ -114,7 +135,7 @@ in
     hooksTemplated.rbitcoin-org = ''
       {
         "id": "rbitcoin-org",
-        "execute-command": "${update}",
+        "execute-command": "${updatePath}",
         "trigger-rule": {
           "and": [
             {
@@ -143,9 +164,7 @@ in
     '';
   };
 
-  systemd.services.webhook.serviceConfig.EnvironmentFile = [
-    "/etc/rbitcoin-org/webhook.env"
-  ];
+  systemd.services.webhook.serviceConfig.EnvironmentFile = [ secretPath ];
 
   services.nginx.virtualHosts."rbitcoin.org" = {
     # merge with existing: forceSSL, enableACME, root = "${siteRoot}/public"
@@ -155,7 +174,6 @@ in
     };
   };
 
-  # Backup if a delivery is missed
   systemd.timers.rbitcoin-org-update = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
@@ -169,7 +187,8 @@ in
 
 ## Notes
 
+- Runtime files: site under `/var/www/rbitcoin.org`; script + secret under `/home/rbitcoin-site`.
 - Public HTTPS clone/fetch — no SSH keys or tokens for git.
-- Unsigned or wrong-secret POSTs to `/hooks/rbitcoin-org` do not run the update.
+- HMAC-invalid POSTs do not pull.
 - `merge --ff-only` refuses non-fast-forward history.
-- Webhook and timer both run the same script as `rbitcoin-site` (uid/gid **1002**, home **`/home/rbitcoin-site`**).
+- Webhook and timer both run `/home/rbitcoin-site/update.sh` as uid/gid **1002**.

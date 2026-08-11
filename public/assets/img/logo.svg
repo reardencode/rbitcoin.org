@@ -1,21 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none" role="img" aria-label="rbitcoin">
   <defs>
-    <linearGradient id="steel" x1="4" y1="2" x2="36" y2="38" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#d4d8de"/>
-      <stop offset="0.45" stop-color="#8b939e"/>
-      <stop offset="1" stop-color="#4a515c"/>
+    <linearGradient id="plate" x1="6" y1="4" x2="34" y2="36" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2a3038"/>
+      <stop offset="1" stop-color="#12161c"/>
     </linearGradient>
-    <linearGradient id="copper" x1="10" y1="28" x2="32" y2="10" gradientUnits="userSpaceOnUse">
+    <linearGradient id="copperFrame" x1="2" y1="2" x2="38" y2="38" gradientUnits="userSpaceOnUse">
       <stop stop-color="#e8a65a"/>
+      <stop offset="0.45" stop-color="#c4783a"/>
+      <stop offset="1" stop-color="#8a4a22"/>
+    </linearGradient>
+    <linearGradient id="copperR" x1="12" y1="28" x2="28" y2="10" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f0c07a"/>
+      <stop offset="0.5" stop-color="#e8a65a"/>
       <stop offset="1" stop-color="#c4783a"/>
     </linearGradient>
   </defs>
-  <!-- outer plate -->
-  <rect x="2.5" y="2.5" width="35" height="35" rx="7" stroke="url(#steel)" stroke-width="1.5" fill="#12161c"/>
-  <!-- inner bevel -->
-  <rect x="6" y="6" width="28" height="28" rx="4.5" stroke="rgba(196,120,58,0.35)" stroke-width="1" fill="#0c0e10"/>
-  <!-- monogram: stylized r + bar -->
-  <path d="M13.2 28V12.2h7.1c3.55 0 5.85 1.85 5.85 4.7 0 2.15-1.15 3.65-3.05 4.3L27.2 28h-3.35l-3.85-6.35h-3.5V28H13.2Zm3.3-9.1h3.55c1.85 0 2.95-.95 2.95-2.35s-1.1-2.3-2.95-2.3H16.5v4.65Z" fill="url(#copper)"/>
-  <!-- archive lattice ticks -->
-  <path d="M29.5 12.5h2M29.5 15.5h2M29.5 18.5h2" stroke="#8b939e" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+  <!-- copper frame plate -->
+  <rect x="3" y="3" width="34" height="34" rx="4" fill="url(#plate)" stroke="url(#copperFrame)" stroke-width="1.75"/>
+  <!-- inner recess -->
+  <rect x="6.5" y="6.5" width="27" height="27" rx="2.5" fill="#0c0e10" stroke="rgba(196,120,58,0.25)" stroke-width="1"/>
+  <!-- rivets -->
+  <circle cx="8.5" cy="8.5" r="1.15" fill="#c4783a"/>
+  <circle cx="31.5" cy="8.5" r="1.15" fill="#c4783a"/>
+  <circle cx="8.5" cy="31.5" r="1.15" fill="#c4783a"/>
+  <circle cx="31.5" cy="31.5" r="1.15" fill="#c4783a"/>
+  <!-- monogram r -->
+  <path d="M13.4 28.2V12h7.4c3.65 0 6 1.9 6 4.85 0 2.2-1.2 3.75-3.15 4.4L28.2 28.2h-3.5l-4.05-6.55h-3.55v6.55H13.4Zm3.4-9.35h3.7c1.95 0 3.1-1 3.1-2.45s-1.15-2.4-3.1-2.4h-3.7v4.85Z" fill="url(#copperR)"/>
 </svg>

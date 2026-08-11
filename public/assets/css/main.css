@@ -370,21 +370,99 @@ main {
   overflow: hidden;
 }
 
+/* Technical grid (steel + faint copper) */
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black 20%, transparent 75%);
-  opacity: 0.35;
+    linear-gradient(rgba(196, 120, 58, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(196, 120, 58, 0.07) 1px, transparent 1px),
+    linear-gradient(rgba(139, 147, 158, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 147, 158, 0.12) 1px, transparent 1px);
+  background-size: 192px 192px, 192px 192px, 48px 48px, 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 75% at 55% 35%, black 15%, transparent 78%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* Signature copper diagonal beam (brand motif from OG art) */
+.hero-slash {
+  position: absolute;
+  z-index: 0;
+  top: -12%;
+  right: max(-2rem, calc(50% - 28rem));
+  width: min(5.5rem, 12vw);
+  height: 130%;
+  pointer-events: none;
+  transform: rotate(-32deg);
+  transform-origin: center center;
+}
+
+.hero-slash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 22px,
+      rgba(12, 14, 16, 0.55) 22px,
+      rgba(12, 14, 16, 0.55) 26px
+    ),
+    linear-gradient(
+      90deg,
+      #5c3118 0%,
+      #a05a28 12%,
+      #e8a65a 28%,
+      #c4783a 48%,
+      #e0a050 62%,
+      #8a4a22 82%,
+      #4a2810 100%
+    );
+  box-shadow:
+    0 0 48px rgba(196, 120, 58, 0.28),
+    0 0 2px rgba(232, 166, 90, 0.5),
+    inset 0 0 0 1px rgba(255, 200, 120, 0.22),
+    inset 3px 0 8px rgba(0, 0, 0, 0.35),
+    inset -2px 0 6px rgba(255, 210, 140, 0.12);
+}
+
+/* Rivets along the beam */
+.hero-slash::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 6%;
+  bottom: 6%;
+  width: 9px;
+  transform: translateX(-50%);
+  background-image: radial-gradient(
+    circle at center,
+    #2a1a10 0 28%,
+    #d4924a 32% 48%,
+    #8a4a22 52% 70%,
+    transparent 72%
+  );
+  background-size: 9px 28px;
+  background-repeat: repeat-y;
+  opacity: 0.95;
   pointer-events: none;
 }
 
 .hero .container {
   position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 720px) {
+  .hero-slash {
+    right: -1.5rem;
+    width: 3.25rem;
+    opacity: 0.85;
+  }
 }
 
 .status-chip {
@@ -439,21 +517,28 @@ main {
 .meta-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1.25rem;
+  align-items: center;
+  gap: 0.45rem 0;
   color: var(--text-dim);
   font-size: 0.875rem;
   font-family: var(--font-mono);
 }
 
-.meta-row span::before {
-  content: "·";
-  margin-right: 1.25rem;
-  color: var(--border-strong);
+.meta-row span {
+  display: inline-flex;
+  align-items: center;
 }
 
-.meta-row span:first-child::before {
-  content: none;
-  margin: 0;
+.meta-row span:not(:first-child)::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin: 0 0.85rem;
+  border-radius: 50%;
+  background: var(--copper);
+  opacity: 0.65;
+  flex-shrink: 0;
 }
 
 /* ——— Buttons ——— */
@@ -758,9 +843,24 @@ pre code {
 
 /* ——— Prose pages ——— */
 .page-hero {
+  position: relative;
   padding: 3rem 0 1.5rem;
   border-bottom: 1px solid var(--border);
   margin-bottom: 0;
+  overflow: hidden;
+}
+
+.page-hero .hero-slash {
+  top: -40%;
+  right: max(-3rem, calc(50% - 32rem));
+  width: min(3.25rem, 8vw);
+  height: 180%;
+  opacity: 0.55;
+}
+
+.page-hero .container {
+  position: relative;
+  z-index: 1;
 }
 
 .page-hero h1 {

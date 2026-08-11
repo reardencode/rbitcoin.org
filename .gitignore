@@ -13,3 +13,5 @@ dist/
 tmp/
 .python-version
 .venv/
+Screenshot*.png
+screenshot*.png

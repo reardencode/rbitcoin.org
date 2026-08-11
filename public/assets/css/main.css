@@ -490,19 +490,34 @@ main {
   border: 1px solid rgba(138, 146, 156, 0.12);
 }
 
-/* Subpages: photoreal track strip (same asset family as OG) */
+/* Subpages: narrow photoreal track strip (same asset family as OG) */
 .hero-tracks {
   position: absolute;
   z-index: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: min(42%, 28rem);
+  top: -15%;
+  right: max(-2rem, calc(50% - 34rem));
+  bottom: -15%;
+  width: min(9.5rem, 16vw);
   pointer-events: none;
   overflow: hidden;
-  opacity: 0.88;
-  mask-image: linear-gradient(90deg, transparent 0%, black 22%, black 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 22%, black 100%);
+  opacity: 0.72;
+  transform: rotate(-18deg);
+  transform-origin: center center;
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    black 12%,
+    black 88%,
+    transparent 100%
+  );
+  filter: drop-shadow(2px 6px 12px rgba(0, 0, 0, 0.5));
 }
 
 .hero-tracks img {
@@ -510,8 +525,8 @@ main {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 30% center;
-  filter: saturate(0.92) contrast(1.05);
+  object-position: 45% center;
+  filter: saturate(0.9) contrast(1.05);
 }
 
 .hero .container {
@@ -531,8 +546,9 @@ main {
   }
 
   .hero-tracks {
-    width: min(55%, 18rem);
-    opacity: 0.55;
+    width: min(7rem, 18vw);
+    right: -1rem;
+    opacity: 0.5;
   }
 }
 
@@ -996,8 +1012,9 @@ pre code {
 }
 
 .page-hero .hero-tracks {
-  opacity: 0.55;
-  width: min(38%, 22rem);
+  /* keep the narrow strip; sit behind page title only */
+  opacity: 0.65;
+  width: min(8.5rem, 14vw);
 }
 
 .page-hero .container {

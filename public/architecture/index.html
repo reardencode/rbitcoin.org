@@ -6,7 +6,7 @@
     <title>Architecture — rbitcoin</title>
     <meta
       name="description"
-      content="How rbitcoin differs: relational archive without a UTXO set, pure-Rust consensus, in-process Electrum, Linux map-free IO."
+      content="rbitcoin on-disk model: Class A/B/C archive, no UTXO set, segmented txid lookup, native Electrum scripthash."
     />
     <link rel="canonical" href="https://rbitcoin.org/architecture/" />
     <meta property="og:type" content="website" />
@@ -14,7 +14,7 @@
     <meta property="og:title" content="Architecture — rbitcoin" />
     <meta
       property="og:description"
-      content="Relational archive, pure-Rust scripts, Electrum in-process—how rbitcoin differs from Core and external indexers."
+      content="Relational archive, map-free tables, tip-hot txid heads—how rbitcoin stores and looks up chain data."
     />
     <meta property="og:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -88,8 +88,8 @@
         <div class="container">
           <h1>Architecture</h1>
           <p>
-            Design uniqueness in plain language. Normative layouts live in the node repo; this page
-            is the newcomer map.
+            How data sits on disk and how lookups hit it. Normative layouts live in the node repo;
+            this page is the newcomer map.
           </p>
         </div>
       </div>
@@ -98,26 +98,32 @@
         <div class="container">
           <div class="section-head">
             <h2>One-screen picture</h2>
-            <p>Peers feed IBD densify; confirm is lookup → load → scripts → write with a sole Class A appender.</p>
+            <p>
+              No UTXO database. A relational archive of packed transactions, tip truth in Class C,
+              and thin indexes for wallet queries.
+            </p>
           </div>
-          <div class="pipeline" role="img" aria-label="rbitcoin pipeline diagram">
-  Peers (BIP324 v2)
-        │
-        ▼
-  IBD densify getdata ──► in-RAM body queue
-        │                              │
-        │                              ▼
-        │                    Confirm: lookup → load → scripts → write
-        │                    (sole Class A appender + Class C tip)
-        │                              │
-        └──── Mempool / tip follow ────┘
-                                       │
-                 Reconstruct wire ◄────┤
-                 Electrum joins   ◄────┘  Class A + SH + mempool
+          <div class="pipeline" role="img" aria-label="rbitcoin store and lookup diagram">
+  Class A archive (map-free fd tables)
+    header.body/head     packed txs: tx.body + tx.idx + txid.body
+    tx.head.*            segmented keyless heads (+ fuse8 on seal)
+         │
+         │  create_fk is the dense identity
+         ▼
+  Class C tip commit
+    confirmed[]  strong_tx  tx_height  header_txs_*
+         │
+         ├─► reconstruct historical wire from packed txs
+         │   (tip soft zone: wire ring)
+         │
+  Class B forever-open indexes
+    scripthash.*  ── thin create_tx_fk only ──► join A + C at query
+         │
+         └─► Electrum / Esplora (+ mempool for unconfirmed)
           </div>
           <p class="footnote">
-            Storage center is a transaction-relational archive on map-free tables (pread/pwrite +
-            fallocate; no process mmap of Class A/B/C)—not a UTXO set + LevelDB chainstate.
+            Tables are pread/pwrite + fallocate grow (kernel page cache as L0)—not process
+            <code>mmap</code> of Class A/B/C, and not a LevelDB UTXO chainstate.
           </p>
         </div>
       </section>
@@ -125,8 +131,120 @@
       <section class="section section-tight">
         <div class="container">
           <div class="section-head">
-            <h2>vs Bitcoin Core</h2>
-            <p>Different goals: smaller full archive, Electrum in-process—not every Core product surface.</p>
+            <h2>Class A / B / C</h2>
+            <p>Three roles, one store. Mutation style matches the job.</p>
+          </div>
+          <div class="grid-3">
+            <article class="card">
+              <h3>Class A — archive</h3>
+              <p>
+                Canonical history: headers and <strong>packed full txs</strong> (body + dense idx).
+                Append bodies; publish via high-water marks and heads
+                (<strong>allocate-then-publish</strong>). Identity is dense
+                <code>create_fk</code>, with txids in a sidefile—not a fat key on every row.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Class B — indexes</h3>
+              <p>
+                Forever-open structures such as Electrum <strong>scripthash</strong>: thin
+                <code>create_tx_fk</code> lists (inline or 4 KiB page chains). Expand vouts, value,
+                and height at query time by joining Class A + C—not a second copy of the chain.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Class C — tip</h3>
+              <p>
+                Best-chain visibility: <code>confirmed[]</code>, strong flags, tx heights, per-header
+                tx ranges. <strong>Tip advance is the commit</strong>. Spentness is annotations on
+                create outputs (plus rare multi-spender lists)—not deleting coins from a UTXO bag.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <h2>How lookups work</h2>
+            <p>Common paths operators and wallet backends actually hit.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>Path</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>txid → transaction</td>
+                  <td>
+                    Segmented <code>tx.head</code> (25-bit open address; sealed segments fuse8-gated)
+                    → <code>create_fk</code> → <code>tx.idx</code> / <code>tx.body</code>; verify
+                    identity via <code>txid.body</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>height → block txs</td>
+                  <td>
+                    <code>confirmed[h]</code> → <code>header_fk</code> → contiguous Class A range from
+                    <code>header_txs_first</code> + <code>header_txs_count</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>scripthash history</td>
+                  <td>
+                    Class B SH head/pages → list of create fks → join packed outs + Class C height /
+                    spentness (+ mempool for unconfirmed)
+                  </td>
+                </tr>
+                <tr>
+                  <td>Is this output spent?</td>
+                  <td>
+                    Annotation on the create output (and multi-list only when needed)—no separate
+                    UTXO hash table as truth
+                  </td>
+                </tr>
+                <tr>
+                  <td>Serve historical block wire</td>
+                  <td>
+                    Reconstruct from packed Class A txs; recent tip window may hit the wire ring
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="grid-2 mt-3">
+            <article class="card">
+              <h3>Tip-hot txid heads</h3>
+              <p>
+                <code>tx.head/</code> is a <strong>segmented keyless</strong> address table of dense
+                create foreign keys. Fixed 25-bit open segments with relative ids; roll at load /
+                soft span; <strong>binary fuse8</strong> only on seal. Open segments always probe;
+                sealed segments are fuse-gated. <strong>Newer transactions resolve hottest</strong>—
+                tip-local traffic wins without a multi‑GiB open hash of every point.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Map-free IO</h3>
+              <p>
+                Class A/B/C are ordinary files: <strong>pread/pwrite</strong>, fallocate capacity
+                grow, page cache as L0. No process mmap of the archive tables. Optional bulk
+                io_uring for some denserel paths; table transport stays fd-based and page-coalesced.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-tight">
+        <div class="container">
+          <div class="section-head">
+            <h2>vs Bitcoin Core (store)</h2>
+            <p>Different primary truth: archive + annotations, not UTXO chainstate.</p>
           </div>
           <div class="table-wrap">
             <table>
@@ -154,24 +272,19 @@
                   <td>Coins view / UTXO mutations</td>
                 </tr>
                 <tr>
-                  <td>Script verification</td>
-                  <td>Pure Rust in-tree (secp256k1 via rust-bitcoin)</td>
-                  <td>libbitcoinconsensus / C++ interpreter</td>
+                  <td>Txid lookup</td>
+                  <td>Segmented tip-hot heads + dense body; full archive index included</td>
+                  <td>Optional txindex; otherwise not the hot path</td>
                 </tr>
                 <tr>
                   <td>Electrum</td>
-                  <td>In-process index on confirm</td>
-                  <td>External (Fulcrum, ElectrumX, …)</td>
+                  <td>Native Class B scripthash on confirm</td>
+                  <td>External indexer over Core (Fulcrum, ElectrumX, …)</td>
                 </tr>
                 <tr>
-                  <td>Transport</td>
-                  <td>BIP324 v2 only</td>
-                  <td>v1 + v2</td>
-                </tr>
-                <tr>
-                  <td>Scope</td>
-                  <td>Full node + Electrum backend; no wallet/mining/GUI/prune</td>
-                  <td>Full Core product surface</td>
+                  <td>Script verification</td>
+                  <td>Pure Rust in-tree (secp256k1 via rust-bitcoin)</td>
+                  <td>libbitcoinconsensus / C++ interpreter</td>
                 </tr>
               </tbody>
             </table>
@@ -202,7 +315,7 @@
                 </tr>
                 <tr>
                   <td>Scripthash index</td>
-                  <td>Written on confirm (bulk at tip)</td>
+                  <td>Written on confirm (thin create fks; join at query)</td>
                   <td>Separate DB built by scanning history</td>
                 </tr>
                 <tr>
@@ -218,63 +331,29 @@
               </tbody>
             </table>
           </div>
-        </div>
-      </section>
-
-      <section class="section section-tight">
-        <div class="container">
-          <div class="grid-2">
-            <article class="card">
-              <h3>Class A / B / C (intuition)</h3>
-              <p>
-                <strong>A</strong> — canonical archive: headers, packed txs (append + HWM publish).
-                <strong>B</strong> — forever-open indexes (e.g. Electrum scripthash).
-                <strong>C</strong> — tip / confirmation; tip advance is the commit.
-              </p>
-              <p class="mt-2 mb-0">
-                Spents are annotations—not rewriting old outputs as a UTXO bag. Segmented
-                <code>tx.head</code> makes newer txs resolve hottest.
-              </p>
-            </article>
-            <article class="card">
-              <h3>Concurrent IBD / IO</h3>
-              <p>
-                Fixed writer roles (one Class A appender), allocate-then-publish HWMs, confirm split
-                so disk work, script verify, and publish can overlap. Bulk io_uring where available;
-                pread/pwrite fallback. Linux-shaped IO.
-              </p>
-              <p class="mt-2 mb-0">
-                No multi‑GiB dbcache flush pauses: confirm is lookup → load → scripts → write.
-              </p>
-            </article>
-          </div>
           <div class="callout callout-info mt-3">
             <div>
               <p>
-                <strong>Full archival only.</strong> There is no pruning option. An aspirational
-                goal is ~1 day IBD on a modern laptop; that may require substantial RAM with this
-                architecture and is a goal, not a shipped SLA. Truly “low cost” full nodes still face
-                the random-access working set of possibly-spendable outputs—proof accumulators
-                (e.g. utreexo-class) are a different design path.
+                <strong>Full archival only.</strong> There is no pruning option—the store is built
+                around a complete transaction archive (with txindex and scripthash in the same
+                footprint class). Format is unstable until 1.0; see
+                <a
+                  href="https://github.com/reardencode/rbitcoin/blob/master/SCHEMA.md"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  >SCHEMA.md</a
+                >
+                for the current tables.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="section">
+      <section class="section section-tight">
         <div class="container prose">
           <h2 class="mt-0">Deep docs (node repo)</h2>
           <ul>
-            <li>
-              <a
-                href="https://github.com/reardencode/rbitcoin/blob/master/docs/architecture.md"
-                rel="noopener noreferrer"
-                target="_blank"
-                >docs/architecture.md</a
-              >
-              — full narrative
-            </li>
             <li>
               <a
                 href="https://github.com/reardencode/rbitcoin/blob/master/SCHEMA.md"
@@ -282,7 +361,25 @@
                 target="_blank"
                 >SCHEMA.md</a
               >
-              — on-disk tables
+              — on-disk tables and versions
+            </li>
+            <li>
+              <a
+                href="https://github.com/reardencode/rbitcoin/blob/master/docs/architecture.md"
+                rel="noopener noreferrer"
+                target="_blank"
+                >docs/architecture.md</a
+              >
+              — full design narrative
+            </li>
+            <li>
+              <a
+                href="https://github.com/reardencode/rbitcoin/blob/master/docs/io-modality.md"
+                rel="noopener noreferrer"
+                target="_blank"
+                >docs/io-modality.md</a
+              >
+              — pread / uring bulk paths
             </li>
             <li>
               <a
@@ -292,15 +389,6 @@
                 >docs/concurrency.md</a
               >
               — writer roles / lock-free publish
-            </li>
-            <li>
-              <a
-                href="https://github.com/reardencode/rbitcoin/blob/master/docs/io-modality.md"
-                rel="noopener noreferrer"
-                target="_blank"
-                >docs/io-modality.md</a
-              >
-              — uring / pread
             </li>
             <li>
               <a

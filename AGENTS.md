@@ -38,6 +38,8 @@ Do not invent Discord/Telegram or other socials.
 
 Duplicate shared chrome (header/footer) across pages carefully. When changing nav/footer, update **every** page under `public/`.
 
+Internal `href`/`src` must be **relative** (and name `index.html` for pages) so the tree works from `file://` and from a non-root URL. Do not use site-root paths like `/architecture/`. Canonical and Open Graph URLs stay `https://rbitcoin.org/...`.
+
 ## Commits
 
 Small, logical commits with complete-sentence messages. This tree is public.

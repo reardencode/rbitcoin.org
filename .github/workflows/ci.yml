@@ -16,34 +16,29 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cd public
-          fail=0
-          # Collect local paths from href="/..." and src="/..." (ignore mailto, http, #)
-          while IFS= read -r ref; do
-            path="${ref%%#*}"
-            path="${path%%\?*}"
-            [ -z "$path" ] && continue
-            case "$path" in
-              /*) ;;
-              *) continue ;;
-            esac
-            # directory URLs → index.html
-            if [ -d ".$path" ]; then
-              if [ -f ".$path/index.html" ] || [ -f ".$path" ]; then
-                continue
-              fi
-            fi
-            if [ -f ".$path" ]; then
-              continue
-            fi
-            # try as file without trailing slash
-            if [ "${path%/}" != "$path" ] && [ -f ".${path}index.html" ]; then
-              continue
-            fi
-            echo "Missing: $ref"
-            fail=1
-          done < <(grep -RhoE '(href|src)="(/[^"]*)"' . --include='*.html' | sed -E 's/^(href|src)="//;s/"$//' | sort -u)
-          exit "$fail"
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          public = Path("public")
+          fail = 0
+          # Root-absolute internal paths are forbidden (file:// and subpath hosts break)
+          for html in public.rglob("*.html"):
+              text = html.read_text(encoding="utf-8")
+              for kind, ref in re.findall(r'(href|src)="([^"]*)"', text):
+                  if ref.startswith("/") and not ref.startswith("//"):
+                      print(f"absolute {kind} in {html}: {ref}")
+                      fail = 1
+                  if ref.startswith(("http:", "https:", "mailto:", "#")):
+                      continue
+                  path = ref.split("#", 1)[0].split("?", 1)[0]
+                  if not path:
+                      continue
+                  target = (html.parent / path).resolve()
+                  if not target.exists():
+                      print(f"missing {kind} in {html}: {ref} -> {target}")
+                      fail = 1
+          raise SystemExit(fail)
+          PY
 
   structure:
     name: structure

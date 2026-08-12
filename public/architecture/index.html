@@ -6,7 +6,7 @@
     <title>Architecture — rbitcoin</title>
     <meta
       name="description"
-      content="rbitcoin on-disk model: Class A/B/C archive, no UTXO set, segmented txid lookup, native Electrum scripthash."
+      content="rbitcoin store: packed archive, no UTXO database, optional --shindex cost, optional Core-class JSON-RPC subset."
     />
     <link rel="canonical" href="https://rbitcoin.org/architecture/" />
     <meta property="og:type" content="website" />
@@ -88,11 +88,11 @@
       <div class="page-hero">
         <div class="hero-tracks" aria-hidden="true"><img src="/assets/img/tracks.jpg" alt="" width="720" height="1280" decoding="async" /></div>
         <div class="container">
-          <div class="status-chip">Experimental 0.x · store model</div>
+          <div class="status-chip">0.x — the store is the product</div>
           <h1>Architecture</h1>
           <p>
-            How data sits on disk and how common lookups resolve. Normative layouts live in the node
-            repository; this page is the newcomer map.
+            Lookups hit packed history, not a UTXO bag. Normative layouts live in the node repository.
+            This page is the map.
           </p>
         </div>
       </div>
@@ -102,8 +102,8 @@
           <div class="section-head">
             <h2>One-screen picture</h2>
             <p>
-              There is no UTXO database. History lives in a relational archive of packed
-              transactions, tip truth in Class C, and thin indexes for wallet queries.
+              No UTXO database. Packed transactions are the archive. Class C is tip truth. Class B
+              scripthash is extra index cost you turn on when wallet clients need it.
             </p>
           </div>
           <div class="store-diagram" role="img" aria-label="rbitcoin store and lookup diagram">
@@ -164,8 +164,8 @@
                 </div>
               </div>
               <div class="store-layer store-layer-b">
-                <div class="store-layer-label">Class B · indexes</div>
-                <p class="store-layer-tag">forever-open · thin create_tx_fk only</p>
+                <div class="store-layer-label">Class B · indexes · off by default</div>
+                <p class="store-layer-tag">--shindex · selectable indexing cost · not a sync mode</p>
                 <div class="store-cells store-cells-stack">
                   <div class="store-cell">
                     <strong>scripthash.*</strong>
@@ -173,7 +173,7 @@
                   </div>
                   <div class="store-cell">
                     <strong>Electrum / Esplora</strong>
-                    <span>wallet clients · + mempool unconfirmed</span>
+                    <span>require --shindex · refuse start otherwise</span>
                   </div>
                 </div>
               </div>
@@ -204,12 +204,12 @@
               </p>
             </article>
             <article class="card">
-              <h3>Class B — indexes</h3>
+              <h3>Class B — indexes (optional)</h3>
               <p>
-                Forever-open structures such as Electrum <strong>scripthash</strong>: thin
-                <code>create_tx_fk</code> lists (inline or 4 KiB page chains). Values, vouts, and
-                height expand at query time by joining Class A and Class C—not a second copy of the
-                chain.
+                Forever-open Electrum <strong>scripthash</strong> when you pass
+                <code>--shindex</code>: thin <code>create_tx_fk</code> lists (inline or 4 KiB pages).
+                That is extra disk and write cost you choose—not a faster IBD. Query time joins A and
+                C. Off by default.
               </p>
             </article>
             <article class="card">
@@ -258,8 +258,8 @@
                 <tr>
                   <td>scripthash history</td>
                   <td>
-                    Class B SH head/pages → list of create fks → join packed outs + Class C height /
-                    spentness (+ mempool for unconfirmed)
+                    Requires <code>--shindex</code>. Class B SH head/pages → create fks → join packed
+                    outs + Class C height / spentness (+ mempool for unconfirmed)
                   </td>
                 </tr>
                 <tr>
@@ -339,9 +339,14 @@
                   <td>Optional txindex; otherwise not the hot path</td>
                 </tr>
                 <tr>
-                  <td>Electrum</td>
-                  <td>Native Class B scripthash on confirm</td>
+                  <td>Electrum / Esplora</td>
+                  <td>In-process; require <code>--shindex</code> (off by default)</td>
                   <td>External indexer over Core (Fulcrum, ElectrumX, …)</td>
+                </tr>
+                <tr>
+                  <td>JSON-RPC</td>
+                  <td>Optional documented subset; cookie or user/pass; no wallet/mining</td>
+                  <td>Large Core surface including wallet and mining</td>
                 </tr>
                 <tr>
                   <td>Script verification</td>
@@ -377,7 +382,7 @@
                 </tr>
                 <tr>
                   <td>Scripthash index</td>
-                  <td>Written on confirm (thin create fks; join at query)</td>
+                  <td>Opt-in <code>--shindex</code>; written on confirm; join at query</td>
                   <td>Separate DB built by scanning history</td>
                 </tr>
                 <tr>
@@ -396,9 +401,9 @@
           <div class="callout callout-info mt-3">
             <div>
               <p>
-                <strong>Full archival only.</strong> There is no pruning option: the store assumes a
-                complete transaction archive, with transaction index and scripthash in the same
-                footprint class. The format is unstable until 1.0; see
+                <strong>Full archival only.</strong> There is no pruning option. The store assumes a
+                complete transaction archive with a transaction index. Scripthash is extra cost when
+                you enable <code>--shindex</code>. Format is unstable until 1.0; see
                 <a
                   href="https://github.com/reardencode/rbitcoin/blob/master/SCHEMA.md"
                   rel="noopener noreferrer"
@@ -433,6 +438,15 @@
                 >docs/architecture.md</a
               >
               — full design narrative
+            </li>
+            <li>
+              <a
+                href="https://github.com/reardencode/rbitcoin/blob/master/docs/rpc.md"
+                rel="noopener noreferrer"
+                target="_blank"
+                >docs/rpc.md</a
+              >
+              — optional JSON-RPC subset
             </li>
             <li>
               <a
@@ -484,7 +498,7 @@
               <img class="brand-mark" src="/assets/img/logo.jpg" width="32" height="32" alt="" />
               <span class="brand-name">rbitcoin</span>
             </a>
-            <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>
+            <p>A full node in Rust. 0.x — the mill is running. You own the risk.</p>
           </div>
           <div class="footer-col">
             <h3>Site</h3>

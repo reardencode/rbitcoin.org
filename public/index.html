@@ -6,7 +6,7 @@
     <title>rbitcoin — Bitcoin full node in Rust</title>
     <meta
       name="description"
-      content="rbitcoin is a Bitcoin full node in Rust for server-side operators: full archival store without a UTXO database, pure-Rust consensus, and in-process Electrum or Esplora for wallet clients."
+      content="rbitcoin is a Bitcoin full node in Rust for server-side operators: a full archive without a UTXO database, optional Electrum/Esplora indexing, optional Core-class JSON-RPC, and pure-Rust consensus."
     />
     <link rel="canonical" href="https://rbitcoin.org/" />
     <meta property="og:type" content="website" />
@@ -14,14 +14,14 @@
     <meta property="og:title" content="rbitcoin — Bitcoin full node in Rust" />
     <meta
       property="og:description"
-      content="Server-side Bitcoin full node: map-free archive, pure-Rust scripts, Electrum in-process. Experimental 0.x."
+      content="A validating full node you can run. The mill is 0.x — treat mainnet as high-scrutiny."
     />
     <meta property="og:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="rbitcoin — Bitcoin full node in Rust" />
     <meta
       name="twitter:description"
-      content="Server-side Bitcoin full node: map-free archive, pure-Rust scripts, Electrum in-process."
+      content="A validating full node you can run. Archive without a UTXO database. Optional Electrum and JSON-RPC."
     />
     <meta name="twitter:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
     <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
@@ -94,12 +94,11 @@
       <section class="hero hero-split">
         <div class="container">
           <div class="hero-copy">
-            <div class="status-chip">Experimental 0.x · early production</div>
-            <h1>Bitcoin full node in Rust for server-side operators</h1>
+            <div class="status-chip">0.x — the mill is running</div>
+            <h1>A full node you can pour yourself</h1>
             <p class="hero-lead">
-              A validating peer with a compact relational archive and in-process Electrum (optional
-              Esplora REST) in one Linux-first binary. Built for wallet backends and infrastructure—not
-              a desktop GUI or pruned lite node.
+              Bitcoin, validated in Rust, stored as a compact archive—not a UTXO bag. One Linux
+              binary. Treat mainnet as high-scrutiny until 1.0. Signet first.
             </p>
             <div class="hero-actions">
               <a class="btn btn-primary" href="/get-started/">Get started</a>
@@ -138,51 +137,60 @@
           <div class="section-head">
             <h2>Why this node is different</h2>
             <p>
-              Most full nodes organize around a UTXO set and block files. Most Electrum backends are
-              external indexers attached to another node. rbitcoin takes a different path: one process,
-              one archive, wallet indexes included.
+              One binary. One archive. No second indexer pretending to be the node. You choose what
+              extra index cost to pay.
             </p>
           </div>
-          <div class="grid-3">
+          <div class="grid-2">
             <article class="card">
               <svg class="card-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-                <rect x="4" y="6" width="28" height="24" rx="3" stroke="currentColor" stroke-width="1.5" />
-                <path d="M10 14h16M10 18h12M10 22h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <rect x="5" y="8" width="26" height="20" rx="1" stroke="currentColor" stroke-width="1.5" />
+                <path d="M9 14h10M9 18h16M9 22h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" />
+                <path d="M26 8v-3h4v3" stroke="currentColor" stroke-width="1.4" />
               </svg>
               <h3>Relational archive, no UTXO database</h3>
               <p>
-                Map-free Class A/B/C tables in the libbitcoin-class tradition: packed transactions,
-                spend annotations, and native scripthash. Transaction index and Electrum index share
-                the same archive footprint—no separate multi‑GiB UTXO chainstate.
+                Packed transactions, spend annotations, and a transaction index in map-free Class A/C
+                tables. Confirm and mempool prevouts read the archive—not a mutable coins bag and not
+                a multi‑GiB dbcache flush.
               </p>
             </article>
             <article class="card">
               <svg class="card-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-                <circle cx="18" cy="18" r="12" stroke="currentColor" stroke-width="1.5" />
-                <path d="M12 18h12M18 12v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M6 24h24M10 24V12h4v12M22 24V10h4v14" stroke="currentColor" stroke-width="1.5" />
+                <circle cx="12" cy="12" r="1.6" fill="currentColor" />
+                <circle cx="24" cy="10" r="1.6" fill="currentColor" />
               </svg>
-              <h3>Electrum in-process</h3>
+              <h3>Wallet indexes when you want them</h3>
               <p>
-                A single binary for Electrum self-hosting, with optional Esplora REST. There is no
-                second process re-indexing block files. The surface is aimed at wallet clients, not
-                a graphical block explorer.
+                Electrum and optional Esplora live in-process. They need
+                <code>--shindex</code>—a <strong>selectable indexing cost</strong> (Class B scripthash,
+                extra disk). Off by default. Without it, those listeners refuse to start. Not a
+                graphical explorer.
               </p>
             </article>
             <article class="card">
               <svg class="card-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-                <path
-                  d="M8 24V12l10-6 10 6v12l-10 6-10-6z"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linejoin="round"
-                />
-                <path d="M18 18v12M8 12l10 6 10-6" stroke="currentColor" stroke-width="1.5" />
+                <path d="M18 6l10 6v12l-10 6-10-6V12z" stroke="currentColor" stroke-width="1.5" />
+                <path d="M18 16v8M14 20h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
               </svg>
-              <h3>Pure-Rust scripts · modest RAM</h3>
+              <h3>Scripts in Rust · modest RAM</h3>
               <p>
-                Consensus and script verification run in Rust on rust-bitcoin, with secp256k1 as the
-                only cryptographic primitive. Confirm work stays lookup → load → scripts → write—no
-                multi‑GiB dbcache flushes on the hot path.
+                Structure, connect, and script verification in-tree on rust-bitcoin. secp256k1 is the
+                only crypto primitive—no libbitcoinconsensus dual-eval. Confirm is lookup → load →
+                scripts → write.
+              </p>
+            </article>
+            <article class="card">
+              <svg class="card-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <rect x="7" y="9" width="22" height="18" rx="1" stroke="currentColor" stroke-width="1.5" />
+                <path d="M11 15h14M11 19h10M11 23h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" />
+              </svg>
+              <h3>Optional Core-class JSON-RPC</h3>
+              <p>
+                A documented subset over HTTP (<code>--rpc-listen</code>, cookie or user/pass). Chain,
+                mempool, raw tx, and <code>estimatesmartfee</code>—not wallet, mining, or a UTXO-set
+                scanner. Prefer Electrum/Esplora with <code>--shindex</code> for script history.
               </p>
             </article>
           </div>
@@ -194,19 +202,19 @@
           <div class="section-head">
             <h2>Operator-order facts</h2>
             <p>
-              Approximate figures from a real mainnet archive. The tip moves; treat these as order of
-              magnitude, not a warranty or SLA.
+              Approximate figures from a real mainnet archive. The tip moves. These are order of
+              magnitude, not a warranty.
             </p>
           </div>
           <div class="metrics">
             <div class="metric">
               <span class="metric-value">~886 GiB</span>
-              <span class="metric-label">Full archive with txindex and Electrum scripthash</span>
-              <span class="metric-note">Fits ~1 TB-class disks</span>
+              <span class="metric-label">Full archive with transaction index</span>
+              <span class="metric-note">Scripthash is extra if you enable --shindex</span>
             </div>
             <div class="metric">
               <span class="metric-value">&lt; ~30 h</span>
-              <span class="metric-label">Initial block download on a laptop-class host</span>
+              <span class="metric-label">IBD on a laptop-class host</span>
               <span class="metric-note">With --milestone 0 (full script checks)</span>
             </div>
             <div class="metric">
@@ -216,8 +224,8 @@
             </div>
           </div>
           <p class="footnote">
-            Segmented transaction heads keep newer txs hottest under tip traffic. Portable static musl
-            builds target ordinary Linux hosts without a matching glibc.
+            Newer transactions resolve hottest in segmented <code>tx.head</code>. Portable static musl
+            builds run on ordinary Linux without a matching glibc.
             <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
               >Details on GitHub</a
             >.
@@ -230,22 +238,22 @@
           <div class="section-head">
             <h2>Who it is for</h2>
             <p>
-              Goals differ from Bitcoin Core: a smaller full archive and a single binary for Electrum
-              self-hosting—not every Core product surface.
+              Built for people who will run the mill: validate, store, and serve. Not every Core
+              surface. Not a lighter coin on a smaller disk.
             </p>
           </div>
           <div class="audience">
             <div class="card list-card for">
               <h3>Built for</h3>
               <ul>
-                <li>Operators running Electrum or Esplora wallet backends</li>
-                <li>Infrastructure that wants validation and indexing in one process</li>
-                <li>Linux servers with roughly terabyte-class disk for a full archive</li>
-                <li>Engineers who want a transparent pure-Rust consensus path</li>
+                <li>Operators who want Electrum or Esplora in the same process (with --shindex)</li>
+                <li>Infrastructure that needs a documented JSON-RPC subset next to the archive</li>
+                <li>Linux hosts with terabyte-class disk for a full archive</li>
+                <li>Engineers who want scripts verified in-tree, in Rust</li>
               </ul>
             </div>
             <div class="card list-card not">
-              <h3>Not a fit today</h3>
+              <h3>Out of scope</h3>
               <ul>
                 <li>Desktop wallets, mining, or a graphical UI</li>
                 <li>Pruned or low-disk “lite” deployments</li>
@@ -260,10 +268,10 @@
         <div class="container">
           <div class="cta-band">
             <div>
-              <h2>Start on signet</h2>
+              <h2>Run signet until you trust the logs</h2>
               <p>
-                Soak on signet before any mainnet cutover. On-disk format and APIs remain unstable
-                until 1.0. Source and portable musl builds are on GitHub.
+                Then consider mainnet, with monitoring. Format and APIs stay unstable until 1.0.
+                Source and portable musl builds are on GitHub.
               </p>
             </div>
             <div class="hero-actions">
@@ -289,7 +297,7 @@
               <img class="brand-mark" src="/assets/img/logo.jpg" width="32" height="32" alt="" />
               <span class="brand-name">rbitcoin</span>
             </a>
-            <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>
+            <p>A full node in Rust. 0.x — the mill is running. You own the risk.</p>
           </div>
           <div class="footer-col">
             <h3>Site</h3>

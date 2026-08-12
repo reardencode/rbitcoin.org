@@ -6,7 +6,7 @@
     <title>About — rbitcoin</title>
     <meta
       name="description"
-      content="About rbitcoin: Bitcoin full node in Rust by Brandon Black (@reardencode), AI-assisted implementation, MIT OR Apache-2.0."
+      content="About rbitcoin: a full node in Rust under Brandon Black (@reardencode). Contact, license, donate."
     />
     <link rel="canonical" href="https://rbitcoin.org/about/" />
     <meta property="og:type" content="website" />
@@ -88,11 +88,11 @@
       <div class="page-hero">
         <div class="hero-tracks" aria-hidden="true"><img src="/assets/img/tracks.jpg" alt="" width="720" height="1280" decoding="async" /></div>
         <div class="container">
-          <div class="status-chip">Experimental 0.x · open source</div>
+          <div class="status-chip">0.x — someone had to pour the steel</div>
           <h1>About</h1>
           <p>
-            rbitcoin is a Bitcoin full node in Rust for server-side operators: multi-peer IBD, tip
-            follow, relay, and in-process Electrum with optional Esplora for wallet clients.
+            A full node in Rust for people who will run it: validate, archive, and serve wallet
+            clients if they choose the index cost.
           </p>
         </div>
       </div>
@@ -101,24 +101,23 @@
         <div class="container prose">
           <h2 class="mt-0">Purpose</h2>
           <p>
-            The design centers a libbitcoin-class relational archive (no UTXO database), pure-Rust
-            consensus on rust-bitcoin, and a single Linux binary for Electrum self-hosting. The full
-            archive is smaller than a typical Core-plus-external-indexer stack, while remaining full
-            archival—not a pruned lite node.
+            The design is a libbitcoin-class relational archive (no UTXO database), scripts verified
+            in Rust, and one Linux binary. Electrum and Esplora are there if you pay for
+            <code>--shindex</code>. JSON-RPC is a documented subset if you need Core-shaped tools.
+            Full archival—not a pruned lite node.
           </p>
           <p>
-            Product focus is infrastructure and wallet backends. The node is not a desktop wallet,
-            miner, or graphical explorer.
+            Built for infrastructure. Not a desktop wallet, miner, or graphical explorer.
           </p>
 
           <h2>Origin</h2>
           <p>
-            The architecture had been under consideration for years. First-party implementation was
-            written with AI assistance (Grok / xAI) under the direction and prompting of
+            The layout sat in a notebook for years. Someone had to pour the steel. First-party code
+            was written with AI assistance (Grok / xAI) under
             <strong>Brandon Black</strong>
             (<a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">@reardencode</a>).
-            That does not reduce the seriousness of consensus, P2P, or Electrum integrity, or how
-            bugs should be reported. See the node
+            That does not cheapen consensus, P2P, or Electrum integrity, or how to report bugs. See
+            the node
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/SECURITY.md"
               rel="noopener noreferrer"
@@ -272,7 +271,7 @@
               <img class="brand-mark" src="/assets/img/logo.jpg" width="32" height="32" alt="" />
               <span class="brand-name">rbitcoin</span>
             </a>
-            <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>
+            <p>A full node in Rust. 0.x — the mill is running. You own the risk.</p>
           </div>
           <div class="footer-col">
             <h3>Site</h3>

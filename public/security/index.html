@@ -6,7 +6,7 @@
     <title>Security — rbitcoin</title>
     <meta
       name="description"
-      content="Report rbitcoin vulnerabilities privately to security@reardencode.com. Experimental 0.x expectations and milestone honesty."
+      content="Report rbitcoin vulnerabilities privately to security@reardencode.com. 0.x expectations and milestone honesty."
     />
     <link rel="canonical" href="https://rbitcoin.org/security/" />
     <meta property="og:type" content="website" />
@@ -88,11 +88,11 @@
       <div class="page-hero">
         <div class="hero-tracks" aria-hidden="true"><img src="/assets/img/tracks.jpg" alt="" width="720" height="1280" decoding="async" /></div>
         <div class="container">
-          <div class="status-chip">Experimental 0.x · report privately</div>
+          <div class="status-chip">0.x — report privately</div>
           <h1>Security</h1>
           <p>
-            Full-node software intended for server-side use. Until 1.0, treat mainnet as early
-            production and keep scrutiny high.
+            The mill is running. Until 1.0, treat mainnet as high-scrutiny. Consensus bugs still
+            matter.
           </p>
         </div>
       </div>
@@ -119,8 +119,7 @@
               active 0.x line.
             </li>
             <li>
-              The software is early: progress is rapid, and operators should assume high scrutiny
-              rather than turnkey production readiness.
+              Progress is rapid. Assume high scrutiny—not a turnkey appliance.
             </li>
           </ul>
 
@@ -138,7 +137,12 @@
             <li>Consensus and script: accepting invalid chain data or rejecting valid data</li>
             <li>P2P (BIP324 v2 only): denial-of-service and misbehavior handling</li>
             <li>
-              Electrum and Esplora wallet-client backends: integrity and application-level DoS limits
+              Electrum and Esplora (when <code>--shindex</code> is on): integrity and application-level
+              DoS limits
+            </li>
+            <li>
+              Optional JSON-RPC: authentication, integrity of documented methods (not a full Core
+              surface)
             </li>
             <li>
               Store and archive: corruption or incorrect spend or scripthash results that could
@@ -214,7 +218,7 @@
               <img class="brand-mark" src="/assets/img/logo.jpg" width="32" height="32" alt="" />
               <span class="brand-name">rbitcoin</span>
             </a>
-            <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>
+            <p>A full node in Rust. 0.x — the mill is running. You own the risk.</p>
           </div>
           <div class="footer-col">
             <h3>Site</h3>

@@ -14,7 +14,7 @@
     <meta property="og:title" content="rbitcoin — Bitcoin full node in Rust" />
     <meta
       property="og:description"
-      content="A validating full node you can run. The mill is 0.x — treat mainnet as high-scrutiny."
+      content="Bitcoin full node in Rust for server-side operators. Experimental 0.x — treat mainnet as high-scrutiny."
     />
     <meta property="og:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -94,11 +94,12 @@
       <section class="hero hero-split">
         <div class="container">
           <div class="hero-copy">
-            <div class="status-chip">0.x — the mill is running</div>
-            <h1>A full node you can pour yourself</h1>
+            <div class="status-chip">Experimental 0.x · treat mainnet as high-scrutiny</div>
+            <h1>Bitcoin full node in Rust for server-side operators</h1>
             <p class="hero-lead">
-              Bitcoin, validated in Rust, stored as a compact archive—not a UTXO bag. One Linux
-              binary. Treat mainnet as high-scrutiny until 1.0. Signet first.
+              A validating peer with a compact relational archive—not a UTXO database—in one
+              Linux-first binary. Electrum, Esplora, and a Core-class JSON-RPC subset are optional.
+              Prefer signet until 1.0.
             </p>
             <div class="hero-actions">
               <a class="btn btn-primary" href="get-started/index.html">Get started</a>
@@ -137,8 +138,8 @@
           <div class="section-head">
             <h2>Why this node is different</h2>
             <p>
-              One binary. One archive. No second indexer pretending to be the node. You choose what
-              extra index cost to pay.
+              One binary and one archive: a validating node without a separate indexer process.
+              Scripthash indexing is optional and billed as extra disk, not as a default.
             </p>
           </div>
           <div class="grid-2">
@@ -238,8 +239,8 @@
           <div class="section-head">
             <h2>Who it is for</h2>
             <p>
-              Built for people who will run the mill: validate, store, and serve. Not every Core
-              surface. Not a lighter coin on a smaller disk.
+              Aimed at operators who validate, store, and serve. The product is not a full Bitcoin
+              Core replacement and not a pruned or desktop node.
             </p>
           </div>
           <div class="audience">
@@ -297,7 +298,7 @@
               <img class="brand-mark" src="assets/img/logo.jpg" width="32" height="32" alt="" />
               <span class="brand-name">rbitcoin</span>
             </a>
-            <p>A full node in Rust. 0.x — the mill is running. You own the risk.</p>
+            <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>
           </div>
           <div class="footer-col">
             <h3>Site</h3>

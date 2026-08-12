@@ -1519,7 +1519,7 @@ pre code {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 0.45rem;
 }
 
@@ -1528,10 +1528,18 @@ pre code {
   color: var(--text);
 }
 
+.donate-address-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
 .ln-address,
 .sp-address {
   display: block;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   box-sizing: border-box;
   margin: 0;
   padding: 0.65rem 0.85rem;
@@ -1548,9 +1556,21 @@ pre code {
   font-size: 0.72rem;
 }
 
-.donate-method-body .copy-btn {
+.donate-address-row .copy-btn {
   position: static;
-  align-self: flex-start;
+  flex-shrink: 0;
+  align-self: center;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .donate-address-row {
+    flex-wrap: wrap;
+  }
+
+  .donate-address-row .copy-btn {
+    width: 100%;
+  }
 }
 
 /* ——— Utility ——— */

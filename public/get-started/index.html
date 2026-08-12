@@ -6,7 +6,7 @@
     <title>Get started — rbitcoin</title>
     <meta
       name="description"
-      content="Build rbitcoin with Nix musl, run signet first, then opt into --shindex or JSON-RPC. Milestone honesty for mainnet scripts."
+      content="Build rbitcoin from source with Nix, run signet first, then opt into --shindex or JSON-RPC. Milestone honesty for mainnet scripts."
     />
     <link rel="canonical" href="https://rbitcoin.org/get-started/" />
     <meta property="og:type" content="website" />
@@ -14,7 +14,7 @@
     <meta property="og:title" content="Get started — rbitcoin" />
     <meta
       property="og:description"
-      content="Build and run rbitcoin: portable musl static binary via Nix, signet first."
+      content="Build rbitcoin from source with Nix, then run signet first."
     />
     <meta property="og:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -91,8 +91,8 @@
           <div class="status-chip">Experimental 0.x · signet first</div>
           <h1>Get started</h1>
           <p>
-            Copy a musl binary. Run signet until you trust the logs. The format and public APIs stay
-            unstable until 1.0.
+            Clone the source and build with Nix. Run signet until you trust the logs. The format and
+            public APIs stay unstable until 1.0.
           </p>
         </div>
       </div>
@@ -128,9 +128,9 @@
             <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
               >github.com/reardencode/rbitcoin</a
             >.
-            The recommended portable build uses
+            The recommended way to produce a portable static binary is
             <a href="https://nixos.org/download/" rel="noopener noreferrer" target="_blank">Nix</a>
-            with flakes enabled.
+            with flakes enabled. Pre-built release binaries are not published yet.
           </p>
           <div class="pre-wrap">
             <button type="button" class="copy-btn" data-copy="cmd-clone">Copy</button>
@@ -245,7 +245,7 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
               (terabyte-class). <code>--shindex</code> adds scripthash cost on top.
             </li>
             <li><strong>Mode:</strong> full archival only—there is no pruning option.</li>
-            <li><strong>Build:</strong> Nix with flakes for the musl static release (preferred).</li>
+            <li><strong>Build:</strong> Nix with flakes; <code>nix build .#rbitcoin-musl</code> for a static binary (preferred).</li>
             <li>
               <strong>P2P:</strong> BIP324 version 2 only; plan reverse-proxy TLS for Electrum and
               Esplora if you expose them beyond localhost.

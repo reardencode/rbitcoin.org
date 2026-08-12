@@ -14,6 +14,7 @@ Write clear, concrete technical English. Do **not** inject moralizing, political
 ## Facts and claims
 
 - Product numbers and CLI examples must track the **node** repo README / OPERATOR (`github.com/reardencode/rbitcoin` / workspace `rearden-bitcoin`). Label ballpark figures as approximate.
+- Do **not** claim published/downloadable release binaries until they exist. Operators **build from source** (`nix build .#rbitcoin-musl`).
 - Do not invent “faster than Core” or storage SLAs.
 - Full archival only — no pruning. Linux-first. Electrum/Esplora are wallet-client backends, not a block explorer product.
 - **`--shindex` is off by default.** It is a **user-selectable indexing cost** (disk / Class B scripthash), not a “fast sync” mode. Electrum and Esplora refuse to start without it. ~886 GiB is the archive with txindex; SH is extra when enabled.

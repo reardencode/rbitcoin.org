@@ -225,8 +225,9 @@
             </div>
           </div>
           <p class="footnote">
-            Newer transactions resolve hottest in segmented <code>tx.head</code>. Portable static musl
-            builds run on ordinary Linux without a matching glibc.
+            Newer transactions resolve hottest in segmented <code>tx.head</code>. A Nix musl build
+            produces a static binary for ordinary Linux without a matching glibc; there is no
+            published release tarball yet.
             <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
               >Details on GitHub</a
             >.
@@ -272,7 +273,8 @@
               <h2>Run signet until you trust the logs</h2>
               <p>
                 Then consider mainnet, with monitoring. Format and APIs stay unstable until 1.0.
-                Source and portable musl builds are on GitHub.
+                Source is on GitHub. Build a static musl binary with Nix; release artifacts are not
+                published yet.
               </p>
             </div>
             <div class="hero-actions">

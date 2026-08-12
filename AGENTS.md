@@ -9,7 +9,8 @@ Static marketing site for **rbitcoin**. Document root is `public/`. Clone-and-se
 Write clear, concrete technical English. Do **not** inject moralizing, political framing, or hype. Prefer mechanism over slogans.
 
 - **OK:** precise domain terms, honest 0.x status, approximate metrics labeled as such
-- **Not OK:** inventing benchmarks, burying milestone script-skip, soft-pedaling experimental status
+- **Not OK:** inventing benchmarks, burying milestone script-skip, soft-pedaling experimental status, or “prefer signet” hedging
+- Mainnet: **reckless; consensus divergence is likely** — say that, do not soften to “prefer signet”
 
 ## Facts and claims
 

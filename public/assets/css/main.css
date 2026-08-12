@@ -1461,27 +1461,96 @@ pre code {
   font-size: 0.9rem;
 }
 
-/* Silent payment / long address */
-.sp-address {
-  display: block;
-  margin: 0.75rem 0 0;
-  padding: 0.85rem 1rem;
+/* Donate methods */
+.donate-block {
+  margin-top: 0.5rem;
+}
+
+.donate-block > p {
+  margin: 0 0 1rem;
+}
+
+.donate-methods {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.donate-method {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1rem 1.1rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-strong);
+  border-left: 3px solid var(--rail);
+}
+
+.donate-method-sp {
+  border-left-color: var(--copper);
+}
+
+.donate-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 0.45rem;
+  object-fit: cover;
+  background: #0a0c0e;
+}
+
+.donate-icon-sp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  line-height: 1.5;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--copper-bright);
+  border: 1px solid var(--rail);
+}
+
+.donate-method-body {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+}
+
+.donate-method-body strong {
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.ln-address,
+.sp-address {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.45;
   word-break: break-all;
   color: var(--steel-bright);
   background: #0a0c0e;
   border: 1px solid var(--rail);
-  border-left: 3px solid var(--copper);
 }
 
-.donate-block {
-  margin-top: 1rem;
+.sp-address {
+  font-size: 0.72rem;
 }
 
-.donate-block p {
-  margin: 0 0 0.5rem;
+.donate-method-body .copy-btn {
+  position: static;
+  align-self: flex-start;
 }
 
 /* ——— Utility ——— */

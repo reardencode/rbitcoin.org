@@ -1,0 +1,7 @@
+Brand icons vendored from official company sites (for donation UI only).
+
+Strike:  https://strike.me/apple-touch-icon.png  → strike-icon.png
+Cash App: https://cash-f.squarecdn.com/static/favicon.svg  → cashapp-icon.svg
+  (served from Cash App marketing CDN / cash.app)
+
+Trademarks belong to their respective owners.

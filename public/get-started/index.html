@@ -6,7 +6,7 @@
     <title>Get started — rbitcoin</title>
     <meta
       name="description"
-      content="Build rbitcoin from source with Nix. Mainnet use is reckless; consensus divergence is likely. Optional --shindex and JSON-RPC."
+      content="Build rbitcoin from source with Nix. Reproducible static musl binaries. Full Electrum including silent payment tweaks."
     />
     <link rel="canonical" href="https://rbitcoin.org/get-started/" />
     <meta property="og:type" content="website" />
@@ -92,9 +92,9 @@
           <div class="status-chip">Experimental 0.x · mainnet is reckless</div>
           <h1>Get started</h1>
           <p>
-            Clone the source and build with Nix. Consensus uses rust-bitcoin and libsecp256k1.
-            Mainnet use is reckless; consensus divergence is likely. Format and public APIs stay
-            unstable until 1.0.
+            Clone the source and build a reproducible musl binary with Nix. Consensus uses
+            rust-bitcoin and libsecp256k1. Mainnet use is reckless; consensus divergence is likely.
+            Format and public APIs stay unstable until 1.0.
           </p>
         </div>
       </div>
@@ -140,11 +140,12 @@
 cd rbitcoin</code></pre>
           </div>
 
-          <h2>2. Portable static release (recommended)</h2>
+          <h2>2. Reproducible static release (recommended)</h2>
           <p>
-            Pinned nixpkgs and <code>Cargo.lock</code> produce fully static
-            <code>rbitcoin-node</code> and <code>rbitcoin-cli</code> binaries (musl) for ordinary
-            Linux hosts. No matching glibc is required on the target machine.
+            This is the reproducible release path. Pinned nixpkgs and <code>Cargo.lock</code> produce
+            fully static, <strong>byte-identical</strong> <code>rbitcoin-node</code> and
+            <code>rbitcoin-cli</code> binaries (musl) for a given git revision. They run on ordinary
+            Linux hosts with no Nix store and no matching glibc.
           </p>
           <div class="pre-wrap">
             <button type="button" class="copy-btn" data-copy="cmd-build">Copy</button>
@@ -186,24 +187,28 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
 
           <h2>4. Optional surfaces</h2>
           <p>
-            IBD, tip follow, and P2P do not need extra indexes. Wallet listeners and JSON-RPC are
-            opt-in.
+            IBD, tip follow, and P2P stand on their own. Wallet listeners and JSON-RPC are opt-in.
           </p>
           <p>
-            <strong>Scripthash (<code>--shindex</code>)</strong> is a selectable <em>indexing cost</em>
-            (Class B tables, extra disk)—not a faster-sync switch. Electrum and Esplora
-            <strong>refuse to start</strong> unless it is on. Default is off.
+            <strong>Electrum</strong> is a full wallet-client backend in the same process: scripthash
+            history, unconfirmed, broadcast, fees, and <strong>silent payment tweaks</strong>.
+            Optional Esplora REST covers the same role. Not a graphical explorer. Knobs:
+            <a
+              href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
+              rel="noopener noreferrer"
+              target="_blank"
+              >OPERATOR.md</a
+            >.
           </p>
           <div class="pre-wrap">
-            <button type="button" class="copy-btn" data-copy="cmd-sh">Copy</button>
-            <pre><code id="cmd-sh">./target/release/rbitcoin-node --datadir ./datadir-signet --network signet \
-  --shindex --electrum-listen 127.0.0.1:50001</code></pre>
+            <button type="button" class="copy-btn" data-copy="cmd-electrum">Copy</button>
+            <pre><code id="cmd-electrum">./target/release/rbitcoin-node --datadir ./datadir-signet --network signet \
+  --electrum-listen 127.0.0.1:50001</code></pre>
           </div>
           <p>
             <strong>JSON-RPC (<code>--rpc-listen</code>)</strong> is a documented Core-class
             <em>subset</em> (cookie file or <code>--rpcuser</code> / <code>--rpcpassword</code>). No
-            wallet, mining, or <code>scantxoutset</code>. Height/hash/txid methods do not need
-            <code>--shindex</code>. See
+            wallet, mining, or <code>scantxoutset</code>. See
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/docs/rpc.md"
               rel="noopener noreferrer"
@@ -269,7 +274,10 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
               volumes.
             </li>
             <li><strong>Mode:</strong> full archival only—there is no pruning option.</li>
-            <li><strong>Build:</strong> Nix with flakes; <code>nix build .#rbitcoin-musl</code> for a static binary (preferred).</li>
+            <li>
+              <strong>Build:</strong> Nix with flakes; <code>nix build .#rbitcoin-musl</code> is the
+              reproducible static release (preferred).
+            </li>
             <li>
               <strong>P2P:</strong> BIP324 version 2 only; plan reverse-proxy TLS for Electrum and
               Esplora if you expose them beyond localhost.

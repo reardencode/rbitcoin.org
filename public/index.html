@@ -6,7 +6,7 @@
     <title>rbitcoin — Bitcoin full node in Rust</title>
     <meta
       name="description"
-      content="rbitcoin is a Bitcoin full node in Rust: compact full archive on 1 TB-class disks, rust-bitcoin and libsecp256k1, optional Electrum/Esplora and Core-class JSON-RPC."
+      content="rbitcoin is a Bitcoin full node in Rust: compact full archive on 1 TB-class disks, rust-bitcoin and libsecp256k1, full Electrum including silent payment tweaks, reproducible musl builds."
     />
     <link rel="canonical" href="https://rbitcoin.org/" />
     <meta property="og:type" content="website" />
@@ -21,7 +21,7 @@
     <meta name="twitter:title" content="rbitcoin — Bitcoin full node in Rust" />
     <meta
       name="twitter:description"
-      content="Compact full archive, rust-bitcoin and libsecp256k1. Optional Electrum and JSON-RPC."
+      content="Compact full archive, rust-bitcoin and libsecp256k1. Full Electrum including silent payment tweaks."
     />
     <meta name="twitter:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
     <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
@@ -99,8 +99,9 @@
             <h1>Bitcoin full node in Rust for server-side operators</h1>
             <p class="hero-lead">
               A validating node for Linux servers. The store is a compact full archive, not a UTXO
-              database. Consensus uses rust-bitcoin and libsecp256k1. Electrum, Esplora, and a
-              Core-class JSON-RPC subset are optional.
+              database. Consensus uses rust-bitcoin and libsecp256k1. Full Electrum wallet serving
+              (including silent payment tweaks), Esplora, and a Core-class JSON-RPC subset are
+              optional.
             </p>
             <div class="hero-actions">
               <a class="btn btn-primary" href="get-started/index.html">Get started</a>
@@ -116,6 +117,7 @@
             <div class="meta-row">
               <span>MIT OR Apache-2.0</span>
               <span>Linux first</span>
+              <span>Reproducible musl</span>
               <span>Full archival · no UTXO database</span>
             </div>
           </div>
@@ -140,7 +142,7 @@
             <h2>Why this node is different</h2>
             <p>
               One process validates, archives, and can serve wallet clients. There is no UTXO
-              database and no separate indexer. Scripthash is extra disk when wallet clients need it.
+              database and no separate indexer.
             </p>
           </div>
           <div class="grid-2">
@@ -163,12 +165,11 @@
                 <circle cx="12" cy="12" r="1.6" fill="currentColor" />
                 <circle cx="24" cy="10" r="1.6" fill="currentColor" />
               </svg>
-              <h3>Wallet indexes when you want them</h3>
+              <h3>Full Electrum wallet serving</h3>
               <p>
-                Electrum and optional Esplora live in-process. They need
-                <code>--shindex</code>—a <strong>selectable indexing cost</strong> (Class B scripthash,
-                extra disk). Off by default. Without it, those listeners refuse to start. Not a
-                graphical explorer.
+                Electrum lives in-process: history, unconfirmed, broadcast, fees, and
+                <strong>silent payment tweaks</strong>. Optional Esplora REST covers the same wallet
+                role. Not a graphical explorer.
               </p>
             </article>
             <article class="card">
@@ -192,7 +193,7 @@
               <p>
                 A documented subset over HTTP (<code>--rpc-listen</code>, cookie or user/pass). Chain,
                 mempool, raw tx, and <code>estimatesmartfee</code>—not wallet, mining, or a UTXO-set
-                scanner. Prefer Electrum/Esplora with <code>--shindex</code> for script history.
+                scanner. Prefer Electrum or Esplora for script history and wallet clients.
               </p>
             </article>
           </div>
@@ -228,7 +229,8 @@
           </div>
           <p class="footnote">
             Without <code>--datadir-cold</code>, everything lives under <code>--datadir</code>.
-            Modest RAM during sync (no multi‑GiB dbcache). Build from source with Nix; no published
+            Modest RAM during sync (no multi‑GiB dbcache). <strong>Reproducible</strong> static musl
+            builds from a pinned Nix flake are byte-identical for a given revision. No published
             release binaries yet.
           </p>
         </div>
@@ -247,7 +249,7 @@
             <div class="card list-card for">
               <h3>Built for</h3>
               <ul>
-                <li>Operators who want Electrum or Esplora in the same process (with --shindex)</li>
+                <li>Operators who want full Electrum, including silent payment tweaks, in the same process</li>
                 <li>Infrastructure that needs a documented JSON-RPC subset next to the archive</li>
                 <li>Linux hosts with 1 TB-class disk; --datadir-cold if you have two storage classes</li>
               </ul>
@@ -270,7 +272,7 @@
             <div>
               <h2>Get the node running</h2>
               <p>
-                Clone the source and build a static musl binary with Nix. Mainnet use is reckless;
+                Clone the source and build a reproducible musl binary with Nix. Mainnet use is reckless;
                 consensus divergence is likely. If the node is useful, fund continued work.
               </p>
             </div>

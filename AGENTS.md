@@ -17,8 +17,9 @@ Write clear, concrete technical English. Do **not** inject moralizing, political
 - Product numbers and CLI examples must track the **node** repo README / OPERATOR (`github.com/reardencode/rbitcoin` / workspace `rearden-bitcoin`). Label ballpark figures as approximate.
 - Do **not** claim published/downloadable release binaries until they exist. Operators **build from source** (`nix build .#rbitcoin-musl`).
 - Do not invent “faster than Core” or storage SLAs.
-- Full archival only — no pruning. Linux-first. Electrum/Esplora are wallet-client backends, not a block explorer product.
-- **`--shindex` is off by default.** It is a **user-selectable indexing cost** (disk / Class B scripthash), not a “fast sync” mode. Electrum and Esplora refuse to start without it.
+- Full archival only — no pruning. Linux-first. **Full Electrum wallet serving** (including **silent payment tweaks**) and optional Esplora are wallet-client backends, not a block explorer product.
+- Do **not** name `--shindex` or `--sptweaks` on marketing pages. Talk about the capability, not those knobs. Point operators to OPERATOR.md for the exact CLI.
+- **Reproducible builds:** pinned Nix flake + `Cargo.lock` produce **byte-identical** static musl `rbitcoin-node` / `rbitcoin-cli` for a given revision. That is the release path.
 - **Storage:** call **1 TB-class** drives for a full archive. Do **not** publish a specific total size (it moves). **&lt; 250 GB** must stay **hot** even with full indexes. **`--datadir-cold`** puts rarely-read `inwit` on a second volume.
 - Consensus stack: **rust-bitcoin** + **libsecp256k1**. No `libbitcoinconsensus`.
 - **JSON-RPC** is an optional Core-class **subset** (`--rpc-listen`, cookie or user/pass). Not full Core parity (no wallet, mining, or `scantxoutset`).

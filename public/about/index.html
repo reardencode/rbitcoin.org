@@ -92,8 +92,8 @@
           <div class="status-chip">Experimental 0.x</div>
           <h1>About</h1>
           <p>
-            A Bitcoin full node in Rust for server-side operators. Validate, archive, and optionally
-            serve wallet clients. Fund the work if the node is useful.
+            A Bitcoin full node in Rust for server-side operators. Validate, archive, and serve
+            Electrum wallets—including silent payment tweaks. Fund the work if the node is useful.
           </p>
         </div>
       </div>
@@ -108,11 +108,11 @@
             <strong>libsecp256k1</strong>.
           </p>
           <p>
-            Electrum and Esplora need <code>--shindex</code>. JSON-RPC is a documented subset. Full
-            archival only. Plan a <strong>1 TB-class</strong> disk; keep under
-            <strong>250 GB</strong> hot even with full indexes.
-            <code>--datadir-cold</code> puts the rest on a second volume if you have more than one
-            class of storage.
+            Electrum is a full wallet-client backend, including silent payment tweaks. Esplora REST
+            is optional. JSON-RPC is a documented subset. Full archival only. Plan a
+            <strong>1 TB-class</strong> disk; keep under <strong>250 GB</strong> hot even with full
+            indexes. <code>--datadir-cold</code> puts the rest on a second volume if you have more
+            than one class of storage.
           </p>
           <p>Built for infrastructure. Not a desktop wallet, miner, or graphical explorer.</p>
 

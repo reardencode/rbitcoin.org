@@ -104,8 +104,8 @@
             <h2>One-screen picture</h2>
             <p>
               No UTXO database. Packed history is the archive. Outputs and spends stay hot. Inputs
-              and witness can sit on a second volume. Scripthash is extra disk you turn on for
-              Electrum and Esplora.
+              and witness can sit on a second volume. Wallet indexes are extra disk when you serve
+              Electrum or Esplora.
             </p>
           </div>
           <div class="store-diagram" role="img" aria-label="rbitcoin store and lookup diagram">
@@ -170,16 +170,16 @@
                 </div>
               </div>
               <div class="store-layer store-layer-b">
-                <div class="store-layer-label">Class B · indexes · off by default</div>
-                <p class="store-layer-tag">--shindex · selectable indexing cost · not a sync mode</p>
+                <div class="store-layer-label">Class B · wallet indexes</div>
+                <p class="store-layer-tag">optional · Electrum + silent payment tweaks</p>
                 <div class="store-cells store-cells-stack">
                   <div class="store-cell">
-                    <strong>scripthash.*</strong>
-                    <span>head + page chains · join A + C</span>
+                    <strong>scripthash</strong>
+                    <span>history for Electrum / Esplora</span>
                   </div>
                   <div class="store-cell">
-                    <strong>Electrum / Esplora</strong>
-                    <span>require --shindex · refuse start otherwise</span>
+                    <strong>silent payment tweaks</strong>
+                    <span>BIP352 on Electrum</span>
                   </div>
                 </div>
               </div>
@@ -216,9 +216,9 @@
             <article class="card">
               <h3>Class B — indexes (optional)</h3>
               <p>
-                Forever-open Electrum <strong>scripthash</strong> when you pass
-                <code>--shindex</code>. That is extra disk and write cost you choose—not a faster
-                IBD. Off by default. Electrum and Esplora refuse to start without it.
+                Optional wallet indexes: Electrum scripthash history and
+                <strong>silent payment tweaks</strong>. Extra disk you choose—not a faster IBD. Off
+                until you turn wallet serving on.
               </p>
             </article>
             <article class="card">
@@ -256,10 +256,10 @@
                   <td>Best-chain height → the contiguous archive range for that block.</td>
                 </tr>
                 <tr>
-                  <td>scripthash history</td>
+                  <td>scripthash / SP tweaks</td>
                   <td>
-                    Requires <code>--shindex</code>. Join the scripthash index with packed outs,
-                    spentness, and the mempool for unconfirmed.
+                    Electrum wallet index joined with packed outs, spentness, and the mempool.
+                    Silent payment tweaks are served on the same Electrum surface.
                   </td>
                 </tr>
                 <tr>
@@ -339,7 +339,7 @@
                 </tr>
                 <tr>
                   <td>Electrum / Esplora</td>
-                  <td>In-process; require <code>--shindex</code> (off by default)</td>
+                  <td>In-process Electrum, including silent payment tweaks</td>
                   <td>External indexer over Core (Fulcrum, ElectrumX, …)</td>
                 </tr>
                 <tr>
@@ -380,8 +380,8 @@
                   <td>Reads Core RPC or blk files after the fact</td>
                 </tr>
                 <tr>
-                  <td>Scripthash index</td>
-                  <td>Opt-in <code>--shindex</code>; written on confirm; join at query</td>
+                  <td>Wallet indexes</td>
+                  <td>In-process scripthash + silent payment tweaks</td>
                   <td>Separate DB built by scanning history</td>
                 </tr>
                 <tr>
@@ -401,8 +401,8 @@
             <div>
               <p>
                 <strong>Full archival only.</strong> There is no pruning option. The store assumes a
-                complete transaction archive with a transaction index. Scripthash is extra cost when
-                you enable <code>--shindex</code>. Format is unstable until 1.0; see
+                complete transaction archive with a transaction index. Wallet indexes are extra disk
+                when you serve Electrum. Format is unstable until 1.0; see
                 <a
                   href="https://github.com/reardencode/rbitcoin/blob/master/SCHEMA.md"
                   rel="noopener noreferrer"

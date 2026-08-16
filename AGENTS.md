@@ -18,8 +18,12 @@ Write clear, concrete technical English. Do **not** inject moralizing, political
 - Do **not** claim published/downloadable release binaries until they exist. Operators **build from source** (`nix build .#rbitcoin-musl`).
 - Do not invent “faster than Core” or storage SLAs.
 - Full archival only — no pruning. Linux-first. Electrum/Esplora are wallet-client backends, not a block explorer product.
-- **`--shindex` is off by default.** It is a **user-selectable indexing cost** (disk / Class B scripthash), not a “fast sync” mode. Electrum and Esplora refuse to start without it. ~886 GiB is the archive with txindex; SH is extra when enabled.
+- **`--shindex` is off by default.** It is a **user-selectable indexing cost** (disk / Class B scripthash), not a “fast sync” mode. Electrum and Esplora refuse to start without it.
+- **Storage:** call **1 TB-class** drives for a full archive. Do **not** publish a specific total size (it moves). **&lt; 250 GB** must stay **hot** even with full indexes. **`--datadir-cold`** puts rarely-read `inwit` on a second volume.
+- Consensus stack: **rust-bitcoin** + **libsecp256k1**. No `libbitcoinconsensus`.
 - **JSON-RPC** is an optional Core-class **subset** (`--rpc-listen`, cookie or user/pass). Not full Core parity (no wallet, mining, or `scantxoutset`).
+- Marketing pages stay **operator-facing**. Do not put store internals (fuse8, `create_fk`, mmap/L0, denserel, allocate-then-publish) on rbitcoin.org; those belong in the node repo.
+- First-class CTAs: **Get started** and **Donate**. Keep Donate in the header and on the home/get-started bands.
 
 ## Contact (fixed)
 

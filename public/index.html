@@ -6,7 +6,7 @@
     <title>rbitcoin — Bitcoin full node in Rust</title>
     <meta
       name="description"
-      content="rbitcoin is a Bitcoin full node in Rust for server-side operators: a full archive without a UTXO database, optional Electrum/Esplora indexing, optional Core-class JSON-RPC, and pure-Rust consensus."
+      content="rbitcoin is a Bitcoin full node in Rust: compact full archive on 1 TB-class disks, rust-bitcoin and libsecp256k1, optional Electrum/Esplora and Core-class JSON-RPC."
     />
     <link rel="canonical" href="https://rbitcoin.org/" />
     <meta property="og:type" content="website" />
@@ -21,7 +21,7 @@
     <meta name="twitter:title" content="rbitcoin — Bitcoin full node in Rust" />
     <meta
       name="twitter:description"
-      content="A validating full node you can run. Archive without a UTXO database. Optional Electrum and JSON-RPC."
+      content="Compact full archive, rust-bitcoin and libsecp256k1. Optional Electrum and JSON-RPC."
     />
     <meta name="twitter:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
     <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
@@ -57,6 +57,7 @@
             <li><a href="architecture/index.html">Architecture</a></li>
             <li><a href="security/index.html">Security</a></li>
             <li><a href="about/index.html">About</a></li>
+            <li><a class="nav-cta" href="about/index.html#donate">Donate</a></li>
           </ul>
           <div class="nav-social">
             <a
@@ -97,20 +98,20 @@
             <div class="status-chip">Experimental 0.x · mainnet is reckless</div>
             <h1>Bitcoin full node in Rust for server-side operators</h1>
             <p class="hero-lead">
-              A validating peer with a compact relational archive—not a UTXO database—in one
-              Linux-first binary. Electrum, Esplora, and a Core-class JSON-RPC subset are optional.
-              Mainnet use is reckless; consensus divergence is likely.
+              A validating node for Linux servers. The store is a compact full archive, not a UTXO
+              database. Consensus uses rust-bitcoin and libsecp256k1. Electrum, Esplora, and a
+              Core-class JSON-RPC subset are optional.
             </p>
             <div class="hero-actions">
               <a class="btn btn-primary" href="get-started/index.html">Get started</a>
+              <a class="btn btn-donate" href="about/index.html#donate">Donate</a>
               <a
-                class="btn btn-secondary"
+                class="btn btn-ghost"
                 href="https://github.com/reardencode/rbitcoin"
                 rel="noopener noreferrer"
                 target="_blank"
-                >View on GitHub</a
+                >Source</a
               >
-              <a class="btn btn-ghost" href="architecture/index.html">Architecture</a>
             </div>
             <div class="meta-row">
               <span>MIT OR Apache-2.0</span>
@@ -138,8 +139,8 @@
           <div class="section-head">
             <h2>Why this node is different</h2>
             <p>
-              One binary and one archive: a validating node without a separate indexer process.
-              Scripthash indexing is optional and billed as extra disk, not as a default.
+              One process validates, archives, and can serve wallet clients. There is no UTXO
+              database and no separate indexer. Scripthash is extra disk when wallet clients need it.
             </p>
           </div>
           <div class="grid-2">
@@ -151,9 +152,9 @@
               </svg>
               <h3>Relational archive, no UTXO database</h3>
               <p>
-                Packed transactions, spend annotations, and a transaction index in map-free Class A/C
-                tables. Confirm and mempool prevouts read the archive—not a mutable coins bag and not
-                a multi‑GiB dbcache flush.
+                Outputs, spend annotations, and a transaction index are the store. Confirm and
+                mempool prevouts read that archive—not a mutable UTXO set and not a multi‑GiB
+                dbcache flush.
               </p>
             </article>
             <article class="card">
@@ -175,11 +176,11 @@
                 <path d="M18 6l10 6v12l-10 6-10-6V12z" stroke="currentColor" stroke-width="1.5" />
                 <path d="M18 16v8M14 20h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" />
               </svg>
-              <h3>Scripts in Rust · modest RAM</h3>
+              <h3>rust-bitcoin · libsecp256k1</h3>
               <p>
-                Structure, connect, and script verification in-tree on rust-bitcoin. secp256k1 is the
-                only crypto primitive—no libbitcoinconsensus dual-eval. Confirm is lookup → load →
-                scripts → write.
+                Wire and transaction types come from <strong>rust-bitcoin</strong>. ECDSA and Schnorr
+                go through <strong>libsecp256k1</strong>. Script evaluation is in-tree Rust. There is
+                no libbitcoinconsensus dual-eval.
               </p>
             </article>
             <article class="card">
@@ -201,36 +202,34 @@
       <section class="section section-tight">
         <div class="container">
           <div class="section-head">
-            <h2>Operator-order facts</h2>
+            <h2>Storage</h2>
             <p>
-              Approximate figures from a real mainnet archive. The tip moves. These are order of
-              magnitude, not a warranty.
+              Full archival only. Size grows with the chain—plan on a <strong>1 TB-class</strong>
+              volume, not a published byte count. Split hot and cold if you have more than one class
+              of disk.
             </p>
           </div>
           <div class="metrics">
             <div class="metric">
-              <span class="metric-value">~886 GiB</span>
-              <span class="metric-label">Full archive with transaction index</span>
-              <span class="metric-note">Scripthash is extra if you enable --shindex</span>
+              <span class="metric-value">1 TB-class</span>
+              <span class="metric-label">Full archive, including indexes you enable</span>
+              <span class="metric-note">No prune. Tip moves; not a storage SLA.</span>
             </div>
             <div class="metric">
-              <span class="metric-value">&lt; ~30 h</span>
-              <span class="metric-label">IBD on a laptop-class host</span>
-              <span class="metric-note">With --milestone 0 (full script checks)</span>
+              <span class="metric-value">&lt; 250 GB hot</span>
+              <span class="metric-label">Even with full indexes</span>
+              <span class="metric-note">Outputs, spends, heads, optional scripthash</span>
             </div>
             <div class="metric">
-              <span class="metric-value">Modest RAM</span>
-              <span class="metric-label">During sync—no multi‑GiB dbcache</span>
-              <span class="metric-note">Confirm: lookup → load → scripts → write</span>
+              <span class="metric-value metric-value-flag">Hot / cold</span>
+              <span class="metric-label"><code>--datadir-cold</code> for a second volume</span>
+              <span class="metric-note">Inputs and witness can sit on HDD</span>
             </div>
           </div>
           <p class="footnote">
-            Newer transactions resolve hottest in segmented <code>tx.head</code>. A Nix musl build
-            produces a static binary for ordinary Linux without a matching glibc; there is no
-            published release tarball yet.
-            <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
-              >Details on GitHub</a
-            >.
+            Without <code>--datadir-cold</code>, everything lives under <code>--datadir</code>.
+            Modest RAM during sync (no multi‑GiB dbcache). Build from source with Nix; no published
+            release binaries yet.
           </p>
         </div>
       </section>
@@ -240,8 +239,8 @@
           <div class="section-head">
             <h2>Who it is for</h2>
             <p>
-              Aimed at operators who validate, store, and serve. The product is not a full Bitcoin
-              Core replacement and not a pruned or desktop node.
+              Aimed at operators who validate, store, and serve wallet clients. Not a Bitcoin Core
+              replacement, and not a pruned or desktop node.
             </p>
           </div>
           <div class="audience">
@@ -250,8 +249,7 @@
               <ul>
                 <li>Operators who want Electrum or Esplora in the same process (with --shindex)</li>
                 <li>Infrastructure that needs a documented JSON-RPC subset next to the archive</li>
-                <li>Linux hosts with terabyte-class disk for a full archive</li>
-                <li>Engineers who want scripts verified in-tree, in Rust</li>
+                <li>Linux hosts with 1 TB-class disk; --datadir-cold if you have two storage classes</li>
               </ul>
             </div>
             <div class="card list-card not">
@@ -270,22 +268,15 @@
         <div class="container">
           <div class="cta-band">
             <div>
-              <h2>Start on signet</h2>
+              <h2>Get the node running</h2>
               <p>
-                Mainnet use is reckless; consensus divergence is likely. Format and APIs stay unstable
-                until 1.0. Source is on GitHub. Build a static musl binary with Nix; release artifacts
-                are not published yet.
+                Clone the source and build a static musl binary with Nix. Mainnet use is reckless;
+                consensus divergence is likely. If the node is useful, fund continued work.
               </p>
             </div>
             <div class="hero-actions">
               <a class="btn btn-primary" href="get-started/index.html">Get started</a>
-              <a
-                class="btn btn-secondary"
-                href="https://x.com/reardencode"
-                rel="noopener noreferrer"
-                target="_blank"
-                >@reardencode on X</a
-              >
+              <a class="btn btn-donate" href="about/index.html#donate">Donate</a>
             </div>
           </div>
         </div>

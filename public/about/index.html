@@ -6,7 +6,7 @@
     <title>About — rbitcoin</title>
     <meta
       name="description"
-      content="About rbitcoin: a full node in Rust under Brandon Black (@reardencode). Contact, license, donate."
+      content="About rbitcoin: rust-bitcoin and libsecp256k1, compact 1 TB-class archive, contact, license, donate."
     />
     <link rel="canonical" href="https://rbitcoin.org/about/" />
     <meta property="og:type" content="website" />
@@ -51,6 +51,7 @@
             <li><a href="../architecture/index.html">Architecture</a></li>
             <li><a href="../security/index.html">Security</a></li>
             <li><a href="../about/index.html" aria-current="page">About</a></li>
+            <li><a class="nav-cta" href="#donate">Donate</a></li>
           </ul>
           <div class="nav-social">
             <a
@@ -91,8 +92,8 @@
           <div class="status-chip">Experimental 0.x</div>
           <h1>About</h1>
           <p>
-            A Bitcoin full node in Rust for server-side operators: validate, archive, and optionally
-            serve wallet clients when you enable the scripthash index.
+            A Bitcoin full node in Rust for server-side operators. Validate, archive, and optionally
+            serve wallet clients. Fund the work if the node is useful.
           </p>
         </div>
       </div>
@@ -101,14 +102,19 @@
         <div class="container prose">
           <h2 class="mt-0">Purpose</h2>
           <p>
-            The design is a libbitcoin-class relational archive (no UTXO database), scripts verified
-            in Rust, and one Linux binary. Electrum and Esplora are there if you pay for
-            <code>--shindex</code>. JSON-RPC is a documented subset if you need Core-shaped tools.
-            Full archival—not a pruned lite node.
+            rbitcoin is a validating Bitcoin full node for Linux servers. The store is a
+            libbitcoin-class relational archive—no UTXO database. Scripts are verified in Rust on
+            <strong>rust-bitcoin</strong>, with ECDSA and Schnorr through
+            <strong>libsecp256k1</strong>.
           </p>
           <p>
-            Built for infrastructure. Not a desktop wallet, miner, or graphical explorer.
+            Electrum and Esplora need <code>--shindex</code>. JSON-RPC is a documented subset. Full
+            archival only. Plan a <strong>1 TB-class</strong> disk; keep under
+            <strong>250 GB</strong> hot even with full indexes.
+            <code>--datadir-cold</code> puts the rest on a second volume if you have more than one
+            class of storage.
           </p>
+          <p>Built for infrastructure. Not a desktop wallet, miner, or graphical explorer.</p>
 
           <h2>Origin</h2>
           <p>
@@ -152,7 +158,10 @@
 
           <h2 id="donate">Donate</h2>
           <div class="donate-block">
-            <p>Optional support for ongoing development:</p>
+            <p class="donate-lead">
+              If this node is useful, fund continued work. Lightning is the easy path; silent
+              payments stay on-chain.
+            </p>
 
             <ul class="donate-methods">
               <li class="donate-method donate-method-sp">
@@ -241,23 +250,23 @@
             in the node repository (coverage gates, tests, and public commit hygiene). Site copy and
             design changes belong in the rbitcoin.org repository.
           </p>
-
-          <div class="hero-actions mt-3">
-            <a
-              class="btn btn-primary"
-              href="https://github.com/reardencode/rbitcoin"
-              rel="noopener noreferrer"
-              target="_blank"
-              >GitHub</a
-            >
-            <a
-              class="btn btn-secondary"
-              href="https://x.com/reardencode"
-              rel="noopener noreferrer"
-              target="_blank"
-              >Follow @reardencode</a
-            >
-            <a class="btn btn-ghost" href="../get-started/index.html">Get started</a>
+        </div>
+        <div class="container">
+          <div class="cta-band">
+            <div>
+              <h2>Get started</h2>
+              <p>Clone the source and build with Nix. Mainnet use is reckless.</p>
+            </div>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../get-started/index.html">Get started</a>
+              <a
+                class="btn btn-secondary"
+                href="https://github.com/reardencode/rbitcoin"
+                rel="noopener noreferrer"
+                target="_blank"
+                >Source</a
+              >
+            </div>
           </div>
         </div>
       </section>

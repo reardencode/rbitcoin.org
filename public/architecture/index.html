@@ -6,7 +6,7 @@
     <title>Architecture — rbitcoin</title>
     <meta
       name="description"
-      content="rbitcoin store: packed archive, no UTXO database, optional --shindex cost, optional Core-class JSON-RPC subset."
+      content="rbitcoin store: compact full archive, no UTXO database, 1 TB-class disk, --datadir-cold, rust-bitcoin and libsecp256k1."
     />
     <link rel="canonical" href="https://rbitcoin.org/architecture/" />
     <meta property="og:type" content="website" />
@@ -14,7 +14,7 @@
     <meta property="og:title" content="Architecture — rbitcoin" />
     <meta
       property="og:description"
-      content="Relational archive, map-free tables, tip-hot txid heads—how rbitcoin stores and looks up chain data."
+      content="Compact full archive, no UTXO database, 1 TB-class disk, --datadir-cold, rust-bitcoin and libsecp256k1."
     />
     <meta property="og:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -51,6 +51,7 @@
             <li><a href="../architecture/index.html" aria-current="page">Architecture</a></li>
             <li><a href="../security/index.html">Security</a></li>
             <li><a href="../about/index.html">About</a></li>
+            <li><a class="nav-cta" href="../about/index.html#donate">Donate</a></li>
           </ul>
           <div class="nav-social">
             <a
@@ -91,8 +92,8 @@
           <div class="status-chip">Experimental 0.x · on-disk store</div>
           <h1>Architecture</h1>
           <p>
-            Lookups hit packed history, not a UTXO bag. Normative layouts live in the node repository.
-            This page is the map.
+            Lookups hit packed history, not a UTXO bag. Hot and cold volumes split if you have more
+            than one class of disk. Normative layouts live in the node repository.
           </p>
         </div>
       </div>
@@ -102,44 +103,49 @@
           <div class="section-head">
             <h2>One-screen picture</h2>
             <p>
-              No UTXO database. Packed transactions are the archive. Class C is tip truth. Class B
-              scripthash is extra index cost you turn on when wallet clients need it.
+              No UTXO database. Packed history is the archive. Outputs and spends stay hot. Inputs
+              and witness can sit on a second volume. Scripthash is extra disk you turn on for
+              Electrum and Esplora.
             </p>
           </div>
           <div class="store-diagram" role="img" aria-label="rbitcoin store and lookup diagram">
             <div class="store-layer store-layer-a">
               <div class="store-layer-label">Class A · archive</div>
-              <p class="store-layer-tag">map-free fd tables · create_fk is dense identity</p>
-              <div class="store-cells">
+              <p class="store-layer-tag">full history · outputs stay hot · inwit can go cold</p>
+              <div class="store-cells store-cells-4">
                 <div class="store-cell">
                   <strong>headers</strong>
-                  <span>header.body / header.head</span>
+                  <span>best-chain headers</span>
                 </div>
                 <div class="store-cell">
-                  <strong>packed txs</strong>
-                  <span>tx.body · tx.idx · txid.body</span>
+                  <strong>outs / spends</strong>
+                  <span>hot even with full indexes</span>
                 </div>
                 <div class="store-cell">
-                  <strong>txid heads</strong>
-                  <span>tx.head.* · fuse8 on seal</span>
+                  <strong>inwit</strong>
+                  <span>inputs + witness · --datadir-cold</span>
+                </div>
+                <div class="store-cell">
+                  <strong>txid index</strong>
+                  <span>included · newer txs resolve first</span>
                 </div>
               </div>
             </div>
 
             <div class="store-flow" aria-hidden="true">
               <span class="store-flow-line"></span>
-              <span class="store-flow-caption">create_fk · packed bodies</span>
+              <span class="store-flow-caption">packed bodies</span>
               <span class="store-flow-line"></span>
             </div>
 
             <div class="store-layer store-layer-c">
-              <div class="store-layer-label">Class C · tip commit</div>
-              <p class="store-layer-tag">best-chain visibility · tip advance is the commit</p>
+              <div class="store-layer-label">Class C · tip</div>
+              <p class="store-layer-tag">best-chain visibility · spentness as annotations</p>
               <div class="store-cells store-cells-4">
-                <div class="store-cell"><strong>confirmed[]</strong><span>height → header_fk</span></div>
-                <div class="store-cell"><strong>strong_tx</strong><span>strong bitset</span></div>
-                <div class="store-cell"><strong>tx_height</strong><span>create height</span></div>
-                <div class="store-cell"><strong>header_txs_*</strong><span>per-block ranges</span></div>
+                <div class="store-cell"><strong>best chain</strong><span>height → header</span></div>
+                <div class="store-cell"><strong>spentness</strong><span>on create outputs</span></div>
+                <div class="store-cell"><strong>heights</strong><span>create height per tx</span></div>
+                <div class="store-cell"><strong>block ranges</strong><span>txs in each header</span></div>
               </div>
             </div>
 
@@ -154,12 +160,12 @@
                 <div class="store-layer-label">Serve / reconstruct</div>
                 <div class="store-cells store-cells-stack">
                   <div class="store-cell">
-                    <strong>historical wire</strong>
-                    <span>rebuild from packed Class A txs</span>
+                    <strong>historical blocks</strong>
+                    <span>reconstruct from outs + inwit</span>
                   </div>
                   <div class="store-cell">
-                    <strong>tip wire ring</strong>
-                    <span>soft zone for recent tip</span>
+                    <strong>recent tip</strong>
+                    <span>served from the live wire cache</span>
                   </div>
                 </div>
               </div>
@@ -180,9 +186,14 @@
             </div>
           </div>
           <p class="footnote">
-            Tables grow with <code>pread</code>/<code>pwrite</code> and fallocate; the kernel page
-            cache is L0. Class A/B/C are not process-<code>mmap</code>’d, and there is no LevelDB UTXO
-            chainstate.
+            Ordinary files under <code>--datadir</code>. <code>--datadir-cold</code> holds
+            <code>inwit</code> only. There is no LevelDB UTXO chainstate. Table names and versions:
+            <a
+              href="https://github.com/reardencode/rbitcoin/blob/master/SCHEMA.md"
+              rel="noopener noreferrer"
+              target="_blank"
+              >SCHEMA.md</a
+            >.
           </p>
         </div>
       </section>
@@ -191,34 +202,30 @@
         <div class="container">
           <div class="section-head">
             <h2>Class A / B / C</h2>
-            <p>Three roles in one store. How each class mutates matches its job.</p>
+            <p>Three roles in one store. The split is what you provision disk for.</p>
           </div>
           <div class="grid-3">
             <article class="card">
               <h3>Class A — archive</h3>
               <p>
-                Canonical history: headers and <strong>packed full transactions</strong> (body plus
-                dense index). Bodies append; visibility is published through high-water marks and
-                heads (<strong>allocate-then-publish</strong>). Identity is a dense
-                <code>create_fk</code>, with txids in a side file—not a fat key on every row.
+                Canonical history: headers, outputs (hot), inputs and witness (cold), and spend
+                annotations. <code>--datadir-cold</code> places <code>inwit</code> on a second volume;
+                outputs, spends, and the txid index stay on the hot datadir.
               </p>
             </article>
             <article class="card">
               <h3>Class B — indexes (optional)</h3>
               <p>
                 Forever-open Electrum <strong>scripthash</strong> when you pass
-                <code>--shindex</code>: thin <code>create_tx_fk</code> lists (inline or 4 KiB pages).
-                That is extra disk and write cost you choose—not a faster IBD. Query time joins A and
-                C. Off by default.
+                <code>--shindex</code>. That is extra disk and write cost you choose—not a faster
+                IBD. Off by default. Electrum and Esplora refuse to start without it.
               </p>
             </article>
             <article class="card">
               <h3>Class C — tip</h3>
               <p>
-                Best-chain visibility: <code>confirmed[]</code>, strong flags, transaction heights,
-                and per-header ranges. <strong>Tip advance is the commit.</strong> Spentness is
-                recorded as annotations on create outputs (with rare multi-spender lists)—not by
-                deleting coins from a UTXO bag.
+                Best-chain visibility and transaction heights. Spentness is recorded as annotations
+                on create outputs—not by deleting coins from a UTXO bag.
               </p>
             </article>
           </div>
@@ -242,24 +249,17 @@
               <tbody>
                 <tr>
                   <td>txid → transaction</td>
-                  <td>
-                    Segmented <code>tx.head</code> (25-bit open address; sealed segments fuse8-gated)
-                    → <code>create_fk</code> → <code>tx.idx</code> / <code>tx.body</code>; verify
-                    identity via <code>txid.body</code>
-                  </td>
+                  <td>Tip-hot txid index, then the packed body. Newer transactions resolve first.</td>
                 </tr>
                 <tr>
                   <td>height → block txs</td>
-                  <td>
-                    <code>confirmed[h]</code> → <code>header_fk</code> → contiguous Class A range from
-                    <code>header_txs_first</code> + <code>header_txs_count</code>
-                  </td>
+                  <td>Best-chain height → the contiguous archive range for that block.</td>
                 </tr>
                 <tr>
                   <td>scripthash history</td>
                   <td>
-                    Requires <code>--shindex</code>. Class B SH head/pages → create fks → join packed
-                    outs + Class C height / spentness (+ mempool for unconfirmed)
+                    Requires <code>--shindex</code>. Join the scripthash index with packed outs,
+                    spentness, and the mempool for unconfirmed.
                   </td>
                 </tr>
                 <tr>
@@ -272,7 +272,8 @@
                 <tr>
                   <td>Serve historical block wire</td>
                   <td>
-                    Reconstruct from packed Class A txs; recent tip window may hit the wire ring
+                    Reconstruct from packed outs and inwit; recent tip can be served from the live
+                    wire cache
                   </td>
                 </tr>
               </tbody>
@@ -280,22 +281,20 @@
           </div>
           <div class="grid-2 mt-3">
             <article class="card">
-              <h3>Tip-hot transaction heads</h3>
+              <h3>Hot and cold volumes</h3>
               <p>
-                <code>tx.head/</code> is a <strong>segmented, keyless</strong> address table of dense
-                create foreign keys: fixed 25-bit open segments with relative ids, roll at load or
-                soft span, and <strong>binary fuse8</strong> only on seal. Open segments always probe;
-                sealed segments are fuse-gated. <strong>Newer transactions resolve hottest</strong>,
-                so tip-local traffic wins without a multi‑GiB open hash of every outpoint.
+                Plan a <strong>1 TB-class</strong> disk for the full archive. Under
+                <strong>250 GB</strong> must stay hot even with full indexes (outputs, spends, heads,
+                optional scripthash). <code>--datadir-cold</code> puts inputs and witness on a second
+                volume. Reconstruct and raw-tx serve still work.
               </p>
             </article>
             <article class="card">
-              <h3>Map-free I/O</h3>
+              <h3>No UTXO chainstate</h3>
               <p>
-                Class A/B/C are ordinary files: <strong>pread</strong>/<strong>pwrite</strong>,
-                fallocate capacity growth, page cache as L0. The process does not
-                <code>mmap</code> the archive tables. Optional bulk io_uring covers some denserel
-                paths; table transport stays file-descriptor based and page-coalesced.
+                The archive is ordinary files under <code>--datadir</code>. There is no pruning
+                option and no LevelDB coins database. Historical blocks are rebuilt from packed
+                outs and inwit.
               </p>
             </article>
           </div>
@@ -320,12 +319,12 @@
               <tbody>
                 <tr>
                   <td>Primary store</td>
-                  <td>Map-free Class A/B/C tables; page cache as L0</td>
+                  <td>Packed archive tables; no UTXO set</td>
                   <td>blocks/blk*.dat + undo + LevelDB chainstate (UTXO)</td>
                 </tr>
                 <tr>
                   <td>Historical blocks</td>
-                  <td>Reconstruct from packed tx archive; tip wire ring</td>
+                  <td>Reconstruct from packed outs + inwit</td>
                   <td>Serve raw blk / undo</td>
                 </tr>
                 <tr>
@@ -335,7 +334,7 @@
                 </tr>
                 <tr>
                   <td>Txid lookup</td>
-                  <td>Segmented tip-hot heads + dense body; full archive index included</td>
+                  <td>Full archive txid index included; newer txs resolve first</td>
                   <td>Optional txindex; otherwise not the hot path</td>
                 </tr>
                 <tr>
@@ -350,7 +349,7 @@
                 </tr>
                 <tr>
                   <td>Script verification</td>
-                  <td>Pure Rust in-tree (secp256k1 via rust-bitcoin)</td>
+                  <td>In-tree Rust scripts; rust-bitcoin types; libsecp256k1 for ECDSA/Schnorr</td>
                   <td>libbitcoinconsensus / C++ interpreter</td>
                 </tr>
               </tbody>
@@ -450,24 +449,6 @@
             </li>
             <li>
               <a
-                href="https://github.com/reardencode/rbitcoin/blob/master/docs/io-modality.md"
-                rel="noopener noreferrer"
-                target="_blank"
-                >docs/io-modality.md</a
-              >
-              — pread / uring bulk paths
-            </li>
-            <li>
-              <a
-                href="https://github.com/reardencode/rbitcoin/blob/master/docs/concurrency.md"
-                rel="noopener noreferrer"
-                target="_blank"
-                >docs/concurrency.md</a
-              >
-              — writer roles / lock-free publish
-            </li>
-            <li>
-              <a
                 href="https://github.com/reardencode/rbitcoin/blob/master/COMPAT.md"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -476,15 +457,17 @@
               — intentional differences vs Core / Electrum
             </li>
           </ul>
-          <div class="hero-actions mt-3">
-            <a class="btn btn-primary" href="../get-started/index.html">Get started</a>
-            <a
-              class="btn btn-secondary"
-              href="https://github.com/reardencode/rbitcoin"
-              rel="noopener noreferrer"
-              target="_blank"
-              >GitHub</a
-            >
+        </div>
+        <div class="container">
+          <div class="cta-band">
+            <div>
+              <h2>Get started</h2>
+              <p>Build from source with Nix. Donate if the node is useful.</p>
+            </div>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="../get-started/index.html">Get started</a>
+              <a class="btn btn-donate" href="../about/index.html#donate">Donate</a>
+            </div>
           </div>
         </div>
       </section>

@@ -51,6 +51,7 @@
             <li><a href="../architecture/index.html">Architecture</a></li>
             <li><a href="../security/index.html">Security</a></li>
             <li><a href="../about/index.html">About</a></li>
+            <li><a class="nav-cta" href="../about/index.html#donate">Donate</a></li>
           </ul>
           <div class="nav-social">
             <a
@@ -91,8 +92,9 @@
           <div class="status-chip">Experimental 0.x · mainnet is reckless</div>
           <h1>Get started</h1>
           <p>
-            Clone the source and build with Nix. Mainnet use is reckless; consensus divergence is
-            likely. Format and public APIs stay unstable until 1.0.
+            Clone the source and build with Nix. Consensus uses rust-bitcoin and libsecp256k1.
+            Mainnet use is reckless; consensus divergence is likely. Format and public APIs stay
+            unstable until 1.0.
           </p>
         </div>
       </div>
@@ -218,6 +220,29 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
             Put TLS in front if you bind beyond localhost (Electrum, Esplora, or RPC).
           </p>
 
+          <h2>5. Hot and cold datadirs</h2>
+          <p>
+            A full archive belongs on <strong>1 TB-class</strong> media. Less than
+            <strong>250 GB</strong> must stay on fast (hot) storage even with full indexes. The rest
+            of the rarely-read input and witness data can sit on a second volume:
+          </p>
+          <div class="pre-wrap">
+            <button type="button" class="copy-btn" data-copy="cmd-cold">Copy</button>
+            <pre><code id="cmd-cold">./target/release/rbitcoin-node --datadir /mnt/nvme/rbtc \
+  --datadir-cold /mnt/hdd/rbtc-cold --network signet</code></pre>
+          </div>
+          <p>
+            <code>--datadir-cold</code> holds Class A <code>inwit.body</code> and
+            <code>inwit.idx/</code> only. Confirm, spends, heads, and optional scripthash stay on
+            <code>--datadir</code>. Omit the flag and both live in one tree. See
+            <a
+              href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
+              rel="noopener noreferrer"
+              target="_blank"
+              >OPERATOR.md</a
+            >.
+          </p>
+
           <h2>Milestone honesty</h2>
           <div class="callout callout-info">
             <div>
@@ -227,8 +252,7 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
                 Prevouts, double-spend checks, maturity, and fees still run.
               </p>
               <p>
-                Use <code>--milestone 0</code> for full historical script validation. The compact
-                storage design keeps script-on sync competitive on laptop-class hosts. See the node
+                Use <code>--milestone 0</code> for full historical script validation. See the node
                 README for the current default height.
               </p>
             </div>
@@ -237,12 +261,12 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
           <h2>Requirements (order of magnitude)</h2>
           <ul>
             <li>
-              <strong>Platform:</strong> Linux first (io_uring and map-free file descriptors). Other
-              operating systems are unproven.
+              <strong>Platform:</strong> Linux first. Other operating systems are unproven.
             </li>
             <li>
-              <strong>Disk:</strong> roughly 886 GiB for a full archive with transaction index
-              (terabyte-class). <code>--shindex</code> adds scripthash cost on top.
+              <strong>Disk:</strong> 1 TB-class for a full archive. Keep under 250 GB on hot storage
+              even with full indexes; use <code>--datadir-cold</code> for the rest if you have two
+              volumes.
             </li>
             <li><strong>Mode:</strong> full archival only—there is no pruning option.</li>
             <li><strong>Build:</strong> Nix with flakes; <code>nix build .#rbitcoin-musl</code> for a static binary (preferred).</li>
@@ -302,16 +326,23 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
               <a href="../architecture/index.html">Architecture overview</a> on this site
             </li>
           </ul>
-
-          <div class="hero-actions mt-3">
-            <a
-              class="btn btn-primary"
-              href="https://github.com/reardencode/rbitcoin"
-              rel="noopener noreferrer"
-              target="_blank"
-              >Open GitHub</a
-            >
-            <a class="btn btn-secondary" href="../architecture/index.html">Architecture</a>
+        </div>
+        <div class="container">
+          <div class="cta-band">
+            <div>
+              <h2>If the node is useful</h2>
+              <p>Fund continued work. Lightning is the easy path; silent payments stay on-chain.</p>
+            </div>
+            <div class="hero-actions">
+              <a class="btn btn-donate" href="../about/index.html#donate">Donate</a>
+              <a
+                class="btn btn-secondary"
+                href="https://github.com/reardencode/rbitcoin"
+                rel="noopener noreferrer"
+                target="_blank"
+                >Source</a
+              >
+            </div>
           </div>
         </div>
       </section>

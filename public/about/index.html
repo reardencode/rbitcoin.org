@@ -92,8 +92,7 @@
           <div class="status-chip">Experimental 0.x</div>
           <h1>About</h1>
           <p>
-            Why this node exists, who built it, and how to reach the project. Validate, archive, and
-            serve Electrum wallets—including silent payment tweaks.
+            Why this node exists, who directed it, and how to reach the project.
           </p>
         </div>
       </div>
@@ -102,53 +101,55 @@
         <div class="container prose">
           <h2 class="mt-0" id="why">Why rbitcoin exists</h2>
           <p>
-            Most full nodes center a UTXO set and a pile of block files. rbitcoin does not. The
-            store is a compact relational archive: packed outputs and spends, inputs and witness that
-            can sit on a second volume, and a transaction index in the same tree. Full archival. No
-            pruning. No coins database. A <strong>1 TB-class</strong> drive holds the archive; under
+            Most full nodes keep a UTXO set and a pile of block files. That works. It also means you
+            pay for a mutable coins database, a large RAM cache, and a flush when the cache fills
+            up. rbitcoin does something else.
+          </p>
+          <p>
+            The store is a compact relational archive: outputs and spends, inputs and witness that
+            can sit on a cheaper disk, and a transaction index in the same tree. Full archival. No
+            pruning. No UTXO set. A <strong>1 TB-class</strong> drive holds the archive. Under
             <strong>250 GB</strong> stays hot even with wallet indexes.
-            <code>--datadir-cold</code> puts rarely-read inputs and witness on cheaper media.
-            Confirm should be limited by libsecp256k1, not by a multi‑GiB cache flush.
+            <code>--datadir-cold</code> is how you split the two. The point of that layout is that
+            script checks should be limited by libsecp256k1, not by the store.
           </p>
           <p>
-            Consensus is rust-native on that archive. Types and wire come from
-            <strong>rust-bitcoin</strong>. ECDSA and Schnorr go through
-            <strong>libsecp256k1</strong>. Script evaluation is in-tree Rust—not
-            <code>libbitcoinconsensus</code>, and not Core’s C++ interpreter with a Rust coat.
-            Independent implementations (Core, btcd, rbitcoin) reading the same chain under
-            different code can expose gaps between the understood rules and the real rules. A shared
-            consensus library is a different bet, useful for some mission-critical services.
+            Consensus sits on that archive, in Rust. Types come from
+            <strong>rust-bitcoin</strong>. Signatures go through <strong>libsecp256k1</strong>.
+            Scripts run in this tree—not <code>libbitcoinconsensus</code>, and not Core’s interpreter
+            with a Rust coat. There is value in several clients sharing one consensus library. There
+            is also value in independent implementations. Core, btcd, and rbitcoin reading the same
+            chain under different code can show where the understood rules and the real rules
+            disagree.
           </p>
           <p>
-            The same process can serve wallets: full Electrum, including
-            <strong>silent payment tweaks</strong>; optional Esplora REST; a documented Core-class
-            JSON-RPC subset. Not a desktop wallet and not a block explorer.
+            The same process can serve wallets. Electrum, including
+            <strong>silent payment tweaks</strong>. Esplora if you want REST. A slice of Core
+            JSON-RPC if you have tools that speak it. This is not a desktop wallet and not a block
+            explorer.
           </p>
           <p>
-            The design sat for years. The project exists to explore that node design space—archive
+            That design sat around for years. The project is a way to actually explore it: archive
             layout, consensus in Rust, wallet serving in one binary. There was never the time or
             energy to build it until AI made the implementation possible.
             <strong>Brandon Black</strong>
             (<a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">@reardencode</a>)
-            specified and directed the work. Grok wrote the code. Building it also documented
-            concrete rust-bitcoin limitations that can be fixed upstream. None of that reduces the
-            seriousness of consensus, P2P, or Electrum integrity, or how bugs should be reported. See
-            the node
+            specified and directed the work. Grok wrote the code. Along the way the work documented
+            rust-bitcoin limitations that can be fixed upstream. None of that makes consensus, P2P,
+            or Electrum less serious, or changes how bugs should be reported. See the node
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/SECURITY.md"
               rel="noopener noreferrer"
               target="_blank"
               >SECURITY.md</a
-            >
-            for authorship and review expectations.
+            >.
           </p>
 
           <h2>What the node is</h2>
           <p>
-            A validating Bitcoin full node for Linux servers. libbitcoin-class relational
-            archive—no UTXO database. Full archival only. Reproducible static musl builds from a
-            pinned Nix flake. Experimental 0.x: mainnet use is reckless; consensus divergence is
-            likely.
+            A validating Bitcoin full node for Linux. Full archival only. Reproducible static musl
+            builds from a pinned Nix flake. Experimental 0.x. Mainnet is reckless; consensus
+            divergence is likely.
           </p>
 
           <h2>Contact</h2>
@@ -177,8 +178,8 @@
           <h2 id="donate">Donate</h2>
           <div class="donate-block">
             <p class="donate-lead">
-              If this node is useful, fund continued work. Lightning is the easy path; silent
-              payments stay on-chain.
+              If this node is useful, send some sats. Lightning is easy; silent payments stay
+              on-chain.
             </p>
 
             <ul class="donate-methods">
@@ -265,15 +266,14 @@
               target="_blank"
               >CONTRIBUTING.md</a
             >
-            in the node repository (coverage gates, tests, and public commit hygiene). Site copy and
-            design changes belong in the rbitcoin.org repository.
+            in the node repository. Site copy belongs in this repository.
           </p>
         </div>
         <div class="container">
           <div class="cta-band">
             <div>
               <h2>Get started</h2>
-              <p>Clone the source and build with Nix. Mainnet use is reckless.</p>
+              <p>Clone it and build with Nix. Mainnet is reckless.</p>
             </div>
             <div class="hero-actions">
               <a class="btn btn-primary" href="../get-started/index.html">Get started</a>
@@ -298,7 +298,7 @@
               <img class="brand-mark" src="../assets/img/logo.jpg" width="32" height="32" alt="" />
               <span class="brand-name">rbitcoin</span>
             </a>
-            <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>
+            <p>A compact Bitcoin archive, not a UTXO set. Experimental 0.x.</p>
           </div>
           <div class="footer-col">
             <h3>Site</h3>

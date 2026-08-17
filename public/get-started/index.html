@@ -92,9 +92,8 @@
           <div class="status-chip">Experimental 0.x · mainnet is reckless</div>
           <h1>Get started</h1>
           <p>
-            Clone the source and build a reproducible musl binary with Nix. Consensus uses
-            rust-bitcoin and libsecp256k1. Mainnet use is reckless; consensus divergence is likely.
-            Format and public APIs stay unstable until 1.0.
+            Clone it, build a static binary with Nix, try it on signet. Scripts run on rust-bitcoin
+            and libsecp256k1. Mainnet is reckless. The on-disk format will change before 1.0.
           </p>
         </div>
       </div>
@@ -104,8 +103,8 @@
           <div class="callout callout-warn mb-2">
             <div>
               <p>
-                <strong>Experimental 0.x.</strong> Core pipelines exist. Mainnet use is reckless;
-                consensus divergence is likely. Read the
+                <strong>This is 0.x.</strong> The pipelines work. Mainnet will diverge from Core in
+                ways we have not found yet. Read the
                 <a
                   href="https://github.com/reardencode/rbitcoin/blob/master/docs/experimental-mainnet.md"
                   rel="noopener noreferrer"
@@ -119,7 +118,7 @@
                   target="_blank"
                   >operator guide</a
                 >
-                before depending on this binary for real funds or production wallets.
+                before you point a wallet with real funds at it.
               </p>
             </div>
           </div>
@@ -130,9 +129,9 @@
             <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
               >github.com/reardencode/rbitcoin</a
             >.
-            The recommended way to produce a portable static binary is
+            Build a portable static binary with
             <a href="https://nixos.org/download/" rel="noopener noreferrer" target="_blank">Nix</a>
-            with flakes enabled. Pre-built release binaries are not published yet.
+            and flakes. There is no download page of release tarballs yet.
           </p>
           <div class="pre-wrap">
             <button type="button" class="copy-btn" data-copy="cmd-clone">Copy</button>
@@ -142,10 +141,10 @@ cd rbitcoin</code></pre>
 
           <h2>2. Reproducible static release (recommended)</h2>
           <p>
-            This is the reproducible release path. Pinned nixpkgs and <code>Cargo.lock</code> produce
-            fully static, <strong>byte-identical</strong> <code>rbitcoin-node</code> and
-            <code>rbitcoin-cli</code> binaries (musl) for a given git revision. They run on ordinary
-            Linux hosts with no Nix store and no matching glibc.
+            Same git revision, same flake lock, same bytes. Pinned nixpkgs and
+            <code>Cargo.lock</code> build fully static <code>rbitcoin-node</code> and
+            <code>rbitcoin-cli</code> (musl). They run on ordinary Linux. You do not need Nix or a
+            matching glibc on the machine that runs them.
           </p>
           <div class="pre-wrap">
             <button type="button" class="copy-btn" data-copy="cmd-build">Copy</button>
@@ -154,8 +153,8 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
           </div>
           <p>
             Do <strong>not</strong> ship <code>cargo build --release</code> from inside
-            <code>nix-shell</code> as the operator binary: that links against the Nix store glibc and
-            fails outside the store. See
+            <code>nix-shell</code>. That binary looks for Nix’s glibc and dies the moment you copy it
+            somewhere else. See
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/docs/reproducible-builds.md"
               rel="noopener noreferrer"
@@ -166,8 +165,8 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
 
           <h2>3. Signet lab (time-boxed)</h2>
           <p>
-            Confirm the binary starts, talks to peers, and advances tip before you give it real disk
-            or real funds.
+            Make sure it starts, talks to peers, and moves tip before you give it a terabyte and real
+            coins.
           </p>
           <div class="pre-wrap">
             <button type="button" class="copy-btn" data-copy="cmd-signet">Copy</button>
@@ -187,12 +186,12 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
 
           <h2>4. Optional surfaces</h2>
           <p>
-            IBD, tip follow, and P2P stand on their own. Wallet listeners and JSON-RPC are opt-in.
+            IBD and tip follow do not need wallet indexes. Turn Electrum on when you want wallets.
           </p>
           <p>
-            <strong>Electrum</strong> is a full wallet-client backend in the same process: scripthash
-            history, unconfirmed, broadcast, fees, and <strong>silent payment tweaks</strong>.
-            Optional Esplora REST covers the same role. Not a graphical explorer. Knobs:
+            <strong>Electrum</strong> is in the same process: history, unconfirmed, broadcast, fees,
+            and <strong>silent payment tweaks</strong>. Esplora REST is optional. This is not a block
+            explorer. Flags live in
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
               rel="noopener noreferrer"
@@ -206,8 +205,8 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
   --electrum-listen 127.0.0.1:50001</code></pre>
           </div>
           <p>
-            <strong>JSON-RPC (<code>--rpc-listen</code>)</strong> is a documented Core-class
-            <em>subset</em> (cookie file or <code>--rpcuser</code> / <code>--rpcpassword</code>). No
+            <strong>JSON-RPC</strong> (<code>--rpc-listen</code>, cookie or
+            <code>--rpcuser</code> / <code>--rpcpassword</code>) is a slice of Core’s surface. No
             wallet, mining, or <code>scantxoutset</code>. See
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/docs/rpc.md"
@@ -222,14 +221,14 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
   --rpc-listen 127.0.0.1:18332</code></pre>
           </div>
           <p>
-            Put TLS in front if you bind beyond localhost (Electrum, Esplora, or RPC).
+            If you bind Electrum, Esplora, or RPC beyond localhost, put TLS in front.
           </p>
 
           <h2>5. Hot and cold datadirs</h2>
           <p>
-            A full archive belongs on <strong>1 TB-class</strong> media. Less than
-            <strong>250 GB</strong> must stay on fast (hot) storage even with full indexes. The rest
-            of the rarely-read input and witness data can sit on a second volume:
+            A full archive wants a <strong>1 TB-class</strong> disk. Keep less than
+            <strong>250 GB</strong> on the fast volume even with wallet indexes. Inputs and witness
+            are rarely read; they can live on a second disk:
           </p>
           <div class="pre-wrap">
             <button type="button" class="copy-btn" data-copy="cmd-cold">Copy</button>
@@ -237,9 +236,9 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
   --datadir-cold /mnt/hdd/rbtc-cold --network signet</code></pre>
           </div>
           <p>
-            <code>--datadir-cold</code> holds Class A <code>inwit.body</code> and
-            <code>inwit.idx/</code> only. Confirm, spends, heads, and optional scripthash stay on
-            <code>--datadir</code>. Omit the flag and both live in one tree. See
+            <code>--datadir-cold</code> holds <code>inwit.body</code> and
+            <code>inwit.idx/</code> only. Outputs, spends, the txid index, and wallet indexes stay
+            on <code>--datadir</code>. Leave the flag off and both live in one tree. See
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
               rel="noopener noreferrer"
@@ -253,12 +252,12 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
             <div>
               <p>
                 Default mainnet <code>--milestone</code> is assumevalid-style: it skips
-                <strong>script and signature</strong> checks at or below the configured height.
-                Prevouts, double-spend checks, maturity, and fees still run.
+                <strong>script and signature</strong> checks at or below that height. Prevouts,
+                double-spends, maturity, and fees still run.
               </p>
               <p>
-                Use <code>--milestone 0</code> for full historical script validation. See the node
-                README for the current default height.
+                Use <code>--milestone 0</code> if you want every historical script checked. The
+                current default height is in the node README.
               </p>
             </div>
           </div>
@@ -273,7 +272,7 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
               even with full indexes; use <code>--datadir-cold</code> for the rest if you have two
               volumes.
             </li>
-            <li><strong>Mode:</strong> full archival only—there is no pruning option.</li>
+            <li><strong>Mode:</strong> full archival only. There is no prune switch.</li>
             <li>
               <strong>Build:</strong> Nix with flakes; <code>nix build .#rbitcoin-musl</code> is the
               reproducible static release (preferred).
@@ -339,7 +338,7 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
           <div class="cta-band">
             <div>
               <h2>If the node is useful</h2>
-              <p>Fund continued work. Lightning is the easy path; silent payments stay on-chain.</p>
+              <p>Send some sats. Lightning is easy; silent payments stay on-chain.</p>
             </div>
             <div class="hero-actions">
               <a class="btn btn-donate" href="../about/index.html#donate">Donate</a>
@@ -364,7 +363,7 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
               <img class="brand-mark" src="../assets/img/logo.jpg" width="32" height="32" alt="" />
               <span class="brand-name">rbitcoin</span>
             </a>
-            <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>
+            <p>A compact Bitcoin archive, not a UTXO set. Experimental 0.x.</p>
           </div>
           <div class="footer-col">
             <h3>Site</h3>

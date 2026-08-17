@@ -6,11 +6,13 @@ Static marketing site for **rbitcoin**. Document root is `public/`. Clone-and-se
 
 ## Plain technical language
 
-Write clear, concrete technical English. Do **not** inject moralizing, political framing, or hype. Prefer mechanism over slogans.
+Write like Brandon Black’s Bitcoin Magazine technical pieces and recent X: an observation or question first, then the mechanism. Short sentences mixed with longer ones. Third person on the site. Honest 0.x. Concrete, not cute.
 
 - **OK:** precise domain terms, honest 0.x status, approximate metrics labeled as such
-- **Not OK:** inventing benchmarks, burying milestone script-skip, soft-pedaling experimental status, or “prefer signet” hedging
+- **Not OK:** inventing benchmarks, burying milestone script-skip, soft-pedaling experimental status, or “prefer signet” hedging, slogans, mill metaphors, stacked marketing noun phrases
 - Mainnet: **reckless; consensus divergence is likely** — say that, do not soften to “prefer signet”
+
+Do **not** inject moralizing, political framing, or hype.
 
 ## Facts and claims
 

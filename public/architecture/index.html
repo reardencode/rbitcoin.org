@@ -92,8 +92,8 @@
           <div class="status-chip">Experimental 0.x · on-disk store</div>
           <h1>Architecture</h1>
           <p>
-            Lookups hit packed history, not a UTXO bag. Hot and cold volumes split if you have more
-            than one class of disk. Normative layouts live in the node repository.
+            Lookups go to packed history, not a UTXO set. If you have more than one kind of disk,
+            split hot and cold. Exact table layouts live in the node repo.
           </p>
         </div>
       </div>
@@ -103,9 +103,8 @@
           <div class="section-head">
             <h2>One-screen picture</h2>
             <p>
-              No UTXO database. Packed history is the archive. Outputs and spends stay hot. Inputs
-              and witness can sit on a second volume. Wallet indexes are extra disk when you serve
-              Electrum or Esplora.
+              The archive is the truth. Outputs and spends stay on the fast disk. Inputs and witness
+              can live on something cheaper. Wallet indexes cost extra disk when you serve Electrum.
             </p>
           </div>
           <div class="store-diagram" role="img" aria-label="rbitcoin store and lookup diagram">
@@ -187,7 +186,7 @@
           </div>
           <p class="footnote">
             Ordinary files under <code>--datadir</code>. <code>--datadir-cold</code> holds
-            <code>inwit</code> only. There is no LevelDB UTXO chainstate. Table names and versions:
+            <code>inwit</code> only. There is no LevelDB coins database. Table names and versions:
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/SCHEMA.md"
               rel="noopener noreferrer"
@@ -202,30 +201,29 @@
         <div class="container">
           <div class="section-head">
             <h2>Class A / B / C</h2>
-            <p>Three roles in one store. The split is what you provision disk for.</p>
+            <p>Three jobs in one store. The split is what you buy disk for.</p>
           </div>
           <div class="grid-3">
             <article class="card">
               <h3>Class A — archive</h3>
               <p>
-                Canonical history: headers, outputs (hot), inputs and witness (cold), and spend
-                annotations. <code>--datadir-cold</code> places <code>inwit</code> on a second volume;
-                outputs, spends, and the txid index stay on the hot datadir.
+                Headers, outputs (hot), inputs and witness (cold), and spend marks.
+                <code>--datadir-cold</code> puts <code>inwit</code> on the second volume. Everything
+                you touch on the confirm path stays on the hot datadir.
               </p>
             </article>
             <article class="card">
               <h3>Class B — indexes (optional)</h3>
               <p>
-                Optional wallet indexes: Electrum scripthash history and
-                <strong>silent payment tweaks</strong>. Extra disk you choose—not a faster IBD. Off
-                until you turn wallet serving on.
+                Electrum scripthash history and <strong>silent payment tweaks</strong>. Extra disk
+                you choose, not a faster sync. Off until you turn wallet serving on.
               </p>
             </article>
             <article class="card">
               <h3>Class C — tip</h3>
               <p>
-                Best-chain visibility and transaction heights. Spentness is recorded as annotations
-                on create outputs—not by deleting coins from a UTXO bag.
+                Which chain is best, and at what height each transaction was created. Spentness is
+                a mark on the output that created the coin—not a delete from a UTXO set.
               </p>
             </article>
           </div>
@@ -236,7 +234,7 @@
         <div class="container">
           <div class="section-head">
             <h2>How lookups work</h2>
-            <p>Paths operators and wallet backends hit most often.</p>
+            <p>The questions wallets and the node itself ask most often.</p>
           </div>
           <div class="table-wrap">
             <table>
@@ -265,15 +263,13 @@
                 <tr>
                   <td>Is this output spent?</td>
                   <td>
-                    Annotation on the create output (and multi-list only when needed)—no separate
-                    UTXO hash table as truth
+                    A mark on the output that created it. No separate UTXO hash table.
                   </td>
                 </tr>
                 <tr>
                   <td>Serve historical block wire</td>
                   <td>
-                    Reconstruct from packed outs and inwit; recent tip can be served from the live
-                    wire cache
+                    Rebuild from packed outs and inwit. Recent tip can come from the live wire cache.
                   </td>
                 </tr>
               </tbody>
@@ -283,18 +279,16 @@
             <article class="card">
               <h3>Hot and cold volumes</h3>
               <p>
-                Plan a <strong>1 TB-class</strong> disk for the full archive. Under
-                <strong>250 GB</strong> must stay hot even with full indexes (outputs, spends, heads,
-                optional scripthash). <code>--datadir-cold</code> puts inputs and witness on a second
+                Plan a <strong>1 TB-class</strong> disk. Keep under <strong>250 GB</strong> hot even
+                with wallet indexes. <code>--datadir-cold</code> puts inputs and witness on a second
                 volume. Reconstruct and raw-tx serve still work.
               </p>
             </article>
             <article class="card">
               <h3>No UTXO chainstate</h3>
               <p>
-                The archive is ordinary files under <code>--datadir</code>. There is no pruning
-                option and no LevelDB coins database. Historical blocks are rebuilt from packed
-                outs and inwit.
+                Ordinary files under <code>--datadir</code>. No prune. No LevelDB coins database.
+                Historical blocks are rebuilt from packed outs and inwit.
               </p>
             </article>
           </div>
@@ -305,7 +299,7 @@
         <div class="container">
           <div class="section-head">
             <h2>Compared with Bitcoin Core (store)</h2>
-            <p>Primary truth is the archive and annotations, not a UTXO chainstate.</p>
+            <p>The archive is the truth. Core’s truth is a UTXO chainstate plus block files.</p>
           </div>
           <div class="table-wrap">
             <table>
@@ -362,7 +356,7 @@
         <div class="container">
           <div class="section-head">
             <h2>Compared with external Electrum indexers</h2>
-            <p>The validating node and the archive share one process; Class A is authoritative.</p>
+            <p>The node that validates is the node that serves. There is no second process reading blk files.</p>
           </div>
           <div class="table-wrap">
             <table>
@@ -400,9 +394,9 @@
           <div class="callout callout-info mt-3">
             <div>
               <p>
-                <strong>Full archival only.</strong> There is no pruning option. The store assumes a
-                complete transaction archive with a transaction index. Wallet indexes are extra disk
-                when you serve Electrum. Format is unstable until 1.0; see
+                <strong>Full archival only.</strong> There is no prune switch. The store assumes a
+                complete transaction archive and a transaction index. Wallet indexes are extra disk
+                when you serve Electrum. The format will change before 1.0. See
                 <a
                   href="https://github.com/reardencode/rbitcoin/blob/master/SCHEMA.md"
                   rel="noopener noreferrer"
@@ -462,7 +456,7 @@
           <div class="cta-band">
             <div>
               <h2>Get started</h2>
-              <p>Build from source with Nix. Donate if the node is useful.</p>
+              <p>Build it with Nix. Send sats if it is useful.</p>
             </div>
             <div class="hero-actions">
               <a class="btn btn-primary" href="../get-started/index.html">Get started</a>
@@ -481,7 +475,7 @@
               <img class="brand-mark" src="../assets/img/logo.jpg" width="32" height="32" alt="" />
               <span class="brand-name">rbitcoin</span>
             </a>
-            <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>
+            <p>A compact Bitcoin archive, not a UTXO set. Experimental 0.x.</p>
           </div>
           <div class="footer-col">
             <h3>Site</h3>

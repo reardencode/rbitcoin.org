@@ -92,8 +92,8 @@
           <div class="status-chip">Experimental 0.x · report privately</div>
           <h1>Security</h1>
           <p>
-            Experimental 0.x. Mainnet use is reckless; consensus divergence is likely. Consensus bugs
-            remain in scope.
+            This is 0.x. Mainnet is reckless; consensus divergence is likely. Consensus bugs are
+            still in scope.
           </p>
         </div>
       </div>
@@ -121,18 +121,15 @@
               There is no multi-year LTS branch yet; security-relevant fixes are prioritized on the
               active 0.x line.
             </li>
-            <li>
-              Progress is rapid. Assume high scrutiny—not a turnkey appliance.
-            </li>
+            <li>This is not a turnkey appliance. Treat it that way.</li>
           </ul>
 
           <h2>Milestone and script checks</h2>
           <p>
             Default mainnet <code>--milestone</code> skips <strong>script and signature</strong>
-            checks at or below the configured height (an assumevalid-style speed tradeoff). Prevouts,
-            double-spend checks, maturity, and fees still run. Use <code>--milestone 0</code> for full
-            historical script validation. That is an explicit tradeoff—not a claim that every
-            historical script was checked under the default flag.
+            checks at or below that height. Same idea as assumevalid. Prevouts, double-spends,
+            maturity, and fees still run. Use <code>--milestone 0</code> if you want every historical
+            script checked. The default flag is not a claim that they were.
           </p>
 
           <h2>In scope (node)</h2>
@@ -177,10 +174,10 @@
 
           <h2>This website</h2>
           <p>
-            rbitcoin.org is static HTML, CSS, and JavaScript with no backend. Report serious site
-            issues (for example XSS in checked-in scripts) to
+            rbitcoin.org is static HTML, CSS, and JavaScript. No backend. Report serious site issues
+            (XSS in checked-in scripts, that kind of thing) to
             <a href="mailto:security@reardencode.com">security@reardencode.com</a>.
-            Typos and broken links can be ordinary issues or pull requests on the site repository.
+            Typos and broken links can be ordinary issues or pull requests.
           </p>
 
           <h2>Contact</h2>
@@ -205,7 +202,7 @@
             </li>
           </ul>
           <p class="mt-2">
-            Use security@ for vulnerability reports. General questions go to freedom@ or X—not for
+            Use security@ for vulnerability reports. Freedom@ and X are for everything else—not for
             unfixed consensus or remote-attack bugs.
           </p>
         </div>
@@ -232,7 +229,7 @@
               <img class="brand-mark" src="../assets/img/logo.jpg" width="32" height="32" alt="" />
               <span class="brand-name">rbitcoin</span>
             </a>
-            <p>Bitcoin full node in Rust for server-side operators. Experimental 0.x.</p>
+            <p>A compact Bitcoin archive, not a UTXO set. Experimental 0.x.</p>
           </div>
           <div class="footer-col">
             <h3>Site</h3>

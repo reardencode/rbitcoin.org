@@ -6,7 +6,7 @@
     <title>About — rbitcoin</title>
     <meta
       name="description"
-      content="Why rbitcoin exists: a rust-native consensus implementation, a compact archive without a UTXO set, and full Electrum including silent payment tweaks."
+      content="Why rbitcoin exists: a compact archive without a UTXO set, rust-bitcoin and libsecp256k1, full Electrum including silent payment tweaks."
     />
     <link rel="canonical" href="https://rbitcoin.org/about/" />
     <meta property="og:type" content="website" />
@@ -14,7 +14,7 @@
     <meta property="og:title" content="About — rbitcoin" />
     <meta
       property="og:description"
-      content="Why Brandon Black built rbitcoin: independent Rust consensus, compact archive, Electrum including silent payment tweaks."
+      content="Why rbitcoin exists: compact archive without a UTXO set, rust-native consensus, Electrum including silent payment tweaks."
     />
     <meta property="og:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -102,37 +102,35 @@
         <div class="container prose">
           <h2 class="mt-0" id="why">Why rbitcoin exists</h2>
           <p>
-            I wanted a rust-native, performant Bitcoin consensus implementation to exist. Not a
-            wrapper around <code>libbitcoinconsensus</code>, and not Core’s C++ interpreter with a
-            Rust coat. Types and wire come from <strong>rust-bitcoin</strong>. ECDSA and Schnorr go
-            through <strong>libsecp256k1</strong>. Script evaluation is in-tree Rust.
+            Most full nodes center a UTXO set and a pile of block files. rbitcoin does not. The
+            store is a compact relational archive: packed outputs and spends, inputs and witness that
+            can sit on a second volume, and a transaction index in the same tree. Full archival. No
+            pruning. No coins database. A <strong>1 TB-class</strong> drive holds the archive; under
+            <strong>250 GB</strong> stays hot even with wallet indexes.
+            <code>--datadir-cold</code> puts rarely-read inputs and witness on cheaper media.
+            Confirm should be limited by libsecp256k1, not by a multi‑GiB cache flush.
           </p>
           <p>
-            Several clients can share one consensus library. That is useful for mission-critical
-            services that want a well-known engine. Independent implementations are useful for a
-            different reason: Core, btcd, and rbitcoin reading the same chain under different code
-            can expose gaps between the understood rules and the real rules. rbitcoin is that second
-            bet.
+            Consensus is rust-native on that archive. Types and wire come from
+            <strong>rust-bitcoin</strong>. ECDSA and Schnorr go through
+            <strong>libsecp256k1</strong>. Script evaluation is in-tree Rust—not
+            <code>libbitcoinconsensus</code>, and not Core’s C++ interpreter with a Rust coat.
+            Independent implementations (Core, btcd, rbitcoin) reading the same chain under
+            different code can expose gaps between the understood rules and the real rules. A shared
+            consensus library is a different bet, useful for some mission-critical services.
           </p>
           <p>
-            The store is the other half of the idea I had sat with for years: a compact relational
-            archive with no UTXO database. Full history. Full script checks when you ask for them.
-            Disk that belongs on a <strong>1 TB-class</strong> drive, with under
-            <strong>250 GB</strong> hot even with wallet indexes.
-            <code>--datadir-cold</code> puts rarely-read inputs and witness on a second volume.
-            Confirm should be limited by libsecp256k1, not by a coins database and a multi‑GiB cache
-            flush.
+            The same process can serve wallets: full Electrum, including
+            <strong>silent payment tweaks</strong>; optional Esplora REST; a documented Core-class
+            JSON-RPC subset. Not a desktop wallet and not a block explorer.
           </p>
           <p>
-            The node I wanted to run also had to serve wallets. Electrum in the same process,
-            including <strong>silent payment tweaks</strong>; Esplora if you want REST; a documented
-            Core-class JSON-RPC subset if you need it. Not a desktop wallet and not a block explorer.
-          </p>
-          <p>
-            I specified that design and directed the implementation —
+            The design sat for years. The project exists to explore that node design space—archive
+            layout, consensus in Rust, wallet serving in one binary. There was never the time or
+            energy to build it until AI made the implementation possible.
             <strong>Brandon Black</strong>
-            (<a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">@reardencode</a>).
-            First-party code was written with AI assistance (Grok / xAI). Building it also documented
+            (<a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">@reardencode</a>)
+            specified and directed the work. Grok wrote the code. Building it also documented
             concrete rust-bitcoin limitations that can be fixed upstream. None of that reduces the
             seriousness of consensus, P2P, or Electrum integrity, or how bugs should be reported. See
             the node

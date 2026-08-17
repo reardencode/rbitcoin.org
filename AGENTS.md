@@ -25,7 +25,7 @@ Write clear, concrete technical English. Do **not** inject moralizing, political
 - **JSON-RPC** is an optional Core-class **subset** (`--rpc-listen`, cookie or user/pass). Not full Core parity (no wallet, mining, or `scantxoutset`).
 - Marketing pages stay **operator-facing**. Do not put store internals (fuse8, `create_fk`, mmap/L0, denserel, allocate-then-publish) on rbitcoin.org; those belong in the node repo.
 - First-class CTAs: **Get started** and **Donate**. Keep Donate in the header and on the home/get-started bands.
-- **Why it exists** lives on About (`#why`), first person as Brandon Black. Lead with rust-native independent consensus; then compact no-UTXO archive; then Electrum including silent payment tweaks. Do not invent personal history or “Production Ready.” AI assistance is method, not the thesis.
+- **Why it exists** lives on About (`#why`), **third person**. Lead with the **compact no-UTXO archive**; then rust-native consensus; then Electrum including silent payment tweaks. Design sat for years (explore the node design space); Grok wrote the code once AI made implementation possible. Do not invent personal history or “Production Ready.”
 
 ## Contact (fixed)
 

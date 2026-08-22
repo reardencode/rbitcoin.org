@@ -6,7 +6,7 @@
     <title>Get started — rbitcoin</title>
     <meta
       name="description"
-      content="Build rbitcoin from source with Nix. Reproducible static musl binaries. Full Electrum including silent payment tweaks."
+      content="rbitcoin 0.5: GitHub Release or reproducible Nix musl. Cautious mainnet. Watch consensus divergence."
     />
     <link rel="canonical" href="https://rbitcoin.org/get-started/" />
     <meta property="og:type" content="website" />
@@ -14,7 +14,7 @@
     <meta property="og:title" content="Get started — rbitcoin" />
     <meta
       property="og:description"
-      content="Build rbitcoin from source with Nix. Mainnet use is reckless; consensus divergence is likely."
+      content="rbitcoin 0.5. GitHub Release or Nix musl. Cautious mainnet. Watch consensus divergence."
     />
     <meta property="og:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -89,11 +89,12 @@
       <div class="page-hero">
         <div class="hero-tracks" aria-hidden="true"><img src="../assets/img/tracks.jpg" alt="" width="720" height="1280" decoding="async" /></div>
         <div class="container">
-          <div class="status-chip">Experimental 0.x · mainnet is reckless</div>
+          <div class="status-chip">0.5 · cautious mainnet · watch consensus</div>
           <h1>Get started</h1>
           <p>
-            Clone it, build a static binary with Nix, try it on signet. Scripts run on rust-bitcoin
-            and libsecp256k1. Mainnet is reckless. The on-disk format will change before 1.0.
+            Download 0.5, or build musl with Nix. Try signet, then mainnet with another
+            implementation in view. Scripts run on rust-bitcoin and libsecp256k1. The on-disk
+            format still moves before 1.0.
           </p>
         </div>
       </div>
@@ -103,8 +104,10 @@
           <div class="callout callout-warn mb-2">
             <div>
               <p>
-                <strong>This is 0.x.</strong> The pipelines work. Mainnet will diverge from Core in
-                ways we have not found yet. Read the
+                <strong>0.5 is for cautious mainnet.</strong> IBD, tip follow, and wallet serving
+                work. The remaining risk is consensus divergence: this implementation can accept or
+                reject differently from Core. Keep another node in view before you treat rbitcoin as
+                your only picture of the chain. Read the
                 <a
                   href="https://github.com/reardencode/rbitcoin/blob/master/docs/experimental-mainnet.md"
                   rel="noopener noreferrer"
@@ -117,35 +120,50 @@
                   rel="noopener noreferrer"
                   target="_blank"
                   >operator guide</a
-                >
-                before you point a wallet with real funds at it.
+                >.
               </p>
             </div>
           </div>
 
-          <h2>1. Get the source</h2>
+          <h2>1. GitHub Release (0.5)</h2>
           <p>
-            Clone
-            <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
-              >github.com/reardencode/rbitcoin</a
-            >.
-            Build a portable static binary with
-            <a href="https://nixos.org/download/" rel="noopener noreferrer" target="_blank">Nix</a>
-            and flakes. There is no download page of release tarballs yet.
+            The
+            <a href="https://github.com/reardencode/rbitcoin/releases" rel="noopener noreferrer" target="_blank"
+              >0.5 GitHub Release</a
+            >
+            attaches <code>rbitcoin-node</code> and <code>rbitcoin-cli</code>:
+          </p>
+          <ul>
+            <li>
+              <strong>Linux x86_64 musl</strong> — fully static. This is the operator binary.
+            </li>
+            <li>
+              <strong>Windows x86_64</strong> — CRT-static <code>.exe</code>. IoRing is not
+              supported.
+            </li>
+            <li>
+              <strong>Darwin aarch64</strong> — system-dylib, ad-hoc signed, not notarized. If
+              Gatekeeper kills it:
+              <code>xattr -d com.apple.quarantine rbitcoin-node rbitcoin-cli</code>
+            </li>
+          </ul>
+          <p>
+            Checksums ship next to the binaries (<code>SHA256SUMS.*</code>). Linux first. Windows
+            and macOS are snapshots.
+          </p>
+
+          <h2>2. Reproducible musl (Linux)</h2>
+          <p>
+            Same git revision, same flake lock, same bytes. Pinned nixpkgs and
+            <code>Cargo.lock</code> build fully static <code>rbitcoin-node</code> and
+            <code>rbitcoin-cli</code>. They run on ordinary Linux with no Nix store and no matching
+            glibc. Use this to verify a Release, or to run a revision that is not tagged yet.
           </p>
           <div class="pre-wrap">
             <button type="button" class="copy-btn" data-copy="cmd-clone">Copy</button>
             <pre><code id="cmd-clone">git clone https://github.com/reardencode/rbitcoin.git
 cd rbitcoin</code></pre>
           </div>
-
-          <h2>2. Reproducible static release (recommended)</h2>
-          <p>
-            Same git revision, same flake lock, same bytes. Pinned nixpkgs and
-            <code>Cargo.lock</code> build fully static <code>rbitcoin-node</code> and
-            <code>rbitcoin-cli</code> (musl). They run on ordinary Linux. You do not need Nix or a
-            matching glibc on the machine that runs them.
-          </p>
           <div class="pre-wrap">
             <button type="button" class="copy-btn" data-copy="cmd-build">Copy</button>
             <pre><code id="cmd-build">nix build .#rbitcoin-musl
@@ -163,10 +181,10 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
             >.
           </p>
 
-          <h2>3. Signet lab (time-boxed)</h2>
+          <h2>3. Signet, then mainnet</h2>
           <p>
-            Make sure it starts, talks to peers, and moves tip before you give it a terabyte and real
-            coins.
+            Make sure it starts, talks to peers, and moves tip on signet before you give it a
+            terabyte. Then run mainnet with monitoring, and with another implementation in view.
           </p>
           <div class="pre-wrap">
             <button type="button" class="copy-btn" data-copy="cmd-signet">Copy</button>
@@ -174,8 +192,9 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
   --listen 127.0.0.1:38333 --milestone 200000 --max-run-secs 120</code></pre>
           </div>
           <p>
-            Custom Signets: <code>--signetchallenge</code> and <code>--signetblocktime</code>. Logging
-            and other knobs:
+            If you downloaded the Release, run that binary instead of
+            <code>./target/release/rbitcoin-node</code>. Custom Signets:
+            <code>--signetchallenge</code> and <code>--signetblocktime</code>. Logging and other knobs:
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
               rel="noopener noreferrer"
@@ -206,8 +225,9 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
           </div>
           <p>
             <strong>JSON-RPC</strong> (<code>--rpc-listen</code>, cookie or
-            <code>--rpcuser</code> / <code>--rpcpassword</code>) is a slice of Core’s surface. No
-            wallet, mining, or <code>scantxoutset</code>. See
+            <code>--rpcuser</code> / <code>--rpcpassword</code>) is a slice of Core’s surface: chain,
+            mempool, raw transactions, fee estimates, and a block template selector. No wallet, no
+            stratum, no <code>scantxoutset</code> coins scan. See
             <a
               href="https://github.com/reardencode/rbitcoin/blob/master/docs/rpc.md"
               rel="noopener noreferrer"
@@ -265,7 +285,8 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
           <h2>Requirements (order of magnitude)</h2>
           <ul>
             <li>
-              <strong>Platform:</strong> Linux first. Other operating systems are unproven.
+              <strong>Platform:</strong> Linux first (musl Release or Nix). Windows and macOS
+              snapshots exist; they are unproven. Darwin is aarch64 only.
             </li>
             <li>
               <strong>Disk:</strong> 1 TB-class for a full archive. Keep under 250 GB on hot storage
@@ -274,8 +295,8 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
             </li>
             <li><strong>Mode:</strong> full archival only. There is no prune switch.</li>
             <li>
-              <strong>Build:</strong> Nix with flakes; <code>nix build .#rbitcoin-musl</code> is the
-              reproducible static release (preferred).
+              <strong>Build:</strong> GitHub Release for 0.5, or <code>nix build .#rbitcoin-musl</code>
+              for a byte-identical Linux binary.
             </li>
             <li>
               <strong>P2P:</strong> BIP324 version 2 only; plan reverse-proxy TLS for Electrum and
@@ -363,7 +384,7 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
               <img class="brand-mark" src="../assets/img/logo.jpg" width="32" height="32" alt="" />
               <span class="brand-name">rbitcoin</span>
             </a>
-            <p>A compact Bitcoin archive, not a UTXO set. Experimental 0.x.</p>
+            <p>A compact Bitcoin archive, not a UTXO set. 0.5 · watch consensus.</p>
           </div>
           <div class="footer-col">
             <h3>Site</h3>

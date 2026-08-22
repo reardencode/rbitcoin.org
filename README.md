@@ -1,6 +1,6 @@
 # rbitcoin.org
 
-Marketing site for **[rbitcoin](https://github.com/reardencode/rbitcoin)** — a Bitcoin full node in Rust aimed at production server-side use (IBD, tip follow, in-process Electrum / optional Esplora for wallet clients).
+Marketing site for **[rbitcoin](https://github.com/reardencode/rbitcoin)** 0.5 — a Bitcoin full node in Rust (compact archive, no UTXO set; in-process Electrum / optional Esplora). Cautious mainnet: watch consensus divergence.
 
 **Live:** [https://rbitcoin.org](https://rbitcoin.org)
 

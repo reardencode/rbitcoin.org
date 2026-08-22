@@ -89,11 +89,12 @@
       <div class="page-hero">
         <div class="hero-tracks" aria-hidden="true"><img src="../assets/img/tracks.jpg" alt="" width="720" height="1280" decoding="async" /></div>
         <div class="container">
-          <div class="status-chip">Experimental 0.x · on-disk store</div>
+          <div class="status-chip">0.5 · on-disk store</div>
           <h1>Architecture</h1>
           <p>
             Lookups go to packed history, not a UTXO set. If you have more than one kind of disk,
-            split hot and cold. Exact table layouts live in the node repo.
+            split hot and cold. Exact table layouts live in the node repo. The format still moves
+            before 1.0; some 0.5 upgrades rebuild indexes without a full re-sync.
           </p>
         </div>
       </div>
@@ -338,7 +339,7 @@
                 </tr>
                 <tr>
                   <td>JSON-RPC</td>
-                  <td>Optional documented subset; cookie or user/pass; no wallet/mining</td>
+                  <td>Optional documented subset; cookie or user/pass; template selector, no stratum</td>
                   <td>Large Core surface including wallet and mining</td>
                 </tr>
                 <tr>
@@ -456,7 +457,7 @@
           <div class="cta-band">
             <div>
               <h2>Get started</h2>
-              <p>Build it with Nix. Send sats if it is useful.</p>
+              <p>Grab 0.5, or build musl with Nix. Watch consensus on mainnet.</p>
             </div>
             <div class="hero-actions">
               <a class="btn btn-primary" href="../get-started/index.html">Get started</a>
@@ -475,7 +476,7 @@
               <img class="brand-mark" src="../assets/img/logo.jpg" width="32" height="32" alt="" />
               <span class="brand-name">rbitcoin</span>
             </a>
-            <p>A compact Bitcoin archive, not a UTXO set. Experimental 0.x.</p>
+            <p>A compact Bitcoin archive, not a UTXO set. 0.5 · watch consensus.</p>
           </div>
           <div class="footer-col">
             <h3>Site</h3>

@@ -632,6 +632,10 @@ main {
   color: var(--text-muted);
 }
 
+.hero-copy .hero-lead + .hero-lead {
+  margin-top: -0.85rem;
+}
+
 .hero-split .hero-lead {
   max-width: none;
 }

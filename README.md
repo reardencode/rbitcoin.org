@@ -1,6 +1,6 @@
 # rbitcoin.org
 
-Marketing site for **[rbitcoin](https://github.com/reardencode/rbitcoin)** 0.5 — a Bitcoin full node in Rust (compact archive, no UTXO set; in-process Electrum / optional Esplora). Cautious mainnet: watch consensus divergence.
+Marketing site for **[rbitcoin](https://github.com/reardencode/rbitcoin)** — a Bitcoin full node in Rust (compact archive, no UTXO set; in-process Electrum / optional Esplora). Current published line: **0.5.1**. Cautious mainnet: watch consensus divergence.
 
 **Live:** [https://rbitcoin.org](https://rbitcoin.org)
 

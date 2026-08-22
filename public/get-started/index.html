@@ -6,7 +6,7 @@
     <title>Get started — rbitcoin</title>
     <meta
       name="description"
-      content="rbitcoin 0.5: GitHub Release or reproducible Nix musl. Cautious mainnet. Watch consensus divergence."
+      content="Download rbitcoin 0.5.1 from GitHub, or build musl with Nix. Cautious mainnet. Watch consensus divergence."
     />
     <link rel="canonical" href="https://rbitcoin.org/get-started/" />
     <meta property="og:type" content="website" />
@@ -14,7 +14,7 @@
     <meta property="og:title" content="Get started — rbitcoin" />
     <meta
       property="og:description"
-      content="rbitcoin 0.5. GitHub Release or Nix musl. Cautious mainnet. Watch consensus divergence."
+      content="Download rbitcoin 0.5.1, or build musl with Nix. Cautious mainnet. Watch consensus divergence."
     />
     <meta property="og:image" content="https://rbitcoin.org/assets/img/og-image.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -89,10 +89,10 @@
       <div class="page-hero">
         <div class="hero-tracks" aria-hidden="true"><img src="../assets/img/tracks.jpg" alt="" width="720" height="1280" decoding="async" /></div>
         <div class="container">
-          <div class="status-chip">0.5 · cautious mainnet · watch consensus</div>
+          <div class="status-chip">Cautious mainnet · watch consensus</div>
           <h1>Get started</h1>
           <p>
-            Download 0.5, or build musl with Nix. Try signet, then mainnet with another
+            Download 0.5.1, or build musl with Nix. Try signet, then mainnet with another
             implementation in view. Scripts run on rust-bitcoin and libsecp256k1. The on-disk
             format still moves before 1.0.
           </p>
@@ -104,10 +104,10 @@
           <div class="callout callout-warn mb-2">
             <div>
               <p>
-                <strong>0.5 is for cautious mainnet.</strong> IBD, tip follow, and wallet serving
-                work. The remaining risk is consensus divergence: this implementation can accept or
-                reject differently from Core. Keep another node in view before you treat rbitcoin as
-                your only picture of the chain. Read the
+                <strong>Cautious mainnet.</strong> IBD, tip follow, and wallet serving work. The
+                remaining risk is consensus divergence: this implementation can accept or reject
+                differently from Core. Keep another node in view before you treat rbitcoin as your
+                only picture of the chain. Read the
                 <a
                   href="https://github.com/reardencode/rbitcoin/blob/master/docs/experimental-mainnet.md"
                   rel="noopener noreferrer"
@@ -125,13 +125,13 @@
             </div>
           </div>
 
-          <h2>1. GitHub Release (0.5)</h2>
+          <h2>1. GitHub Release (0.5.1)</h2>
           <p>
-            The
-            <a href="https://github.com/reardencode/rbitcoin/releases" rel="noopener noreferrer" target="_blank"
-              >0.5 GitHub Release</a
-            >
-            attaches <code>rbitcoin-node</code> and <code>rbitcoin-cli</code>:
+            The current published line is
+            <a href="https://github.com/reardencode/rbitcoin/releases/tag/v0.5.1" rel="noopener noreferrer" target="_blank"
+              >0.5.1</a
+            >.
+            The tag attaches <code>rbitcoin-node</code> and <code>rbitcoin-cli</code>:
           </p>
           <ul>
             <li>
@@ -295,8 +295,8 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
             </li>
             <li><strong>Mode:</strong> full archival only. There is no prune switch.</li>
             <li>
-              <strong>Build:</strong> GitHub Release for 0.5, or <code>nix build .#rbitcoin-musl</code>
-              for a byte-identical Linux binary.
+              <strong>Build:</strong> GitHub Release <strong>0.5.1</strong>, or
+              <code>nix build .#rbitcoin-musl</code> for a byte-identical Linux binary.
             </li>
             <li>
               <strong>P2P:</strong> BIP324 version 2 only; plan reverse-proxy TLS for Electrum and
@@ -384,7 +384,7 @@ install -m 755 result/bin/rbitcoin-node result/bin/rbitcoin-cli target/release/<
               <img class="brand-mark" src="../assets/img/logo.jpg" width="32" height="32" alt="" />
               <span class="brand-name">rbitcoin</span>
             </a>
-            <p>A compact Bitcoin archive, not a UTXO set. 0.5 · watch consensus.</p>
+            <p>A compact Bitcoin archive, not a UTXO set. Watch consensus.</p>
           </div>
           <div class="footer-col">
             <h3>Site</h3>

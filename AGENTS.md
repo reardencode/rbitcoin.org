@@ -17,7 +17,7 @@ Do **not** inject moralizing, political framing, or hype.
 ## Facts and claims
 
 - Product numbers and CLI examples must track the **node** repo README / OPERATOR (`github.com/reardencode/rbitcoin` / workspace `rearden-bitcoin`). Label ballpark figures as approximate.
-- **0.5 GitHub Release** is the install CTA: Linux musl (operator binary), Windows CRT-static, Darwin aarch64 (ad-hoc signed, not notarized). **Nix** (`nix build .#rbitcoin-musl`) is the **reproducible** Linux path. Linux first; Darwin/Windows are snapshots (no IoRing on Windows; Darwin needs `xattr -d com.apple.quarantine` if Gatekeeper kills it).
+- Name the current published tag (**0.5.1**) only on **install/download**. Everywhere else prefer “rbitcoin” / **0.x**, not a patch. GitHub Release: Linux musl (operator binary), Windows CRT-static, Darwin aarch64 (ad-hoc signed, not notarized). **Nix** (`nix build .#rbitcoin-musl`) is the **reproducible** Linux path. Linux first; Darwin/Windows are snapshots (no IoRing on Windows; Darwin needs `xattr -d com.apple.quarantine` if Gatekeeper kills it).
 - Do not invent “faster than Core” or storage SLAs. Do not publish a specific archive GiB or IBD hour count (they move). Laptop-class full-script IBD may be mentioned as practical, not a warranty.
 - Full archival only — no pruning. Linux-first. **Full Electrum wallet serving** (including **silent payment tweaks**) and optional Esplora are wallet-client backends, not a block explorer product.
 - Do **not** name `--shindex` or `--sptweaks` on marketing pages. Talk about the capability, not those knobs. Point operators to OPERATOR.md for the exact CLI.

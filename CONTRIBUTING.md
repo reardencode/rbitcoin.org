@@ -24,7 +24,7 @@ python3 scripts/check-site.py   # href/src, CSS url(), manifest icons, og:image
 
 - Prefer small PRs that update related pages together (e.g. nav in all HTML files).
 - Self-host assets under `public/assets/` (no required CDN).
-- Match the navy / bitcoin-orange visual system in `public/assets/css/main.css`.
+- Follow the Essential design and editing rules in [`AGENTS.md`](AGENTS.md). Shared styles live in `public/assets/site.css`.
 
 ## License
 

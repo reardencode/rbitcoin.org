@@ -1,532 +1,279 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
     <title>Architecture — rbitcoin</title>
     <meta
+      content="Why the archive replaces the coins database—and what that changes."
       name="description"
-      content="rbitcoin store: compact full archive, no UTXO database, ~720 GiB fully indexed / ~226 GiB hot, --datadir-cold, rust-bitcoin and libsecp256k1."
     />
-    <link rel="canonical" href="https://rbitcoin.org/architecture/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://rbitcoin.org/architecture/" />
-    <meta property="og:title" content="Architecture — rbitcoin" />
+    <meta content="#ffffff" name="theme-color" />
+    <link href="../assets/img/favicon.svg" rel="icon" type="image/svg+xml" />
+    <script src="../assets/theme.js?v=text-toggle"></script>
+    <link href="../assets/site.css?v=original-brand" rel="stylesheet" />
+    <script defer="" src="../assets/archive-comparison.js"></script>
+    <link href="https://rbitcoin.org/architecture/" rel="canonical" />
+    <link href="../site.webmanifest" rel="manifest" />
+    <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
+    <meta content="website" property="og:type" />
+    <meta content="rbitcoin" property="og:site_name" />
+    <meta content="Architecture — rbitcoin" property="og:title" />
     <meta
+      content="Why the archive replaces the coins database—and what that changes."
       property="og:description"
-      content="Compact full archive, no UTXO database, ~720 GiB fully indexed / ~226 GiB hot, --datadir-cold, rust-bitcoin and libsecp256k1."
     />
-    <meta property="og:image" content="https://rbitcoin.org/assets/img/og-card.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://rbitcoin.org/assets/img/og-card.jpg" />
-    <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="../assets/img/icon-192.png" type="image/png" sizes="192x192" />
-    <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png" sizes="180x180" />
-    <link rel="manifest" href="../site.webmanifest" />
-    <link rel="stylesheet" href="../assets/css/main.css" />
+    <meta content="https://rbitcoin.org/architecture/" property="og:url" />
+    <meta content="https://rbitcoin.org/assets/img/og-card.png" property="og:image" />
+    <meta content="1200" property="og:image:width" />
+    <meta content="630" property="og:image:height" />
+    <meta content="rbitcoin" property="og:image:alt" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <script defer="" src="../assets/release.js"></script>
   </head>
-  <body>
-    <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header">
-      <div class="header-inner">
-        <a class="brand" href="../index.html">
-          <img class="brand-mark" src="../assets/img/logo-on-dark.svg" width="48" height="34" alt="" />
-          <span class="brand-name">rbitcoin</span>
-        </a>
-        <button
-          class="nav-toggle"
-          type="button"
-          data-nav-toggle
-          aria-expanded="false"
-          aria-controls="site-nav"
-          aria-label="Open menu"
+  <body class="site essential-site reading-page">
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="chapter-grid">
+      <header class="chapter-sidebar">
+        <a class="chapter-brand" href="../index.html"
+          ><span class="brand-lockup"
+            ><img
+              class="brand-mark wordmark-light"
+              src="../assets/img/logo.svg"
+              width="1000"
+              height="720"
+              alt=""
+            /><img
+              class="brand-mark wordmark-dark"
+              src="../assets/img/logo-on-dark.svg"
+              width="1000"
+              height="720"
+              alt=""
+            /><span class="brand-name">rbitcoin</span></span
+          ></a
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
-          </svg>
-        </button>
-        <nav class="nav" id="site-nav" data-nav aria-label="Primary">
-          <ul class="nav-links">
-            <li><a href="../index.html">Home</a></li>
-            <li><a href="../get-started/index.html">Get started</a></li>
-            <li><a href="../architecture/index.html" aria-current="page">Architecture</a></li>
-            <li><a href="../security/index.html">Security</a></li>
-            <li><a href="../about/index.html">About</a></li>
-            <li><a class="nav-cta" href="../about/index.html#donate">Donate</a></li>
-          </ul>
-          <div class="nav-social">
-            <a
-              class="icon-link"
-              href="https://github.com/reardencode/rbitcoin"
-              rel="noopener noreferrer"
-              target="_blank"
-              aria-label="GitHub"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"
-                />
-              </svg>
-            </a>
-            <a
-              class="icon-link"
-              href="https://x.com/reardencode"
-              rel="noopener noreferrer"
-              target="_blank"
-              aria-label="X (Twitter)"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"
-                />
-              </svg>
-            </a>
-          </div>
+        <nav aria-label="Site" class="chapter-nav">
+          <a href="../index.html">Home</a
+          ><a href="../get-started/index.html"><span>01</span>Get started</a
+          ><a aria-current="page" href="index.html"><span>02</span>Architecture</a
+          ><a href="../wallets/index.html"><span>03</span>Wallet backends</a
+          ><a href="../security/index.html"><span>04</span>Security</a
+          ><a href="../about/index.html"><span>05</span>About</a>
         </nav>
-      </div>
-    </header>
-
-    <main id="main">
-      <div class="page-hero">
-        <div class="hero-tracks" aria-hidden="true"><img src="../assets/img/logo-on-dark.svg" alt="" decoding="async" /></div>
-        <div class="container">
-          <div class="status-chip">On-disk store</div>
-          <h1>Architecture</h1>
+      </header>
+      <main class="chapter" id="main">
+        <header class="chapter-title">
+          <p class="chapter-kicker">02 / Architecture</p>
+          <h1>The archive is the store.</h1>
+          <p class="chapter-intro">
+            rbitcoin uses indexed transaction history to find previous outputs and check whether
+            they have been spent. It records spends alongside that history, without maintaining a
+            separate UTXO database.
+          </p>
+        </header>
+        <nav aria-label="On this page" class="chapter-contents">
+          <a href="#archive">An output’s history</a><a href="#store">Three parts, one node</a
+          ><a href="#storage">Storage</a><a href="#consensus">Validation in Rust</a>
+        </nav>
+        <section id="archive">
+          <h2>An output stays in history.</h2>
           <p>
-            Lookups go to packed history, not a UTXO set. If you have more than one kind of disk,
-            split hot and cold. Schema 24 is current on the
-            <span data-release-minor>0.x</span> line; occupied 0.6.x stores refuse — wipe and redo
-            IBD. The format still moves before 1.0.
+            Bitcoin Core keeps block files alongside a separate set of unspent outputs. rbitcoin
+            looks up outputs in its archive and uses spend records and the selected chain to
+            determine whether they are available to spend.
           </p>
-        </div>
-      </div>
-
-      <section class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>One-screen picture</h2>
-            <p>
-              The archive is the truth. Outputs and spends stay on the fast disk. Inputs and witness
-              can live on something cheaper. Wallet indexes cost extra disk if you serve Electrum.
+          <figure class="archive-comparison">
+            <figcaption>Archive and UTXO set</figcaption>
+            <div aria-label="Spend output B" class="archive-controls" hidden="" role="group">
+              <button aria-pressed="true" data-choice="0" type="button">Before spend</button
+              ><button aria-pressed="false" data-choice="1" type="button">After spend</button>
+            </div>
+            <div class="comparison-rows">
+              <div class="comparison-row">
+                <span>rbitcoin archive</span
+                ><svg
+                  aria-label="rbitcoin archive: outputs A, B, and C"
+                  role="img"
+                  viewBox="0 0 300 70"
+                >
+                  <g id="archive-A">
+                    <rect class="token" height="54" width="64" x="10" y="8"></rect>
+                    <text class="center" x="42" y="41">A</text>
+                  </g>
+                  <g id="archive-B">
+                    <rect class="token focus-token" height="54" width="64" x="110" y="8"></rect>
+                    <text class="center" x="142" y="41">B</text>
+                  </g>
+                  <g id="archive-C">
+                    <rect class="token" height="54" width="64" x="210" y="8"></rect>
+                    <text class="center" x="242" y="41">C</text>
+                  </g>
+                  <path
+                    class="accent"
+                    d="M118 54 L166 16"
+                    id="spend-mark"
+                    visibility="hidden"
+                  ></path>
+                </svg>
+              </div>
+              <div class="comparison-row">
+                <span>UTXO set</span
+                ><svg aria-label="UTXO set: outputs A, B, and C" role="img" viewBox="0 0 300 70">
+                  <g id="utxo-A">
+                    <rect class="token" height="54" width="64" x="10" y="8"></rect>
+                    <text class="center" x="42" y="41">A</text>
+                  </g>
+                  <g id="utxo-B">
+                    <rect class="token focus-token" height="54" width="64" x="110" y="8"></rect>
+                    <text class="center" x="142" y="41">B</text>
+                  </g>
+                  <g id="utxo-C">
+                    <rect class="token" height="54" width="64" x="210" y="8"></rect>
+                    <text class="center" x="242" y="41">C</text>
+                  </g>
+                </svg>
+              </div>
+            </div>
+            <p aria-live="polite" class="archive-caption">
+              Output B is unspent and appears in both stores.
             </p>
-          </div>
-          <div class="store-diagram" role="img" aria-label="rbitcoin store and lookup diagram">
-            <div class="store-layer store-layer-a">
-              <div class="store-layer-label">Class A · archive</div>
-              <p class="store-layer-tag">full history · outputs stay hot · inwit can go cold</p>
-              <div class="store-cells store-cells-4">
-                <div class="store-cell">
-                  <strong>headers</strong>
-                  <span>best-chain headers</span>
-                </div>
-                <div class="store-cell">
-                  <strong>outs / spends</strong>
-                  <span>hot even with full indexes</span>
-                </div>
-                <div class="store-cell">
-                  <strong>inwit</strong>
-                  <span>inputs + witness · --datadir-cold</span>
-                </div>
-                <div class="store-cell">
-                  <strong>txid index</strong>
-                  <span>structural · IBD writes it</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="store-flow" aria-hidden="true">
-              <span class="store-flow-line"></span>
-              <span class="store-flow-caption">packed bodies</span>
-              <span class="store-flow-line"></span>
-            </div>
-
-            <div class="store-layer store-layer-c">
-              <div class="store-layer-label">Class C · tip</div>
-              <p class="store-layer-tag">best-chain visibility · spentness as annotations</p>
-              <div class="store-cells store-cells-4">
-                <div class="store-cell"><strong>best chain</strong><span>height → header</span></div>
-                <div class="store-cell"><strong>spentness</strong><span>on create outputs</span></div>
-                <div class="store-cell"><strong>heights</strong><span>create height per tx</span></div>
-                <div class="store-cell"><strong>block ranges</strong><span>txs in each header</span></div>
-              </div>
-            </div>
-
-            <div class="store-flow" aria-hidden="true">
-              <span class="store-flow-line"></span>
-              <span class="store-flow-caption">joins at query</span>
-              <span class="store-flow-line"></span>
-            </div>
-
-            <div class="store-split">
-              <div class="store-layer store-layer-out">
-                <div class="store-layer-label">Serve / reconstruct</div>
-                <div class="store-cells store-cells-stack">
-                  <div class="store-cell">
-                    <strong>historical blocks</strong>
-                    <span>reconstruct from outs + inwit</span>
-                  </div>
-                  <div class="store-cell">
-                    <strong>recent tip</strong>
-                    <span>served from the live wire cache</span>
-                  </div>
-                </div>
-              </div>
-              <div class="store-layer store-layer-b">
-                <div class="store-layer-label">Class B · wallet indexes</div>
-                <p class="store-layer-tag">optional · Electrum + silent payment tweaks</p>
-                <div class="store-cells store-cells-stack">
-                  <div class="store-cell">
-                    <strong>scripthash</strong>
-                    <span>history for Electrum / Esplora</span>
-                  </div>
-                  <div class="store-cell">
-                    <strong>silent payment tweaks</strong>
-                    <span>BIP352 + Frigate scan-key subscribe</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <p class="footnote">
-            Ordinary files under <code>--datadir</code>. <code>--datadir-cold</code> holds
-            <code>inwit</code> only. There is no LevelDB coins database. Table names and versions:
-            <a
-              href="https://github.com/reardencode/rbitcoin/blob/master/SCHEMA.md"
-              rel="noopener noreferrer"
-              target="_blank"
-              >SCHEMA.md</a
-            >.
+          </figure>
+          <p>
+            Spend status follows the selected chain. Keeping the output in history does not allow it
+            to be spent twice.
           </p>
-        </div>
-      </section>
-
-      <section class="section section-tight">
-        <div class="container">
-          <div class="section-head">
-            <h2>Class A / B / C</h2>
-            <p>Three jobs in one store. The split is what you buy disk for.</p>
-          </div>
-          <div class="grid-3">
-            <article class="card">
-              <h3>Class A — archive</h3>
-              <p>
-                Headers, outputs (hot), inputs and witness (cold), and spend marks.
-                <code>--datadir-cold</code> puts <code>inwit</code> on the second volume. Everything
-                you touch on the confirm path stays on the hot datadir.
-              </p>
-            </article>
-            <article class="card">
-              <h3>Class B — indexes (optional)</h3>
-              <p>
-                Electrum scripthash history, <strong>silent payment tweaks</strong>, and Frigate
-                scan-key subscribe. Extra disk you choose, not a faster sync — and about 150 GiB
-                temporary on the hot volume while the index packs. Off until you turn wallet serving
-                on.
-              </p>
-            </article>
-            <article class="card">
-              <h3>Class C — tip</h3>
-              <p>
-                Which chain is best, and at what height each transaction was created. Spentness is
-                a mark on the output that created the coin—not a delete from a UTXO set.
-              </p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>How lookups work</h2>
-            <p>Spentness, history, and reconstruction — without a UTXO set.</p>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Question</th>
-                  <th>Path</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>txid → transaction</td>
-                  <td>Tip-hot txid index, then the packed body. Newer transactions resolve first.</td>
-                </tr>
-                <tr>
-                  <td>height → block txs</td>
-                  <td>Best-chain height → the contiguous archive range for that block.</td>
-                </tr>
-                <tr>
-                  <td>scripthash / SP tweaks</td>
-                  <td>
-                    Electrum wallet index joined with packed outs, spentness, and the mempool.
-                    Silent payment tweaks are served on the same Electrum surface.
-                  </td>
-                </tr>
-                <tr>
-                  <td>Is this output spent?</td>
-                  <td>
-                    A mark on the output that created it. No separate UTXO hash table.
-                  </td>
-                </tr>
-                <tr>
-                  <td>Serve historical block wire</td>
-                  <td>
-                    Rebuild from packed outs and inwit. Recent tip can come from the live wire cache.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-tight">
-        <div class="container">
-          <div class="section-head">
-            <h2>Compared with bitcoin core (store)</h2>
-            <p>The archive is the truth. core’s truth is a UTXO chainstate plus block files.</p>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Concern</th>
-                  <th>rbitcoin</th>
-                  <th>bitcoin core (typical)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Primary store</td>
-                  <td>Packed archive tables; no UTXO set</td>
-                  <td>blocks/blk*.dat + undo + LevelDB chainstate (UTXO)</td>
-                </tr>
-                <tr>
-                  <td>Historical blocks</td>
-                  <td>Reconstruct from packed outs + inwit; IBD <code>getdata</code> serves from archive spans</td>
-                  <td>Serve raw blk / undo</td>
-                </tr>
-                <tr>
-                  <td>Spentness</td>
-                  <td>Annotations on creates; no mutable UTXO set as truth</td>
-                  <td>Coins view / UTXO mutations</td>
-                </tr>
-                <tr>
-                  <td>Txid lookup</td>
-                  <td>Full archive txid index, written during IBD. Not optional.</td>
-                  <td>Optional txindex; otherwise not the hot path</td>
-                </tr>
-                <tr>
-                  <td>Electrum / Esplora</td>
-                  <td>In-process Electrum, including silent payment tweaks and Frigate scan-key subscribe</td>
-                  <td>External indexer over core (Fulcrum, ElectrumX, …)</td>
-                </tr>
-                <tr>
-                  <td>JSON-RPC</td>
-                  <td>Optional documented subset; decode helpers; Bearer token or unix socket; template selector, no stratum</td>
-                  <td>Large core surface including wallet and mining</td>
-                </tr>
-                <tr>
-                  <td>Script verification</td>
-                  <td>In-tree Rust scripts; rust-bitcoin types; libsecp256k1 for ECDSA/Schnorr</td>
-                  <td>libbitcoinconsensus / C++ interpreter</td>
-                </tr>
-                <tr>
-                  <td>IBD RAM</td>
-                  <td>No coins cache. Modest process RSS; the OS page cache is the cache</td>
-                  <td>Multi‑GiB dbcache to keep the UTXO set hot</td>
-                </tr>
-                <tr>
-                  <td>IBD wall-clock</td>
-                  <td>
-                    Under 9 hours on a laptop. Default milestone vs
-                    <code>--milestone 0</code> barely moves the clock. One measured run, not a
-                    warranty.
-                  </td>
-                  <td>assumevalid / default IBD on the same class of host</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="mt-3">
-            Independent code still has to match the chain. See
-            <a href="../security/index.html#tests">Security → What the tests cover</a>.
+        </section>
+        <section id="store">
+          <h2>Three parts, one node.</h2>
+          <dl class="fact-list">
+            <div>
+              <dt>Archive</dt>
+              <dd>
+                Headers, outputs, inputs, witness, and spend records. Historical blocks are
+                reconstructed from these transaction parts, rather than permanently stored as
+                complete raw blocks.
+              </dd>
+            </div>
+            <div>
+              <dt>Chain state</dt>
+              <dd>
+                Which chain is selected and where transactions appear in it. This determines how the
+                node interprets the archive, including which spends count.
+              </dd>
+            </div>
+            <div>
+              <dt>Wallet indexes</dt>
+              <dd>
+                Optional indexes for queries such as address history. Wallet queries combine indexed
+                history, spend status, and unconfirmed transactions in the mempool.
+              </dd>
+            </div>
+          </dl>
+          <p>
+            The transaction index is built during sync and is part of the node’s storage model.
+            Wallet indexes are optional. The same process validates blocks and serves wallets,
+            without a separate Electrum indexer.
           </p>
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <div class="section-head">
-            <h2>Compared with external Electrum indexers</h2>
-            <p>The node that validates is the node that serves. There is no second process reading blk files.</p>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Concern</th>
-                  <th>rbitcoin</th>
-                  <th>Typical external indexer</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Data source</td>
-                  <td>Validating node + archive in one process</td>
-                  <td>Reads core RPC or blk files after the fact</td>
-                </tr>
-                <tr>
-                  <td>Wallet indexes</td>
-                  <td>In-process scripthash + silent payment tweaks + Frigate scan-key subscribe</td>
-                  <td>Separate DB built by scanning history</td>
-                </tr>
-                <tr>
-                  <td>Unconfirmed</td>
-                  <td>Mempool attached in-process</td>
-                  <td>Depends on core mempool RPC</td>
-                </tr>
-                <tr>
-                  <td>Consensus</td>
-                  <td>This binary validates blocks/scripts</td>
-                  <td>Trusts the node it indexes</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="callout callout-info mt-3">
-            <div>
-              <p>
-                <strong>Full archival only.</strong> There is no prune switch. Wallet indexes are
-                extra disk when you serve Electrum. The format will change before 1.0. Current
-                tables:
-                <a
-                  href="https://github.com/reardencode/rbitcoin/blob/master/SCHEMA.md"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  >SCHEMA.md</a
-                >.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section section-tight">
-        <div class="container prose">
-          <h2 class="mt-0">Deep docs (node repo)</h2>
-          <ul>
-            <li>
-              <a
-                href="https://github.com/reardencode/rbitcoin/blob/master/SCHEMA.md"
-                rel="noopener noreferrer"
-                target="_blank"
-                >SCHEMA.md</a
-              >
-              — on-disk tables and versions
-            </li>
-            <li>
-              <a
-                href="https://github.com/reardencode/rbitcoin/blob/master/docs/architecture.md"
-                rel="noopener noreferrer"
-                target="_blank"
-                >docs/architecture.md</a
-              >
-              — full design narrative
-            </li>
-            <li>
-              <a
-                href="https://github.com/reardencode/rbitcoin/blob/master/docs/rpc.md"
-                rel="noopener noreferrer"
-                target="_blank"
-                >docs/rpc.md</a
-              >
-              — optional JSON-RPC subset
-            </li>
-            <li>
-              <a
-                href="https://github.com/reardencode/rbitcoin/blob/master/COMPAT.md"
-                rel="noopener noreferrer"
-                target="_blank"
-                >COMPAT.md</a
-              >
-              — intentional differences vs core / Electrum
-            </li>
-          </ul>
-        </div>
-        <div class="container">
-          <div class="cta-band">
-            <div>
-              <h2>Get started</h2>
-              <p>Grab a Release, or build musl with Nix.</p>
-            </div>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="../get-started/index.html">Get started</a>
-              <a class="btn btn-donate" href="../about/index.html#donate">Donate</a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="container">
-        <div class="footer-grid">
-          <div class="footer-brand">
-            <a class="brand" href="../index.html">
-              <img class="brand-mark" src="../assets/img/logo-on-dark.svg" width="48" height="34" alt="" />
-              <span class="brand-name">rbitcoin</span>
-            </a>
-            <p>Compact archive. No UTXO set. Production Ready™.</p>
-          </div>
-          <div class="footer-col">
-            <h3>Site</h3>
-            <ul>
-              <li><a href="../get-started/index.html">Get started</a></li>
-              <li><a href="../architecture/index.html">Architecture</a></li>
-              <li><a href="../security/index.html">Security</a></li>
-              <li><a href="../about/index.html">About</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h3>Project</h3>
-            <ul>
-              <li>
-                <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
-                  >GitHub</a
-                >
-              </li>
-              <li>
-                <a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">X @reardencode</a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  >Operator guide</a
-                >
-              </li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h3>Contact</h3>
-            <ul>
-              <li><a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a></li>
-              <li><a href="mailto:security@reardencode.com">security@reardencode.com</a></li>
-              <li><a href="../about/index.html#donate">Donate</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <span>© rbitcoin contributors · MIT OR Apache-2.0</span>
-          <span>Linux first · full archival</span>
-        </div>
-      </div>
+          <p>The store uses ordinary files; you do not need to install a database server.</p>
+        </section>
+        <section id="storage">
+          <h2>Keep the working data fast.</h2>
+          <p>
+            Outputs, spends, the transaction index, and wallet indexes stay in the main data
+            directory. Inputs and witness can go on a second, slower disk with
+            <code>--datadir-cold</code>. Without that option, everything stays together.
+          </p>
+          <table>
+            <caption id="measurements">
+              Mainnet storage example
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Space</th>
+                <th scope="col">Used for</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">~720 GiB total</th>
+                <td>A fully indexed archive after indexing finishes.</td>
+              </tr>
+              <tr>
+                <th scope="row">~226 GiB hot</th>
+                <td>The part kept on the fast disk, including wallet indexes.</td>
+              </tr>
+              <tr>
+                <th scope="row">~150 GiB temporary</th>
+                <td>Extra fast-disk space while the wallet history index is built.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            The temporary space is needed in addition to the finished index. Allow room for both
+            indexing and chain growth; disk use varies with chain height and enabled indexes.
+          </p>
+          <p>
+            There is no separate coins cache to size and flush. The operating system’s page cache
+            still uses RAM to keep frequently read data close.
+          </p>
+        </section>
+        <section id="consensus">
+          <h2>Validation in Rust.</h2>
+          <p>
+            rbitcoin implements consensus rules and script validation in Rust. It uses rust-bitcoin
+            types and libsecp256k1 for ECDSA and Schnorr cryptography, rather than Bitcoin Core’s
+            script interpreter.
+            <a href="../security/index.html#tests">Explore validation and testing</a>.
+          </p>
+        </section>
+        <nav aria-label="Continue reading" class="chapter-next">
+          <a href="../wallets/index.html"
+            >What the same process can serve<svg
+              aria-hidden="true"
+              class="link-icon"
+              fill="none"
+              focusable="false"
+              height="12"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.4"
+              viewBox="0 0 16 16"
+              width="12"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="m6 3 5 5-5 5"></path></svg></a
+          ><a href="../index.html">Back to home</a>
+        </nav>
+      </main>
+    </div>
+    <footer class="site-colophon">
+      <span>By <a href="https://x.com/reardencode">reardencode</a></span>
+      <nav aria-label="Project information">
+        <a href="../about/index.html#donate">Donate</a
+        ><a class="source-link" href="https://github.com/reardencode/rbitcoin"
+          ><span>Source</span
+          ><svg
+            aria-hidden="true"
+            class="link-icon"
+            fill="none"
+            focusable="false"
+            height="12"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.4"
+            viewBox="0 0 16 16"
+            width="12"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M4 12 12 4M4 4h8v8"></path></svg></a
+        ><a href="../NOTICE.txt">License</a
+        ><button aria-label="Switch color theme" class="theme-toggle" hidden="" type="button">
+          <span class="theme-label">Dark</span
+          ><span aria-hidden="true" class="theme-symbol">☾</span>
+        </button>
+      </nav>
     </footer>
-    <script src="../assets/js/main.js" defer></script>
   </body>
 </html>

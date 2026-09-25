@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <title>Wallet backends — rbitcoin</title>
+    <meta
+      content="Electrum, silent payments, Esplora, and the JSON-RPC boundary."
+      name="description"
+    />
+    <meta content="#ffffff" name="theme-color" />
+    <link href="../assets/img/favicon.svg" rel="icon" type="image/svg+xml" />
+    <script src="../assets/theme.js?v=text-toggle"></script>
+    <link href="../assets/site.css?v=original-brand" rel="stylesheet" />
+    <script defer="" src="../assets/code-copy.js?v=addresses"></script>
+    <link href="https://rbitcoin.org/wallets/" rel="canonical" />
+    <link href="../site.webmanifest" rel="manifest" />
+    <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
+    <meta content="website" property="og:type" />
+    <meta content="rbitcoin" property="og:site_name" />
+    <meta content="Wallet backends — rbitcoin" property="og:title" />
+    <meta
+      content="Electrum, silent payments, Esplora, and the JSON-RPC boundary."
+      property="og:description"
+    />
+    <meta content="https://rbitcoin.org/wallets/" property="og:url" />
+    <meta content="https://rbitcoin.org/assets/img/og-card.png" property="og:image" />
+    <meta content="1200" property="og:image:width" />
+    <meta content="630" property="og:image:height" />
+    <meta content="rbitcoin" property="og:image:alt" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <script defer="" src="../assets/release.js"></script>
+  </head>
+  <body class="site essential-site reading-page">
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="chapter-grid">
+      <header class="chapter-sidebar">
+        <a class="chapter-brand" href="../index.html"
+          ><span class="brand-lockup"
+            ><img
+              class="brand-mark wordmark-light"
+              src="../assets/img/logo.svg"
+              width="1000"
+              height="720"
+              alt=""
+            /><img
+              class="brand-mark wordmark-dark"
+              src="../assets/img/logo-on-dark.svg"
+              width="1000"
+              height="720"
+              alt=""
+            /><span class="brand-name">rbitcoin</span></span
+          ></a
+        >
+        <nav aria-label="Site" class="chapter-nav">
+          <a href="../index.html">Home</a
+          ><a href="../get-started/index.html"><span>01</span>Get started</a
+          ><a href="../architecture/index.html"><span>02</span>Architecture</a
+          ><a aria-current="page" href="index.html"><span>03</span>Wallet backends</a
+          ><a href="../security/index.html"><span>04</span>Security</a
+          ><a href="../about/index.html"><span>05</span>About</a>
+        </nav>
+      </header>
+      <main class="chapter" id="main">
+        <header class="chapter-title">
+          <p class="chapter-kicker">03 / Wallet backends</p>
+          <h1>The node that validates can serve your wallets.</h1>
+          <p class="chapter-intro">
+            Electrum and Esplora run inside rbitcoin, using the same archive as the node. A subset
+            of Bitcoin Core JSON-RPC is also available. Choose the interface your wallet needs; no
+            separate indexer is required.
+          </p>
+        </header>
+        <nav aria-label="On this page" class="chapter-contents">
+          <a href="#interfaces">Choose the interface your client needs</a
+          ><a href="#electrum">Connect a wallet</a><a href="#silent-payments">Silent payments</a
+          ><a href="#rpc">Using JSON-RPC</a><a href="#exposure">Remote access</a>
+        </nav>
+        <section id="interfaces">
+          <h2>Choose the interface your client needs</h2>
+          <dl class="fact-list">
+            <div>
+              <dt>Electrum</dt>
+              <dd>
+                Confirmed and unconfirmed history, transaction broadcast, fee information, silent
+                payment tweaks, and Electrum 1.6 package broadcast.
+              </dd>
+            </div>
+            <div>
+              <dt>Esplora</dt>
+              <dd>
+                A REST interface for wallet clients. It is an API, not a bundled graphical block
+                explorer.
+              </dd>
+            </div>
+            <div>
+              <dt>JSON-RPC</dt>
+              <dd>
+                Chain, mempool, raw-transaction and decode methods, fee estimates, and a
+                block-template selector. A subset, not the complete Bitcoin Core interface.
+              </dd>
+            </div>
+          </dl>
+          <p>
+            Your wallet keeps your keys and signs transactions. rbitcoin supplies chain data and
+            broadcasts transactions. Check the
+            <a
+              data-release-doc="COMPAT.md"
+              href="https://github.com/reardencode/rbitcoin/blob/master/COMPAT.md"
+              >compatibility contract</a
+            >
+            before pointing an existing integration at it.
+          </p>
+        </section>
+        <section id="electrum">
+          <h2>Connect a wallet</h2>
+          <p>
+            Electrum and Esplora need <code>--sh-index</code>, the optional index for wallet
+            history. It is off by default.
+          </p>
+          <p>
+            Continue from the <a href="../get-started/index.html#signet">Linux signet setup</a>.
+            Stop the node with Ctrl-C, then restart it with the same data directory:
+          </p>
+          <figure class="command-block">
+            <figcaption>
+              <span id="electrum-label">Run Electrum on signet</span
+              ><button
+                aria-label="Copy Electrum command"
+                class="copy-command"
+                hidden=""
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  fill="none"
+                  height="14"
+                  stroke="currentColor"
+                  stroke-width="1.2"
+                  viewBox="0 0 16 16"
+                  width="14"
+                >
+                  <rect height="8" rx="1" width="8" x="5.5" y="5.5"></rect>
+                  <path d="M10.5 3V2.5h-8v8H3"></path></svg
+                ><span>Copy</span>
+              </button>
+            </figcaption>
+            <pre
+              aria-labelledby="electrum-label"
+              tabindex="0"
+            ><code>./rbitcoin-node --datadir ./datadir-signet \
+  --network signet --listen 127.0.0.1:38333 \
+  --milestone 0 --sh-index \
+  --electrum-listen 127.0.0.1:50001</code></pre>
+            <p aria-live="polite" class="copy-status" role="status"></p>
+          </figure>
+          <p>
+            Leave the node running while it syncs and builds the wallet index. Electrum waits until
+            that index is ready; reaching the chain tip alone is not enough. Enabling the index
+            after a mainnet sync can take hours and needs
+            <a href="../architecture/index.html#storage">extra temporary disk space</a>.
+          </p>
+          <p>
+            In a signet-capable wallet on the same machine, select signet and set its Electrum
+            server to <code>127.0.0.1</code>, port <code>50001</code>, using plain TCP (SSL/TLS
+            off). These settings are for a local connection. A wallet on another device needs the
+            <a href="#exposure">remote-access setup</a>.
+          </p>
+        </section>
+        <section id="silent-payments">
+          <h2>Silent payments</h2>
+          <p>
+            rbitcoin serves silent payment tweaks over Electrum and supports Frigate scan-key
+            subscriptions. Your wallet must support the matching protocol; ordinary Electrum support
+            is not enough. See the
+            <a
+              data-release-doc="COMPAT.md#tweaks-stream-vs-sparrow--frigate"
+              href="https://github.com/reardencode/rbitcoin/blob/master/COMPAT.md#tweaks-stream-vs-sparrow--frigate"
+              >client compatibility notes</a
+            >.
+          </p>
+        </section>
+        <section id="rpc">
+          <h2>Using JSON-RPC</h2>
+          <p>
+            TCP JSON-RPC authenticates with a Bearer token from <code>{datadir}/rpc.token</code>. A
+            Unix socket uses filesystem access control. Do not assume Bitcoin Core’s cookie or
+            <code>--rpcuser</code> authentication works here.
+          </p>
+          <p>
+            There is no wallet RPC surface or coins-database UTXO scan. A matching method name is
+            not a guarantee that every existing Core integration will work unchanged. Read the
+            <a
+              data-release-doc="docs/rpc.md"
+              href="https://github.com/reardencode/rbitcoin/blob/master/docs/rpc.md"
+              >method and authentication reference</a
+            >.
+          </p>
+        </section>
+        <section id="exposure">
+          <h2>Remote access</h2>
+          <p>
+            Keep application listeners on loopback for local use. For a wallet on another device,
+            use a secure tunnel or configure a TLS proxy and access controls. The node itself serves
+            plain TCP or HTTP.
+          </p>
+          <p>
+            See the
+            <a
+              data-release-doc="OPERATOR.md"
+              href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
+              >operator guide</a
+            >
+            for deployment examples. Keep RPC tokens private and restrict who can reach your
+            services.
+          </p>
+        </section>
+        <nav aria-label="Continue reading" class="chapter-next">
+          <a href="../security/index.html"
+            >Review the trust boundary<svg
+              aria-hidden="true"
+              class="link-icon"
+              fill="none"
+              focusable="false"
+              height="12"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.4"
+              viewBox="0 0 16 16"
+              width="12"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="m6 3 5 5-5 5"></path></svg></a
+          ><a href="../index.html">Back to home</a>
+        </nav>
+      </main>
+    </div>
+    <footer class="site-colophon">
+      <span>By <a href="https://x.com/reardencode">reardencode</a></span>
+      <nav aria-label="Project information">
+        <a href="../about/index.html#donate">Donate</a
+        ><a class="source-link" href="https://github.com/reardencode/rbitcoin"
+          ><span>Source</span
+          ><svg
+            aria-hidden="true"
+            class="link-icon"
+            fill="none"
+            focusable="false"
+            height="12"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.4"
+            viewBox="0 0 16 16"
+            width="12"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M4 12 12 4M4 4h8v8"></path></svg></a
+        ><a href="../NOTICE.txt">License</a
+        ><button aria-label="Switch color theme" class="theme-toggle" hidden="" type="button">
+          <span class="theme-label">Dark</span
+          ><span aria-hidden="true" class="theme-symbol">☾</span>
+        </button>
+      </nav>
+    </footer>
+  </body>
+</html>

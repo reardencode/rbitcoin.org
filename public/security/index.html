@@ -1,312 +1,211 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
     <title>Security — rbitcoin</title>
     <meta
+      content="Mainnet expectations, test evidence, and private vulnerability reporting."
       name="description"
-      content="Report rbitcoin vulnerabilities privately to security@reardencode.com. Consensus divergence is the live mainnet risk."
     />
-    <link rel="canonical" href="https://rbitcoin.org/security/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://rbitcoin.org/security/" />
-    <meta property="og:title" content="Security — rbitcoin" />
+    <meta content="#ffffff" name="theme-color" />
+    <link href="../assets/img/favicon.svg" rel="icon" type="image/svg+xml" />
+    <script src="../assets/theme.js?v=text-toggle"></script>
+    <link href="../assets/site.css?v=original-brand" rel="stylesheet" />
+    <link href="https://rbitcoin.org/security/" rel="canonical" />
+    <link href="../site.webmanifest" rel="manifest" />
+    <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
+    <meta content="website" property="og:type" />
+    <meta content="rbitcoin" property="og:site_name" />
+    <meta content="Security — rbitcoin" property="og:title" />
     <meta
+      content="Mainnet expectations, test evidence, and private vulnerability reporting."
       property="og:description"
-      content="Report rbitcoin vulnerabilities privately to security@reardencode.com."
     />
-    <meta property="og:image" content="https://rbitcoin.org/assets/img/og-card.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://rbitcoin.org/assets/img/og-card.jpg" />
-    <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="../assets/img/icon-192.png" type="image/png" sizes="192x192" />
-    <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png" sizes="180x180" />
-    <link rel="manifest" href="../site.webmanifest" />
-    <link rel="stylesheet" href="../assets/css/main.css" />
+    <meta content="https://rbitcoin.org/security/" property="og:url" />
+    <meta content="https://rbitcoin.org/assets/img/og-card.png" property="og:image" />
+    <meta content="1200" property="og:image:width" />
+    <meta content="630" property="og:image:height" />
+    <meta content="rbitcoin" property="og:image:alt" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <script defer="" src="../assets/release.js"></script>
   </head>
-  <body>
-    <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header">
-      <div class="header-inner">
-        <a class="brand" href="../index.html">
-          <img class="brand-mark" src="../assets/img/logo-on-dark.svg" width="48" height="34" alt="" />
-          <span class="brand-name">rbitcoin</span>
-        </a>
-        <button
-          class="nav-toggle"
-          type="button"
-          data-nav-toggle
-          aria-expanded="false"
-          aria-controls="site-nav"
-          aria-label="Open menu"
+  <body class="site essential-site reading-page">
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="chapter-grid">
+      <header class="chapter-sidebar">
+        <a class="chapter-brand" href="../index.html"
+          ><span class="brand-lockup"
+            ><img
+              class="brand-mark wordmark-light"
+              src="../assets/img/logo.svg"
+              width="1000"
+              height="720"
+              alt=""
+            /><img
+              class="brand-mark wordmark-dark"
+              src="../assets/img/logo-on-dark.svg"
+              width="1000"
+              height="720"
+              alt=""
+            /><span class="brand-name">rbitcoin</span></span
+          ></a
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
-          </svg>
-        </button>
-        <nav class="nav" id="site-nav" data-nav aria-label="Primary">
-          <ul class="nav-links">
-            <li><a href="../index.html">Home</a></li>
-            <li><a href="../get-started/index.html">Get started</a></li>
-            <li><a href="../architecture/index.html">Architecture</a></li>
-            <li><a href="../security/index.html" aria-current="page">Security</a></li>
-            <li><a href="../about/index.html">About</a></li>
-            <li><a class="nav-cta" href="../about/index.html#donate">Donate</a></li>
-          </ul>
-          <div class="nav-social">
-            <a
-              class="icon-link"
-              href="https://github.com/reardencode/rbitcoin"
-              rel="noopener noreferrer"
-              target="_blank"
-              aria-label="GitHub"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"
-                />
-              </svg>
-            </a>
-            <a
-              class="icon-link"
-              href="https://x.com/reardencode"
-              rel="noopener noreferrer"
-              target="_blank"
-              aria-label="X (Twitter)"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"
-                />
-              </svg>
-            </a>
-          </div>
+        <nav aria-label="Site" class="chapter-nav">
+          <a href="../index.html">Home</a
+          ><a href="../get-started/index.html"><span>01</span>Get started</a
+          ><a href="../architecture/index.html"><span>02</span>Architecture</a
+          ><a href="../wallets/index.html"><span>03</span>Wallet backends</a
+          ><a aria-current="page" href="index.html"><span>04</span>Security</a
+          ><a href="../about/index.html"><span>05</span>About</a>
         </nav>
-      </div>
-    </header>
-
-    <main id="main">
-      <div class="page-hero">
-        <div class="hero-tracks" aria-hidden="true"><img src="../assets/img/logo-on-dark.svg" alt="" decoding="async" /></div>
-        <div class="container">
-          <div class="status-chip">Report privately</div>
-          <h1>Security</h1>
-          <p>
-            You can run mainnet. Consensus is independent of bitcoin core’s engine; functional,
-            fuzz, and spec tests give reason to expect a match. Consensus bugs remain in scope.
+      </header>
+      <main class="chapter" id="main">
+        <header class="chapter-title">
+          <p class="chapter-kicker">04 / Security</p>
+          <h1>Security and validation.</h1>
+          <p class="chapter-intro">
+            rbitcoin uses independent consensus code. Functional tests, consensus rule tests, and
+            differential fuzzing check its agreement with Bitcoin Core. It is still pre-1.0, and
+            upgrades can change storage formats or APIs.
           </p>
-        </div>
-      </div>
-
-      <section class="section">
-        <div class="container prose">
-          <div class="callout callout-warn mb-2">
-            <div>
-              <p>
-                <strong>Report vulnerabilities privately</strong> to
-                <a href="mailto:security@reardencode.com">security@reardencode.com</a>.
-                Do not open a public GitHub issue for unfixed remote, consensus-critical, or
-                data-integrity bugs.
-              </p>
-            </div>
-          </div>
-
-          <h2>0.x expectations</h2>
-          <ul>
-            <li>On-disk format and public APIs are <strong>unstable until 1.0</strong>.</li>
-            <li>
-              <strong>Mainnet.</strong> Consensus is independent of bitcoin core’s engine; coverage
-              is growing across functional, fuzz, and specification tests. Divergence is still
-              possible until 1.0 — see
-              <a href="#tests">what the tests cover</a>.
-            </li>
-            <li>
-              <strong data-release-line>0.x.x</strong> is the supported published line until
-              <span data-release-next-minor>0.x</span> or 1.0. No
-              multi-year LTS branch yet.
-            </li>
-            <li>This is not a turnkey appliance.</li>
-          </ul>
-
-          <h2 id="tests">What the tests cover</h2>
+        </header>
+        <nav aria-label="On this page" class="chapter-contents">
+          <a href="#report">Report vulnerabilities privately</a><a href="#tests">How it is tested</a
+          ><a href="#milestone">Historical script checks</a
+          ><a href="#operations">Operating the node</a>
+        </nav>
+        <section id="report">
+          <h2>Report vulnerabilities privately</h2>
+          <p><a href="mailto:security@reardencode.com">security@reardencode.com</a></p>
           <p>
-            Independent consensus is the live risk. Tests do not change that. The node runs bitcoin
-            core’s transaction fixtures, <strong>66</strong> unmodified bitcoin core v31.1 functional
-            tests that hit production (excluding wallet, prune, plaintext v1 P2P, and shim-only
-            scripts — 71 at 0.6.0, 14 at 0.5.0), Hornet Node’s published block-validation rules
-            mapped onto rbitcoin’s own cases, and nightly differential fuzz against official
-            bitcoind (block, spend, fork, compact, script, BIP324). Line coverage is a required
-            GitHub Actions gate: below 92% LCOV on production files, the PR fails. Last green master
-            coverage job:
-            <span data-coverage-message>92.18%</span>
-            (<span data-coverage-ratio>110849 / 120253</span> LH/LF,
-            <span data-coverage-date>2026-09-18</span>) — method in
+            Do not post an unfixed remote, consensus-critical, or data-integrity bug in a public
+            issue. Include the release tag or commit, build method and binary digest if available,
+            network, impact, and a minimal reproduction.
+          </p>
+          <p>
+            Accepting an invalid block and rejecting a valid block both matter. So do P2P
+            denial-of-service, misleading wallet-query results, and archive corruption. Never
+            include seed phrases, private keys, or access tokens.
+          </p>
+          <p>
+            Feature requests, performance questions, and non-sensitive bugs belong in
+            <a href="https://github.com/reardencode/rbitcoin/issues">ordinary GitHub issues</a>. The
+            <a href="https://github.com/reardencode/rbitcoin/blob/master/SECURITY.md"
+              >project security policy</a
+            >
+            defines scope and supported releases.
+          </p>
+        </section>
+        <section id="tests">
+          <h2>How it is tested</h2>
+          <p>
+            The test suite checks transaction rules, node behavior, and agreement with Bitcoin Core:
+          </p>
+          <ul>
+            <li>
+              Bitcoin Core transaction fixtures and selected functional tests exercise validation
+              and node interfaces.
+            </li>
+            <li>Hornet-derived cases check specific consensus rules.</li>
+            <li>
+              Differential fuzzing compares behavior with Bitcoin Core across generated inputs.
+            </li>
+          </ul>
+          <p>
+            These tests help find errors; they cannot prove that the implementations will always
+            agree. Explore the
             <a
+              data-release-doc="TESTING.md"
               href="https://github.com/reardencode/rbitcoin/blob/master/TESTING.md"
-              rel="noopener noreferrer"
-              target="_blank"
-              >TESTING.md</a
-            >. Coverage is still not proof the implementations cannot diverge — report a consensus
-            mismatch privately.
+              >test suite</a
+            >
+            and <a href="https://github.com/reardencode/rbitcoin/actions">current CI results</a>.
           </p>
-
-          <h2>Milestone and script checks</h2>
+        </section>
+        <section id="milestone">
+          <h2>Historical script checks</h2>
           <p>
-            Default mainnet <code>--milestone</code> skips <strong>script and signature</strong>
-            checks at or below that height. Same idea as assumevalid. Prevouts, double-spends,
-            maturity, and fees still run.
+            Mainnet defaults to <code>--milestone 840000</code>. Script and signature checks at or
+            below height 840,000 are skipped. Previous-output, double-spend, maturity, and fee
+            checks still run.
           </p>
           <p>
-            Use <code>--milestone 0</code> if you want every historical script checked. The default
-            flag is not a claim that they were. On rbitcoin that choice does not change IBD
-            wall-clock much.
+            Use <code>--milestone 0</code> to check scripts throughout history. Choose this before
+            the first sync: changing the flag later does not recheck blocks already stored. See the
+            <a href="../get-started/index.html#mainnet">mainnet setup</a>.
           </p>
-
-          <h2>In scope (node)</h2>
-          <ul>
-            <li>Consensus and script: accepting invalid chain data or rejecting valid data</li>
-            <li>P2P (BIP324 v2 only): denial-of-service and misbehavior handling</li>
-            <li>
-              Electrum and Esplora: integrity and application-level DoS limits
-            </li>
-            <li>
-              Optional JSON-RPC: authentication, integrity of documented methods (not a full core
-              surface)
-            </li>
-            <li>
-              Store and archive: corruption or incorrect spend or scripthash results that could
-              mislead a wallet backend
-            </li>
-          </ul>
+        </section>
+        <section id="operations">
+          <h2>Operating the node</h2>
           <p>
-            Full policy:
-            <a
-              href="https://github.com/reardencode/rbitcoin/blob/master/SECURITY.md"
-              rel="noopener noreferrer"
-              target="_blank"
-              >node SECURITY.md</a
-            >.
-            Report against a git commit (and the binary digest if you built the musl static release).
+            Signet and regtest provide a place to try the node before connecting a wallet. Mainnet
+            operators may want another node in view until they are satisfied with chain agreement.
           </p>
-
-          <h2>Out of scope (for security@)</h2>
-          <ul>
-            <li>
-              Feature requests, IBD performance tuning, and non-sensitive crashes—use ordinary issues
-              or CONTRIBUTING
-            </li>
-            <li>
-              Compromised operator hosts, reverse-proxy misconfiguration, or third-party wallets
-              outside this tree
-            </li>
-            <li>Do not send seed phrases or private keys</li>
-          </ul>
-
-          <h2>This website</h2>
           <p>
-            rbitcoin.org is static HTML, CSS, and JavaScript. No backend. Report serious site issues
-            — XSS in checked-in scripts, for example — to
-            <a href="mailto:security@reardencode.com">security@reardencode.com</a>.
-            Typos and broken links can be ordinary issues or pull requests.
+            Watch chain agreement, reorgs, logs, and free disk space. Read the
+            <a href="https://github.com/reardencode/rbitcoin/blob/master/CHANGELOG.md"
+              >release notes</a
+            >
+            before upgrading; some storage changes require a fresh sync.
           </p>
-
-          <h2>Contact</h2>
-          <ul class="contact-list">
-            <li>
-              <span class="label">Security</span>
-              <a href="mailto:security@reardencode.com">security@reardencode.com</a>
-            </li>
-            <li>
-              <span class="label">General</span>
-              <a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a>
-            </li>
-            <li>
-              <span class="label">X</span>
-              <a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">@reardencode</a>
-            </li>
-            <li>
-              <span class="label">Source</span>
-              <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
-                >github.com/reardencode/rbitcoin</a
-              >
-            </li>
-          </ul>
-          <p class="mt-2">
-            Use security@ for vulnerability reports. Freedom@ and X are for everything else—not for
-            unfixed consensus or remote-attack bugs.
+          <p>
+            Keep wallet and RPC listeners local unless you have configured
+            <a href="../wallets/index.html#exposure">secure remote access</a>. Check the
+            <a href="https://github.com/reardencode/rbitcoin/blob/master/SECURITY.md"
+              >security policy</a
+            >
+            for supported releases.
           </p>
-        </div>
-        <div class="container">
-          <div class="cta-band">
-            <div>
-              <h2>Get started</h2>
-              <p>Run it. Report consensus and remote bugs privately to security@.</p>
-            </div>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="../get-started/index.html">Get started</a>
-              <a class="btn btn-donate" href="../about/index.html#donate">Donate</a>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="container">
-        <div class="footer-grid">
-          <div class="footer-brand">
-            <a class="brand" href="../index.html">
-              <img class="brand-mark" src="../assets/img/logo-on-dark.svg" width="48" height="34" alt="" />
-              <span class="brand-name">rbitcoin</span>
-            </a>
-            <p>Compact archive. No UTXO set. Production Ready™.</p>
-          </div>
-          <div class="footer-col">
-            <h3>Site</h3>
-            <ul>
-              <li><a href="../get-started/index.html">Get started</a></li>
-              <li><a href="../architecture/index.html">Architecture</a></li>
-              <li><a href="../security/index.html">Security</a></li>
-              <li><a href="../about/index.html">About</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h3>Project</h3>
-            <ul>
-              <li>
-                <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
-                  >GitHub</a
-                >
-              </li>
-              <li>
-                <a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">X @reardencode</a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  >Operator guide</a
-                >
-              </li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h3>Contact</h3>
-            <ul>
-              <li><a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a></li>
-              <li><a href="mailto:security@reardencode.com">security@reardencode.com</a></li>
-              <li><a href="../about/index.html#donate">Donate</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <span>© rbitcoin contributors · MIT OR Apache-2.0</span>
-          <span>Linux first · full archival</span>
-        </div>
-      </div>
+        </section>
+        <nav aria-label="Continue reading" class="chapter-next">
+          <a href="../get-started/index.html"
+            >Return to the operating guide<svg
+              aria-hidden="true"
+              class="link-icon"
+              fill="none"
+              focusable="false"
+              height="12"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.4"
+              viewBox="0 0 16 16"
+              width="12"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="m6 3 5 5-5 5"></path></svg></a
+          ><a href="../index.html">Back to home</a>
+        </nav>
+      </main>
+    </div>
+    <footer class="site-colophon">
+      <span>By <a href="https://x.com/reardencode">reardencode</a></span>
+      <nav aria-label="Project information">
+        <a href="../about/index.html#donate">Donate</a
+        ><a class="source-link" href="https://github.com/reardencode/rbitcoin"
+          ><span>Source</span
+          ><svg
+            aria-hidden="true"
+            class="link-icon"
+            fill="none"
+            focusable="false"
+            height="12"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.4"
+            viewBox="0 0 16 16"
+            width="12"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M4 12 12 4M4 4h8v8"></path></svg></a
+        ><a href="../NOTICE.txt">License</a
+        ><button aria-label="Switch color theme" class="theme-toggle" hidden="" type="button">
+          <span class="theme-label">Dark</span
+          ><span aria-hidden="true" class="theme-symbol">☾</span>
+        </button>
+      </nav>
     </footer>
-    <script src="../assets/js/main.js" defer></script>
   </body>
 </html>

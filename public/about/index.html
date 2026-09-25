@@ -1,352 +1,316 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
     <title>About — rbitcoin</title>
     <meta
+      content="The reason for another node, the people behind it, and ways to contribute."
       name="description"
-      content="A bitcoin full node: compact archive, no UTXO set, rust-native consensus, Electrum including silent payment tweaks."
     />
-    <link rel="canonical" href="https://rbitcoin.org/about/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://rbitcoin.org/about/" />
-    <meta property="og:title" content="About — rbitcoin" />
+    <meta content="#ffffff" name="theme-color" />
+    <link href="../assets/img/favicon.svg" rel="icon" type="image/svg+xml" />
+    <script src="../assets/theme.js?v=text-toggle"></script>
+    <link href="../assets/site.css?v=original-brand" rel="stylesheet" />
+    <script defer="" src="../assets/code-copy.js?v=addresses"></script>
+    <link href="https://rbitcoin.org/about/" rel="canonical" />
+    <link href="../site.webmanifest" rel="manifest" />
+    <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
+    <meta content="website" property="og:type" />
+    <meta content="rbitcoin" property="og:site_name" />
+    <meta content="About — rbitcoin" property="og:title" />
     <meta
+      content="The reason for another node, the people behind it, and ways to contribute."
       property="og:description"
-      content="A bitcoin full node: compact archive, no UTXO set, rust-native consensus, Electrum including silent payment tweaks."
     />
-    <meta property="og:image" content="https://rbitcoin.org/assets/img/og-card.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://rbitcoin.org/assets/img/og-card.jpg" />
-    <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="../assets/img/icon-192.png" type="image/png" sizes="192x192" />
-    <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png" sizes="180x180" />
-    <link rel="manifest" href="../site.webmanifest" />
-    <link rel="stylesheet" href="../assets/css/main.css" />
+    <meta content="https://rbitcoin.org/about/" property="og:url" />
+    <meta content="https://rbitcoin.org/assets/img/og-card.png" property="og:image" />
+    <meta content="1200" property="og:image:width" />
+    <meta content="630" property="og:image:height" />
+    <meta content="rbitcoin" property="og:image:alt" />
+    <meta content="summary_large_image" name="twitter:card" />
+    <script defer="" src="../assets/release.js"></script>
+    <script src="../assets/donation-qr.js" defer></script>
   </head>
-  <body>
-    <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header">
-      <div class="header-inner">
-        <a class="brand" href="../index.html">
-          <img class="brand-mark" src="../assets/img/logo-on-dark.svg" width="48" height="34" alt="" />
-          <span class="brand-name">rbitcoin</span>
-        </a>
-        <button
-          class="nav-toggle"
-          type="button"
-          data-nav-toggle
-          aria-expanded="false"
-          aria-controls="site-nav"
-          aria-label="Open menu"
+  <body class="site essential-site reading-page">
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="chapter-grid">
+      <header class="chapter-sidebar">
+        <a class="chapter-brand" href="../index.html"
+          ><span class="brand-lockup"
+            ><img
+              class="brand-mark wordmark-light"
+              src="../assets/img/logo.svg"
+              width="1000"
+              height="720"
+              alt=""
+            /><img
+              class="brand-mark wordmark-dark"
+              src="../assets/img/logo-on-dark.svg"
+              width="1000"
+              height="720"
+              alt=""
+            /><span class="brand-name">rbitcoin</span></span
+          ></a
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
-          </svg>
-        </button>
-        <nav class="nav" id="site-nav" data-nav aria-label="Primary">
-          <ul class="nav-links">
-            <li><a href="../index.html">Home</a></li>
-            <li><a href="../get-started/index.html">Get started</a></li>
-            <li><a href="../architecture/index.html">Architecture</a></li>
-            <li><a href="../security/index.html">Security</a></li>
-            <li><a href="../about/index.html" aria-current="page">About</a></li>
-            <li><a class="nav-cta" href="#donate">Donate</a></li>
-          </ul>
-          <div class="nav-social">
-            <a
-              class="icon-link"
-              href="https://github.com/reardencode/rbitcoin"
-              rel="noopener noreferrer"
-              target="_blank"
-              aria-label="GitHub"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"
-                />
-              </svg>
-            </a>
-            <a
-              class="icon-link"
-              href="https://x.com/reardencode"
-              rel="noopener noreferrer"
-              target="_blank"
-              aria-label="X (Twitter)"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path
-                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.727-8.835L1.254 2.25H8.08l4.253 5.622L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"
-                />
-              </svg>
-            </a>
-          </div>
+        <nav aria-label="Site" class="chapter-nav">
+          <a href="../index.html">Home</a
+          ><a href="../get-started/index.html"><span>01</span>Get started</a
+          ><a href="../architecture/index.html"><span>02</span>Architecture</a
+          ><a href="../wallets/index.html"><span>03</span>Wallet backends</a
+          ><a href="../security/index.html"><span>04</span>Security</a
+          ><a aria-current="page" href="index.html"><span>05</span>About</a>
         </nav>
-      </div>
-    </header>
-
-    <main id="main">
-      <div class="page-hero">
-        <div class="hero-tracks" aria-hidden="true"><img src="../assets/img/logo-on-dark.svg" alt="" decoding="async" /></div>
-        <div class="container">
-          <div class="status-chip">Independent consensus</div>
-          <h1>About</h1>
-          <p>
-            Why this node exists, how it was built, and how to reach the project.
-          </p>
-        </div>
-      </div>
-
-      <section class="section">
-        <div class="container prose">
-          <h2 class="mt-0" id="why">Why rbitcoin exists</h2>
-          <p>
-            For years Rearden wanted to kill dbcache. bitcoin core’s full node is a UTXO database
-            plus block files; the multi‑GiB cache exists to keep that coins set hot and to absorb
-            the cost of flushing it. A compact archive with no UTXO set leaves nothing for that
-            cache to hold. Prevouts come from indexed history instead.
+      </header>
+      <main class="chapter" id="main">
+        <header class="chapter-title" id="why">
+          <h1>Why another node?</h1>
+          <p class="chapter-intro">
+            rbitcoin explores a different way to store and validate Bitcoin’s history, with wallet
+            serving in the same process.
           </p>
           <p>
-            rbitcoin's design sits between libbitcoin’s relational archive and core’s block files —
-            full archival, structural txindex, consensus in Rust on rust-bitcoin and libsecp256k1,
-            and wallet serving in the same process. There is value in several clients sharing one
-            consensus library (e.g. libbitcoinconsensus). rbitcoin exists because Rearden
-            believes that there is also value in independent implementations reading the same chain
-            under different code.
+            Its design sits between libbitcoin’s relational archive and Bitcoin Core’s block files.
+            Previous outputs come from indexed history, without a separate UTXO database.
           </p>
           <p>
-            <strong>Rearden</strong> 
-            (<a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">@reardencode</a>)
-            never had the time or energy to build this node design until AI made the
-            implementation possible. Using grok build and cursor, he specified
-            and directed the work. Grok wrote the code (with a little help from
-            Claude). In a couple of months the node went from not existing to
-            IBD under nine hours on a laptop, with a growing
-            suite of core fixtures, functional tests, and differential fuzz. A
-            first on-camera conversation about this work:
-            <a
-              href="https://x.com/PlebUnderground/status/2095904882398265361"
-              rel="noopener noreferrer"
-              target="_blank"
-              >Pleb Underground with Phil</a
+            Its independent consensus implementation uses Rust, rust-bitcoin types, and libsecp256k1
+            cryptography: another implementation reading and checking the same chain.
+          </p>
+          <p><a href="../architecture/index.html">Read how the archive works</a>.</p>
+        </header>
+        <nav aria-label="On this page" class="chapter-contents">
+          <a href="#authorship">How it was built</a
+          ><a href="#contribute">Work on something concrete</a><a href="#contact">Contact</a
+          ><a href="#donate">If the node is useful</a><a href="#license">Open source</a>
+        </nav>
+        <section id="authorship">
+          <h2>How it was built</h2>
+          <p>
+            Brandon Black, known as Rearden or <a href="https://x.com/reardencode">@reardencode</a>,
+            designed and directed the project. Grok wrote the code, with help from Claude, using
+            grok build and Cursor.
+          </p>
+          <p>
+            AI made it possible to build a design he had wanted to pursue for years. Hear the story
+            in
+            <a href="https://x.com/PlebUnderground/status/2095904882398265361"
+              >his conversation with Pleb Underground</a
             >.
           </p>
-
-          <h2>What the node is</h2>
+        </section>
+        <section id="contribute">
+          <h2>Work on something concrete</h2>
           <p>
-            A validating bitcoin full node for Linux: compact archive, no UTXO set, rust-bitcoin
-            types, libsecp256k1 crypto, custom store with structural txindex. Full archival.
-            Binaries ship as a GitHub Release; Nix produces reproducible (byte-identical) musl.
+            Review a consensus edge case. Reproduce a bug. Improve a test or an explanation. Start
+            with
+            <a href="https://github.com/reardencode/rbitcoin/blob/master/CONTRIBUTING.md"
+              >contributor setup</a
+            >, then use
+            <a href="https://github.com/reardencode/rbitcoin/issues">the issue tracker</a> for
+            non-sensitive work.
           </p>
           <p>
-            <strong data-release-minor>0.x</strong> is the current published line
-            (<code data-release-line-tag>v0.x.x</code>). Since
-            <span data-release-prev-version>the prior release</span>:
-            schema 24 (occupied 0.6.x stores refuse — wipe the datadir and redo IBD); packed mempool
-            persist; Frigate silent-payment subscribe; Electrum 1.6 package broadcast;
-            <strong>66</strong> core functional scripts that hit production, Hornet Node rule
-            coverage, and continuous differential fuzz against official bitcoind. Line coverage is a
-            ≥92% LCOV PR gate
-            (<span data-coverage-message>92.18%</span> on
-            <span data-coverage-date>2026-09-18</span>, last green master job). See OPERATOR.md
-            before upgrading. Test detail:
-            <a href="../security/index.html#tests">what the tests cover</a>.
+            Vulnerabilities take a different route:
+            <a href="../security/index.html#report">report them privately</a>. Do not put an unfixed
+            exploit in a public pull request.
           </p>
-
+        </section>
+        <section id="contact">
           <h2>Contact</h2>
-          <ul class="contact-list">
-            <li>
-              <span class="label">General</span>
-              <a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a>
-            </li>
-            <li>
-              <span class="label">X</span>
-              <a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">@reardencode</a>
-              — development updates
-            </li>
-            <li>
-              <span class="label">Security</span>
-              <a href="mailto:security@reardencode.com">security@reardencode.com</a>
-            </li>
-            <li>
-              <span class="label">Code</span>
-              <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
-                >github.com/reardencode/rbitcoin</a
-              >
-            </li>
-          </ul>
-
-          <h2 id="donate">Donate</h2>
-          <div class="donate-block">
-            <p class="donate-lead">
-              If this node is useful, send some sats. Lightning is easy; silent payments stay
-              on-chain.
-            </p>
-
-            <ul class="donate-methods">
-              <li class="donate-method donate-method-sp">
-                <div class="donate-icon donate-icon-sp" aria-hidden="true">SP</div>
-                <div class="donate-method-body">
-                  <strong>Silent payment (on-chain, BIP352)</strong>
-                  <div class="donate-address-row">
-                    <code class="sp-address" id="sp-donate"
-                      >sp1qqwkt0aetchmm5gzucxych7l7kxaevetpx7npe54e236zqv73jevr5qucy5pgnut9fm7syjmlqv9ykm3qzzpfc0v3j737plzvvuy8k08a4scn62wl</code
-                    >
-                    <button type="button" class="btn btn-secondary copy-btn" data-copy="sp-donate">
-                      Copy
-                    </button>
-                  </div>
-                </div>
-              </li>
-              <li class="donate-method">
-                <img
-                  class="donate-icon"
-                  src="../assets/img/strike-icon.png"
-                  width="40"
-                  height="40"
-                  alt="Strike"
-                />
-                <div class="donate-method-body">
-                  <strong>Strike (Lightning)</strong>
-                  <div class="donate-address-row">
-                    <code class="ln-address" id="ln-strike">reardencode@strike.me</code>
-                    <button type="button" class="btn btn-secondary copy-btn" data-copy="ln-strike">
-                      Copy
-                    </button>
-                  </div>
-                </div>
-              </li>
-              <li class="donate-method">
-                <img
-                  class="donate-icon"
-                  src="../assets/img/cashapp-icon.svg"
-                  width="40"
-                  height="40"
-                  alt="Cash App"
-                />
-                <div class="donate-method-body">
-                  <strong>Cash App (Lightning)</strong>
-                  <div class="donate-address-row">
-                    <code class="ln-address" id="ln-cashapp">reardencode@cash.app</code>
-                    <button type="button" class="btn btn-secondary copy-btn" data-copy="ln-cashapp">
-                      Copy
-                    </button>
-                  </div>
-                </div>
-              </li>
-            </ul>
-
-            <p class="footnote">
-              Lightning addresses work in wallets that support LNURL/Lightning Address. Silent payments
-              need a BIP352-capable wallet. Do not send funds related to vulnerability reports; use the
-              security contact instead.
-            </p>
-          </div>
-
-          <h2>License</h2>
-          <p>
-            The node and this site are dual-licensed under the
-            <a href="https://github.com/reardencode/rbitcoin/blob/master/LICENSE-MIT" rel="noopener noreferrer" target="_blank"
-              >MIT License</a
-            >
-            or the
-            <a
-              href="https://github.com/reardencode/rbitcoin/blob/master/LICENSE-APACHE"
-              rel="noopener noreferrer"
-              target="_blank"
-              >Apache License 2.0</a
-            >, at your option.
-          </p>
-
-          <h2>Contributing</h2>
-          <p>
-            Node development follows
-            <a
-              href="https://github.com/reardencode/rbitcoin/blob/master/CONTRIBUTING.md"
-              rel="noopener noreferrer"
-              target="_blank"
-              >CONTRIBUTING.md</a
-            >
-            in the node repository. Site copy belongs in this repository.
-          </p>
-        </div>
-        <div class="container">
-          <div class="cta-band">
+          <dl class="fact-list">
             <div>
-              <h2>Get started</h2>
-              <p>Grab a Release, or build musl with Nix.</p>
+              <dt>General</dt>
+              <dd><a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a></dd>
             </div>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="../get-started/index.html">Get started</a>
-              <a
-                class="btn btn-secondary"
-                href="https://github.com/reardencode/rbitcoin"
-                rel="noopener noreferrer"
-                target="_blank"
-                >Source</a
+            <div>
+              <dt>Security</dt>
+              <dd><a href="mailto:security@reardencode.com">security@reardencode.com</a></dd>
+            </div>
+            <div>
+              <dt>Updates</dt>
+              <dd><a href="https://x.com/reardencode">@reardencode on X</a></dd>
+            </div>
+            <div>
+              <dt>Code</dt>
+              <dd><a href="https://github.com/reardencode/rbitcoin">reardencode/rbitcoin</a></dd>
+            </div>
+          </dl>
+        </section>
+        <section id="donate">
+          <h2>If the node is useful</h2>
+          <p>Support the work with sats. Copy an address into a compatible wallet.</p>
+          <div class="donation-methods">
+            <div class="donation-method" data-copy-kind="address">
+              <div class="donation-heading">
+                <h3>Silent payment</h3>
+                <div class="donation-actions">
+                  <button
+                    aria-label="Copy Silent payment address"
+                    class="copy-command"
+                    hidden=""
+                    type="button"
+                  >
+                    <span>Copy</span>
+                  </button>
+                  <button
+                    class="qr-toggle"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="qr-sp-donate"
+                    aria-label="Show Silent payment QR code"
+                    hidden
+                  >
+                    Show QR
+                  </button>
+                </div>
+              </div>
+              <p class="donation-note">On-chain · requires a BIP352-compatible wallet</p>
+              <code id="sp-donate"
+                >sp1qqwkt0aetchmm5gzucxych7l7kxaevetpx7npe54e236zqv73jevr5qucy5pgnut9fm7syjmlqv9ykm3qzzpfc0v3j737plzvvuy8k08a4scn62wl</code
               >
+              <p aria-live="polite" class="copy-status" role="status"></p>
+              <div class="donation-qr" id="qr-sp-donate">
+                <img
+                  alt="Silent payment address QR code"
+                  height="424"
+                  loading="lazy"
+                  src="../assets/img/qr-sp-donate.png"
+                  width="424"
+                />
+              </div>
+            </div>
+            <div class="donation-method" data-copy-kind="address">
+              <div class="donation-heading">
+                <h3>Strike</h3>
+                <div class="donation-actions">
+                  <button
+                    aria-label="Copy Strike address"
+                    class="copy-command"
+                    hidden=""
+                    type="button"
+                  >
+                    <span>Copy</span>
+                  </button>
+                  <button
+                    class="qr-toggle"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="qr-ln-strike"
+                    aria-label="Show Strike QR code"
+                    hidden
+                  >
+                    Show QR
+                  </button>
+                </div>
+              </div>
+              <p class="donation-note">Lightning</p>
+              <code id="ln-strike">reardencode@strike.me</code>
+              <p aria-live="polite" class="copy-status" role="status"></p>
+              <div class="donation-qr" id="qr-ln-strike">
+                <img
+                  alt="Strike address QR code"
+                  height="264"
+                  loading="lazy"
+                  src="../assets/img/qr-ln-strike.png"
+                  width="264"
+                />
+              </div>
+            </div>
+            <div class="donation-method" data-copy-kind="address">
+              <div class="donation-heading">
+                <h3>Cash App</h3>
+                <div class="donation-actions">
+                  <button
+                    aria-label="Copy Cash App address"
+                    class="copy-command"
+                    hidden=""
+                    type="button"
+                  >
+                    <span>Copy</span>
+                  </button>
+                  <button
+                    class="qr-toggle"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="qr-ln-cashapp"
+                    aria-label="Show Cash App QR code"
+                    hidden
+                  >
+                    Show QR
+                  </button>
+                </div>
+              </div>
+              <p class="donation-note">Lightning</p>
+              <code id="ln-cashapp">reardencode@cash.app</code>
+              <p aria-live="polite" class="copy-status" role="status"></p>
+              <div class="donation-qr" id="qr-ln-cashapp">
+                <img
+                  alt="Cash App address QR code"
+                  height="264"
+                  loading="lazy"
+                  src="../assets/img/qr-ln-cashapp.png"
+                  width="264"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="container">
-        <div class="footer-grid">
-          <div class="footer-brand">
-            <a class="brand" href="../index.html">
-              <img class="brand-mark" src="../assets/img/logo-on-dark.svg" width="48" height="34" alt="" />
-              <span class="brand-name">rbitcoin</span>
-            </a>
-            <p>Compact archive. No UTXO set. Production Ready™.</p>
-          </div>
-          <div class="footer-col">
-            <h3>Site</h3>
-            <ul>
-              <li><a href="../get-started/index.html">Get started</a></li>
-              <li><a href="../architecture/index.html">Architecture</a></li>
-              <li><a href="../security/index.html">Security</a></li>
-              <li><a href="../about/index.html">About</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h3>Project</h3>
-            <ul>
-              <li>
-                <a href="https://github.com/reardencode/rbitcoin" rel="noopener noreferrer" target="_blank"
-                  >GitHub</a
-                >
-              </li>
-              <li>
-                <a href="https://x.com/reardencode" rel="noopener noreferrer" target="_blank">X @reardencode</a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  >Operator guide</a
-                >
-              </li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h3>Contact</h3>
-            <ul>
-              <li><a href="mailto:freedom@reardencode.com">freedom@reardencode.com</a></li>
-              <li><a href="mailto:security@reardencode.com">security@reardencode.com</a></li>
-              <li><a href="#donate">Donate</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <span>© rbitcoin contributors · MIT OR Apache-2.0</span>
-          <span>Linux first · full archival</span>
-        </div>
-      </div>
+        </section>
+        <section id="license">
+          <h2>Open source</h2>
+          <p>
+            rbitcoin and this website are available under MIT or Apache-2.0. Read the
+            <a href="../NOTICE.txt">copyright and license notice</a>.
+          </p>
+        </section>
+        <nav aria-label="Continue reading" class="chapter-next">
+          <a href="../get-started/index.html"
+            >Try the node on signet<svg
+              aria-hidden="true"
+              class="link-icon"
+              fill="none"
+              focusable="false"
+              height="12"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.4"
+              viewBox="0 0 16 16"
+              width="12"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="m6 3 5 5-5 5"></path></svg></a
+          ><a href="../index.html">Back to home</a>
+        </nav>
+      </main>
+    </div>
+    <footer class="site-colophon">
+      <span>By <a href="https://x.com/reardencode">reardencode</a></span>
+      <nav aria-label="Project information">
+        <a href="index.html#donate">Donate</a
+        ><a class="source-link" href="https://github.com/reardencode/rbitcoin"
+          ><span>Source</span
+          ><svg
+            aria-hidden="true"
+            class="link-icon"
+            fill="none"
+            focusable="false"
+            height="12"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.4"
+            viewBox="0 0 16 16"
+            width="12"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M4 12 12 4M4 4h8v8"></path></svg></a
+        ><a href="../NOTICE.txt">License</a
+        ><button aria-label="Switch color theme" class="theme-toggle" hidden="" type="button">
+          <span class="theme-label">Dark</span
+          ><span aria-hidden="true" class="theme-symbol">☾</span>
+        </button>
+      </nav>
     </footer>
-    <script src="../assets/js/main.js" defer></script>
   </body>
 </html>

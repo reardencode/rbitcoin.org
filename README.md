@@ -2,7 +2,7 @@
 
 Website for **[rbitcoin](https://github.com/reardencode/rbitcoin)** — a Bitcoin full node in Rust with a compact archive and wallet serving in the same process.
 
-Six static pages cover the node, setup, architecture, wallet backends, security, and the project. The site follows the system theme until a visitor chooses light or dark mode. Small local scripts add copy controls, release information, and the archive comparison. Content and navigation work without JavaScript.
+Six static pages cover the node, setup, architecture, wallet backends, security, and the project. The site follows the system theme until a visitor chooses light or dark mode. Small local scripts add copy controls, release information, the archive comparison, and the security-page coverage summary. Content and navigation work without JavaScript. The coverage numbers appear when that script can read the latest green master measurement.
 
 **Live:** [https://rbitcoin.org](https://rbitcoin.org)
 

@@ -164,8 +164,7 @@ footer a {
     break-inside: avoid;
   }
 
-  a[href^='https://github.com']
-  {
+  a[href^="https://github.com"] {
     text-decoration: underline;
   }
 
@@ -1081,13 +1080,51 @@ body {
     gap: 24px;
   }
 }
-.build-option {
+.build-option,
+.coverage-summary {
   margin-top: 28px;
   border-top: 1px solid var(--rule);
   padding-top: 18px;
 }
-.build-option summary {
+.build-option summary,
+.coverage-summary summary {
   cursor: pointer;
+}
+.coverage-meta {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+.chapter ul.coverage-crates {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+.coverage-crates li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 16px;
+  border-top: 1px solid var(--rule);
+  padding: 7px 0;
+  font: 14px/1.4 var(--mono);
+}
+.coverage-crates li:last-child {
+  border-bottom: 1px solid var(--rule);
+}
+.coverage-figures {
+  display: flex;
+  gap: 16px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.coverage-hit {
+  color: var(--muted);
+}
+.coverage-summary[hidden],
+.coverage-crates[hidden] {
+  display: none !important;
 }
 .build-option > p {
   margin-top: 18px;
@@ -1232,13 +1269,16 @@ body {
   .chapter h2 {
     text-wrap: balance;
   }
-  .chapter ul:not(.download-files),
+  .chapter ul:not(.download-files):not(.coverage-crates),
   .chapter ol {
     margin: 20px 0;
     padding-left: 22px;
   }
   .chapter li + li {
     margin-top: 10px;
+  }
+  .chapter .coverage-crates li + li {
+    margin-top: 0;
   }
   .chapter .download-files li + li {
     margin-top: 0;

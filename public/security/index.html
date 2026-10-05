@@ -11,7 +11,7 @@
     <meta content="#ffffff" name="theme-color" />
     <link href="../assets/img/favicon.svg" rel="icon" type="image/svg+xml" />
     <script src="../assets/theme.js?v=text-toggle"></script>
-    <link href="../assets/site.css?v=original-brand" rel="stylesheet" />
+    <link href="../assets/site.css?v=coverage-summary" rel="stylesheet" />
     <link href="https://rbitcoin.org/security/" rel="canonical" />
     <link href="../site.webmanifest" rel="manifest" />
     <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
@@ -29,6 +29,7 @@
     <meta content="rbitcoin" property="og:image:alt" />
     <meta content="summary_large_image" name="twitter:card" />
     <script defer="" src="../assets/release.js"></script>
+    <script defer="" src="../assets/coverage.js"></script>
   </head>
   <body class="site essential-site reading-page">
     <a class="skip" href="#main">Skip to content</a>
@@ -122,6 +123,22 @@
             >
             and <a href="https://github.com/reardencode/rbitcoin/actions">current CI results</a>.
           </p>
+          <p>
+            The last green master run publishes
+            <a href="https://raw.githubusercontent.com/reardencode/rbitcoin/badges/coverage.json"
+              >production line coverage</a
+            >. Test files are outside that ratio.
+          </p>
+          <details class="coverage-summary" data-coverage="" hidden="" id="coverage">
+            <summary data-coverage-summary="">Production line coverage on master</summary>
+            <p class="coverage-meta" data-coverage-meta=""></p>
+            <ul
+              aria-label="Production line coverage by crate"
+              class="coverage-crates"
+              data-coverage-crates=""
+              hidden=""
+            ></ul>
+          </details>
         </section>
         <section id="milestone">
           <h2>Historical script checks</h2>

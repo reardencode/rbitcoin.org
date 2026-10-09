@@ -164,8 +164,9 @@
             <div>
               <dt>Wallet indexes</dt>
               <dd>
-                Optional indexes for queries such as address history. Wallet queries combine indexed
-                history, spend status, and unconfirmed transactions in the mempool.
+                Optional indexes for queries such as address history and compact block filters.
+                Wallet queries combine indexed history, spend status, and unconfirmed transactions
+                in the mempool.
               </dd>
             </div>
           </dl>
@@ -180,8 +181,9 @@
           <h2>Keep the working data fast.</h2>
           <p>
             Outputs, spends, the transaction index, and wallet indexes stay in the main data
-            directory. Inputs and witness can go on a second, slower disk with
-            <code>--datadir-cold</code>. Without that option, everything stays together.
+            directory. Inputs, witness, and fee statistics can go on a second, slower disk with
+            <code>--datadir-cold</code>. Block filters and the silent-payment index use that volume
+            when they are enabled. Without that option, everything stays together.
           </p>
           <table>
             <caption id="measurements">
@@ -195,22 +197,23 @@
             </thead>
             <tbody>
               <tr>
-                <th scope="row">~720 GiB total</th>
-                <td>A fully indexed archive after indexing finishes.</td>
+                <th scope="row">~730 GiB total</th>
+                <td>One measured mainnet archive, including inputs and witness.</td>
               </tr>
               <tr>
-                <th scope="row">~226 GiB hot</th>
-                <td>The part kept on the fast disk, including wallet indexes.</td>
-              </tr>
-              <tr>
-                <th scope="row">~150 GiB temporary</th>
-                <td>Extra fast-disk space while the wallet history index is built.</td>
+                <th scope="row">~200 GiB hot</th>
+                <td>Outputs, spends, and the transaction index on the fast disk.</td>
               </tr>
             </tbody>
           </table>
           <p>
-            The temporary space is needed in addition to the finished index. Allow room for both
-            indexing and chain growth; disk use varies with chain height and enabled indexes.
+            These sizes are approximate. Allow room for chain growth; disk use varies with chain
+            height and enabled indexes. Plan for a 1 TB-class disk.
+          </p>
+          <p>
+            The default keeps the full witness history.
+            <code>--prune-seqsigwit</code> keeps a recent window of 288 blocks instead. Silent
+            payments require the full witness, so that window cannot be combined with them.
           </p>
           <p>
             There is no separate coins cache to size and flush. The operating system’s page cache

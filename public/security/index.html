@@ -144,12 +144,15 @@
           <h2>Historical script checks</h2>
           <p>
             Mainnet defaults to <code>--milestone 840000</code>. Script and signature checks at or
-            below height 840,000 are skipped. Previous-output, double-spend, maturity, and fee
-            checks still run.
+            below height 840,000 are skipped only when the header path contains the anchored block
+            and chain work meets the minimum. A fork that only shares the height does not skip those
+            checks. Previous-output, double-spend, maturity, and fee checks still run.
           </p>
           <p>
-            Use <code>--milestone 0</code> to check scripts throughout history. Choose this before
-            the first sync: changing the flag later does not recheck blocks already stored. See the
+            An explicit <code>--milestone HEIGHT</code> skips by height alone. Use
+            <code>--milestone 0</code> to check scripts throughout history. Signet already does that
+            unless you set a height. Choose full checks before the first sync: changing the flag
+            later does not recheck blocks already stored. See the
             <a href="../get-started/index.html#mainnet">mainnet setup</a>.
           </p>
         </section>
@@ -164,7 +167,9 @@
             <a href="https://github.com/reardencode/rbitcoin/blob/master/CHANGELOG.md"
               >release notes</a
             >
-            before upgrading; some storage changes require a fresh sync.
+            before upgrading. A 0.7 data directory opens in place. A directory from 0.6 or earlier
+            is refused and needs a fresh sync. Do not point an older binary at a directory this
+            release has opened.
           </p>
           <p>
             Keep wallet and RPC listeners local unless you have configured

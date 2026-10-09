@@ -89,15 +89,17 @@
             <div>
               <dt>Esplora</dt>
               <dd>
-                A REST interface for wallet clients. It is an API, not a bundled graphical block
-                explorer.
+                A REST interface for wallet clients. The same API can replace a mempool or
+                Blockstream electrs HTTP backend. Queries use an exact address, scripthash,
+                transaction, or block id. It is an API, not a bundled graphical block explorer.
               </dd>
             </div>
             <div>
               <dt>JSON-RPC</dt>
               <dd>
-                Chain, mempool, raw-transaction and decode methods, fee estimates, and a
-                block-template selector. A subset, not the complete Bitcoin Core interface.
+                Chain, mempool, raw-transaction and decode methods, fee estimates, a block-template
+                selector, and an optional Stratum v2 template provider. A subset of the Bitcoin Core
+                interface.
               </dd>
             </div>
           </dl>
@@ -115,8 +117,10 @@
         <section id="electrum">
           <h2>Connect a wallet</h2>
           <p>
-            Electrum and Esplora need <code>--sh-index</code>, the optional index for wallet
-            history. It is off by default.
+            Address history needs <code>--sh-index</code>, the optional wallet index. It is off by
+            default. Electrum and Esplora still start without it. Address and scripthash calls then
+            answer <code>scripthash index disabled</code>. Transaction, block, and fee calls keep
+            working.
           </p>
           <p>
             Continue from the <a href="../get-started/index.html#signet">Linux signet setup</a>.
@@ -157,8 +161,7 @@
           <p>
             Leave the node running while it syncs and builds the wallet index. Electrum waits until
             that index is ready; reaching the chain tip alone is not enough. Enabling the index
-            after a mainnet sync can take hours and needs
-            <a href="../architecture/index.html#storage">extra temporary disk space</a>.
+            after a mainnet sync can take hours.
           </p>
           <p>
             In a signet-capable wallet on the same machine, select signet and set its Electrum
@@ -184,8 +187,10 @@
           <h2>Using JSON-RPC</h2>
           <p>
             TCP JSON-RPC authenticates with a Bearer token from <code>{datadir}/rpc.token</code>. A
-            Unix socket uses filesystem access control. Do not assume Bitcoin Core’s cookie or
-            <code>--rpcuser</code> authentication works here.
+            Unix socket uses filesystem access control. <code>--rpc-cookie-file</code> accepts a
+            Bitcoin Core cookie on TCP for clients that expect one, including an unmodified mempool
+            backend. The node does not create that file, and it has no <code>--rpcuser</code>
+            setting.
           </p>
           <p>
             There is no wallet RPC surface or coins-database UTXO scan. A matching method name is

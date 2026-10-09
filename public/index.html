@@ -102,8 +102,9 @@
         <section id="wallets">
           <h2>Serve wallets from the same node.</h2>
           <p class="small">
-            Connect through Electrum or Esplora without running a separate indexer. Enable the
-            wallet history index when you need it.
+            Connect through Electrum or Esplora without running a separate indexer. Esplora can
+            stand in for an electrs HTTP backend. Enable the wallet history index when you need
+            address history.
             <a href="wallets/index.html"
               >Wallet backends<svg
                 aria-hidden="true"
@@ -128,7 +129,7 @@
           <p class="small">
             rbitcoin checks the chain with independent consensus code. Functional tests, consensus
             rule tests, and differential fuzzing check its agreement with Bitcoin Core. The default
-            skips historical script checks below a milestone.
+            skips historical script checks below an anchored mainnet milestone.
             <a href="security/index.html"
               >Security &amp; validation<svg
                 aria-hidden="true"

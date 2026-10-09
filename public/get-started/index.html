@@ -162,10 +162,11 @@
           </ul>
           <p class="annotation">
             Linux is the main supported path. Windows and macOS builds are less-tested snapshots;
-            macOS builds are not notarized.
+            macOS builds are not notarized. If macOS refuses to launch a downloaded binary, run
+            <code>xattr -d com.apple.quarantine rbitcoin-node rbitcoin-cli</code>.
             <a
-              data-release-doc="OPERATOR.md#build"
-              href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md#build"
+              data-release-doc="docs/operator/setup.md#build"
+              href="https://github.com/reardencode/rbitcoin/blob/master/docs/operator/setup.md#build"
               >Windows and macOS setup notes</a
             >.
           </p>
@@ -250,7 +251,9 @@ sha256sum --check SHA256SUMS.linux-musl</code></pre>
               href="https://github.com/reardencode/rbitcoin/blob/master/CHANGELOG.md"
               >upgrade notes</a
             >
-            before opening an existing data directory. Some upgrades require rebuilding the archive.
+            before opening an existing data directory. A 0.7 directory opens in place. A directory
+            from 0.6 or earlier is refused and needs a fresh sync. Do not point an older binary at a
+            directory this release has opened.
           </p>
           <details class="build-option" id="build">
             <summary>Build with Nix instead</summary>
@@ -346,8 +349,9 @@ cp result/bin/rbitcoin-node result/bin/rbitcoin-cli .
             <p aria-live="polite" class="copy-status" role="status"></p>
           </figure>
           <p class="annotation">
-            <code>--milestone 0</code> enables all historical script checks. Wallet interfaces stay
-            off for this first run.
+            Signet checks every historical script by default.
+            <code>--milestone 0</code> states that explicitly. Wallet interfaces stay off for this
+            first run.
           </p>
         </section>
         <section id="sync">
@@ -357,8 +361,8 @@ cp result/bin/rbitcoin-node result/bin/rbitcoin-cli .
             The process stops after two minutes; that does not mean syncing is complete. If there is
             no progress, check the
             <a
-              data-release-doc="OPERATOR.md#logging"
-              href="https://github.com/reardencode/rbitcoin/blob/master/OPERATOR.md#logging"
+              data-release-doc="docs/operator/operations.md#logging"
+              href="https://github.com/reardencode/rbitcoin/blob/master/docs/operator/operations.md#logging"
               >operator guide</a
             >.
           </p>
@@ -370,8 +374,9 @@ cp result/bin/rbitcoin-node result/bin/rbitcoin-cli .
         <section id="mainnet">
           <h2>Before mainnet</h2>
           <p id="requirements">
-            Plan for a 1 TB-class disk, with room for growth. This release keeps a full archive;
-            wallet indexes need extra space while building.
+            Plan for a 1 TB-class disk, with room for growth. The default keeps a full archive.
+            Older witness data can be dropped with a witness window; silent payments need the full
+            witness.
             <a href="../architecture/index.html#storage">Storage requirements</a>.
           </p>
           <p>
@@ -386,8 +391,10 @@ cp result/bin/rbitcoin-node result/bin/rbitcoin-cli .
             >.
           </p>
           <p>
-            The mainnet default skips script and signature checks at or below block 840,000. Other
-            checks still run. Set <code>--milestone 0</code> to check every historical script.
+            The mainnet default names block 840,000. Script and signature checks at or below that
+            height are skipped only when the header path contains the anchored block and chain work
+            meets the minimum. Other checks still run. Set <code>--milestone 0</code> before the
+            first sync to check every historical script. An explicit height skips by height alone.
             <a href="../security/index.html#milestone">About validation defaults</a>.
           </p>
         </section>

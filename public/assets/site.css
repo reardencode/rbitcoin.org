@@ -164,7 +164,8 @@ footer a {
     break-inside: avoid;
   }
 
-  a[href^="https://github.com"] {
+  a[href^="https://github.com"]
+  {
     text-decoration: underline;
   }
 
@@ -499,6 +500,23 @@ body {
   letter-spacing: -0.3px;
 }
 
+.chapter h3 {
+  font-size: 16px;
+  line-height: 1.45;
+  font-weight: 500;
+  margin: 32px 0 12px;
+  letter-spacing: -0.2px;
+}
+
+.api-method {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-right: 8px;
+}
+
 .chapter-contents {
   display: flex;
   flex-wrap: wrap;
@@ -588,6 +606,10 @@ body {
 
 .chapter th:first-child {
   width: 34%;
+}
+
+.chapter table.api-rows th:first-child {
+  width: 18%;
 }
 
 .chapter-next {
@@ -1262,11 +1284,20 @@ body {
     font-size: 11px;
     gap: 16px;
   }
+  /* Route tables need more than the reading measure. */
+  .essential-site.reading-page.api-page .chapter {
+    max-width: none;
+  }
+  .essential-site.reading-page.api-page .chapter-grid,
+  .essential-site.reading-page.api-page > .site-colophon {
+    max-width: 1040px;
+  }
   .reading-page > .site-colophon nav {
     gap: 16px;
   }
   .chapter h1,
-  .chapter h2 {
+  .chapter h2,
+  .chapter h3 {
     text-wrap: balance;
   }
   .chapter ul:not(.download-files):not(.coverage-crates),

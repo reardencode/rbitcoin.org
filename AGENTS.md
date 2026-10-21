@@ -55,7 +55,7 @@ The version-specific figures and flags above are reference context, not a promis
 ### Layout and typography
 
 - `public/assets/site.css` owns shared styles and tokens. Reuse existing classes and edit the owning rule; avoid page-specific overrides and accumulating duplicate declarations at the end of the file.
-- Keep a single centered reading column. Home uses `.essential` (566px maximum outer width with 24px desktop side padding). Reading pages use `.chapter-grid` (614px outer width with 48px side padding), giving both a 518px desktop text measure.
+- Keep a single centered reading column. Home uses `.essential` (566px maximum outer width with 24px desktop side padding). Reading pages use `.chapter-grid` (614px outer width with 48px side padding), giving both a 518px desktop text measure. The Esplora API page (`body.api-page`) is the exception: 1040px, so route tables fit.
 - Keep the existing responsive rules: 700px for Home adjustments, 650px for reading layouts and 27px gutters, and 420px for stacked download rows and diagrams. A new breakpoint needs a content-driven reason, not a screenshot's exact viewport size.
 - Use Arial/Helvetica/system sans-serif for prose and the existing system monospace stack for code and small utility text. Keep body typography unchanged. The brand name alone uses the self-hosted Host Grotesk Medium (500) font; retain its OFL license.
 - Preserve the hierarchy: a compact wordmark, modest page title, short introduction, then clearly separated sections. Reading-page titles are 30px on desktop and 28px on narrow screens; body copy is 17px/16px. Match neighboring components instead of increasing weight or size to create emphasis.
@@ -74,14 +74,14 @@ The version-specific figures and flags above are reference context, not a promis
 
 - Prefer short, direct headings such as “Run rbitcoin.” and “Security and validation.” Explain mechanisms in simple language; avoid slogans, clever metaphors, promotional claims, or repeated cautionary introductions.
 - Preserve the approved Home opening unless asked to revise it: “Bitcoin full node in Rust.” followed by “Compact archive instead of UTXO set. Validate the chain and serve wallets from the same process.”
-- Keep each page focused: Home explains the difference and points onward; Get started takes an operator through download, verification, signet, and mainnet considerations; Architecture explains the store; Wallet backends covers client connections; Security covers reporting, tests, and validation defaults; About starts with “Why another node?” and covers people, contact, and support.
+- Keep each page focused: Home explains the difference and points onward; Get started takes an operator through download, verification, signet, and mainnet considerations; Architecture explains the store; Wallet backends covers client connections; Security covers reporting, tests, and validation defaults; About starts with “Why another node?” and covers people, contact, and support. Esplora API is the rendered OpenAPI reference for the HTTP routes (`scripts/render-esplora-openapi.py` refreshes it from the node repo `docs/esplora-openapi.yaml`).
 - Link to detailed operator documentation where it helps complete a task. Do not copy all of the old site's material into the new page or repeat technical explanations across pages.
 - Do not reintroduce “Sources & revision”, reviewed-date banners, “not an independent audit” copy, or standalone “Source:” paragraphs. Keep research evidence in the PR description. Useful documentation links and real operating limitations still belong in the relevant prose.
 - Preserve the Home footer credit exactly as **“by rbitcoin contributors”**, without a link. Do not change credits elsewhere as a side effect.
 
 ### Components and interactions
 
-- Reuse `.chapter-nav`, `.chapter-contents`, `.chapter-next`, and `.site-colophon`. Keep the current page marked with `aria-current="page"`. Shared navigation and footer edits must be consistent across all six pages.
+- Reuse `.chapter-nav`, `.chapter-contents`, `.chapter-next`, and `.site-colophon`. Keep the current page marked with `aria-current="page"`. Shared navigation and footer edits must be consistent across every reading page. The unnumbered **Esplora API** item follows About.
 - Links look like links. Keep underlines and the small existing SVG arrows. For Source, underline its text span only, not the whitespace or external-link icon.
 - Use `.download-files` for platform downloads: platform/architecture on the left, Node / CLI / Checksums on the right, separated by quiet rules. Stack the row on narrow screens instead of reverting to a heavy bulleted list.
 - Use `.command-block` for shell examples: caption, Copy control, and selectable `<pre><code>` content with a thin left rule. Copy the original command text without prompts, visual line numbers, or injected labels. Preserve the accessible status and manual-copy error fallback.

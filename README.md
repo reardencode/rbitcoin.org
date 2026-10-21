@@ -2,7 +2,7 @@
 
 Website for **[rbitcoin](https://github.com/reardencode/rbitcoin)** — a Bitcoin full node in Rust with a compact archive and wallet serving in the same process.
 
-Six static pages cover the node, setup, architecture, wallet backends, security, and the project. The site follows the system theme until a visitor chooses light or dark mode. Small local scripts add copy controls, release information, the archive comparison, and the security-page coverage summary. Content and navigation work without JavaScript. The coverage numbers appear when that script can read the latest green master measurement.
+Static pages cover the node, setup, architecture, wallet backends, the Esplora HTTP API, security, and the project. The site follows the system theme until a visitor chooses light or dark mode. Small local scripts add copy controls, release information, the archive comparison, and the security-page coverage summary. Content and navigation work without JavaScript. The coverage numbers appear when that script can read the latest green master measurement.
 
 **Live:** [https://rbitcoin.org](https://rbitcoin.org)
 
@@ -42,6 +42,8 @@ The site has no build or TypeScript step. Format HTML, CSS and JavaScript with t
 Release labels, download links, documentation links and the Nix tag use the highest stable GitHub Release semver. If the API is unavailable, links fall back to GitHub's latest release and the Nix example asks for its tag. Review setup commands and product claims against the node documentation when releases change.
 
 Donation QR images contain the exact addresses printed alongside them. If an address changes, run `python3 scripts/generate-donation-qr.py` (requires `qrcode[pil]`) and verify the decoded value.
+
+The Esplora page is generated from the node repository’s `docs/esplora-openapi.yaml`. Refresh it with `python3 scripts/render-esplora-openapi.py` (requires PyYAML), then format `public/esplora/index.html`.
 
 ## Contact
 

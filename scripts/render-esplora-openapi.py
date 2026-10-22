@@ -395,9 +395,10 @@ def operation_html(method: str, path: str, op: dict, ids: Ids, root) -> str:
     if description and description.strip() != summary.strip():
         desc_html = blocks(description)
     return (
-        f'<section id="{ident}">'
+        f'<section class="api-operation" id="{ident}">'
         f'<h3><span class="api-method">{esc(method.upper())}</span> '
-        f"<code>{esc(path)}</code></h3>"
+        f"<code>{esc(path)}</code>"
+        f'<a class="api-permalink" href="#{ident}" aria-label="Link to {esc(method.upper())} {esc(path)}">#</a></h3>'
         f"{summary_html}{desc_html}"
         f"{parameter_rows(op.get('parameters') or [], root)}"
         f"{request_body_block(op.get('requestBody'), root)}"
@@ -536,14 +537,26 @@ def page_html(spec: dict, stamp: Stamp) -> str:
             grouped.setdefault(tag, [])
             grouped[tag].append(operation_html(method, path, op, ids, spec))
 
-    contents: list[str] = []
+    overview_links: list[str] = []
+    route_links: list[str] = []
     for ident, heading in reserved:
         plain = re.sub(r"`([^`]*)`", r"\1", heading)
-        contents.append(f'<a href="#{ident}">{esc(plain)}</a>')
+        label = "As-of queries" if plain.startswith("As-of") else plain
+        overview_links.append(f'<a href="#{ident}">{esc(label)}</a>')
     for name in grouped:
         label = TAG_TITLES.get(name, name[:1].upper() + name[1:])
-        contents.append(f'<a href="#tag-{slug(name)}">{esc(label)}</a>')
-    contents.append('<a href="#schemas">Schemas</a>')
+        route_links.append(
+            f'<a href="#tag-{slug(name)}">{esc(label)}'
+            f'<span aria-label="{len(grouped[name])} routes">{len(grouped[name])}</span></a>'
+        )
+    contents = (
+        '<div class="api-contents-group"><p>Overview</p>'
+        + "".join(overview_links)
+        + '</div><div class="api-contents-group"><p>Routes</p>'
+        + "".join(route_links)
+        + '</div><div class="api-contents-group"><a href="#schemas">Schemas</a>'
+        + '<a class="api-back-top" href="#main">Back to top ↑</a></div>'
+    )
 
     sections: list[str] = []
     for name, ops in grouped.items():
@@ -607,7 +620,8 @@ def page_html(spec: dict, stamp: Stamp) -> str:
     <meta content="#ffffff" name="theme-color" />
     <link href="../assets/img/favicon.svg" rel="icon" type="image/svg+xml" />
     <script src="../assets/theme.js?v=text-toggle"></script>
-    <link href="../assets/site.css?v=esplora-api" rel="stylesheet" />
+    <link href="../assets/site.css?v=api-navigation-20261023" rel="stylesheet" />
+    <script src="../assets/api-navigation.js" defer></script>
     <link href="https://rbitcoin.org/esplora/" rel="canonical" />
     <link href="../site.webmanifest" rel="manifest" />
     <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
@@ -663,9 +677,14 @@ def page_html(spec: dict, stamp: Stamp) -> str:
           {summary_html}
           {built}
         </header>
-        <nav aria-label="On this page" class="chapter-contents">
-          {"".join(contents)}
-        </nav>
+        <div class="api-layout">
+          <nav aria-label="API sections" class="api-contents">
+            <details class="api-contents-menu" open>
+              <summary><span>On this page</span><span class="api-current-section">Choose a section</span></summary>
+              <div class="api-contents-links">{contents}</div>
+            </details>
+          </nav>
+          <div class="api-document">
         {intro}
         {server_html}
         {source_note}
@@ -675,6 +694,8 @@ def page_html(spec: dict, stamp: Stamp) -> str:
           <p>Named response and field shapes. A field that links here uses that shape.</p>
           {"".join(schema_parts)}
         </section>
+          </div>
+        </div>
         <nav aria-label="Continue reading" class="chapter-next">
           <a href="../wallets/index.html"
             >Wallet backends<svg
